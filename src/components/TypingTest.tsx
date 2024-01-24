@@ -34,13 +34,14 @@ export default function TypingTest() {
             return
         }
 
-        setWpm(userInput.split(' ').length)
+        const wordPerMinute = Math.round(userInput.split(' ').length / (timer / 60));
+        setWpm(wordPerMinute);
 
         // console.log(userInput)
         const accuracy = calculateAccuracy(text, userInput);
         setAccuracy(parseInt(accuracy))
         // console.log(typeof(parseInt(accuracy))) 
-        setIsSubmitted(true);     
+        setIsSubmitted(true);
 
     }
 
