@@ -1,6 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react"
 import Timer from "./Timer";
 import calculateAccuracy from "../lib/compare";
+import Result from "./Result";
 
 export default function TypingTest() {
     const [text, setText] = useState('This is the text to write and test.');
@@ -46,10 +47,7 @@ export default function TypingTest() {
     if (isSubmitted) {
         return (
             <>
-                <section className="p-2 flex flex-col gap-3">
-                    <div>Accuracy is {accuracy}%</div>
-                    <div>WPM (Wrod Per Minute) : {wpm}</div>
-                </section>
+                <Result wpm={wpm} accuracy={accuracy} />
             </>
         );
     }
