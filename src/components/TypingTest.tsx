@@ -1,8 +1,9 @@
 import { ChangeEvent, useState } from "react"
+import Timer from "./Timer";
 
 export default function TypingTest() {
     const [userInput, setUserInput] = useState('');
-    // const [timer, setTimer] = useState();
+    const [timer, setTimer] = useState(0);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setUserInput(e.target.value);
@@ -16,6 +17,7 @@ export default function TypingTest() {
     return (
         <>
             <section className="p-2 flex flex-col gap-3">
+                <Timer time={timer} />
                 <p className="p-2 border runded text-lg font-medium">This is the text to write and test.</p>
                 <input onChange={handleInputChange} className="p-2 rounded border outline-none" title="Text field" type="text" />
 
