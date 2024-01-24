@@ -1,30 +1,76 @@
-# React + TypeScript + Vite
+```markdown
+# Typing Practice App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The Typing Practice App is a web application built with React.js that allows users to practice and improve their typing skills. This app provides a simple and intuitive interface for users to test their typing speed and accuracy.
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Prerequisites
 
-## Expanding the ESLint configuration
+To run the Typing Practice App locally, you need to have PNPM installed. If PNPM is not already installed on your system, you can install it by following the instructions at [https://pnpm.io/installation](https://pnpm.io/installation).
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Installation
 
-- Configure the top-level `parserOptions` property like this:
+Follow these steps to get the app up and running on your local machine:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+1. Clone the repository:
+   ```
+   git clone https://github.com/ashsajal1/typing-app.git
+   ```
+
+2. Navigate to the project directory:
+   ```
+   cd typing-app
+   ```
+
+3. Install the dependencies using PNPM:
+   ```
+   pnpm install
+   ```
+
+4. Start the development server:
+   ```
+   pnpm dev
+   ```
+
+5. Open your browser and visit `http://localhost:3000` to access the Typing Practice App.
+
+## Contributing
+
+Contributions are welcome! If you would like to contribute to this project, please follow these steps:
+
+1. Fork the repository by clicking the "Fork" button on the GitHub repository page.
+
+2. Clone your forked repository to your local machine:
+   ```
+   git clone https://github.com/your-username/typing-app.git
+   ```
+
+3. Create a new branch for your feature or bug fix:
+   ```
+   git checkout -b feature/your-feature-name
+   ```
+
+4. Make your changes and add them to your branch.
+
+5. Commit your changes:
+   ```
+   git commit -m "Add your commit message here"
+   ```
+
+6. Push your changes to your forked repository:
+   ```
+   git push origin feature/your-feature-name
+   ```
+
+7. Open a pull request on the main repository's GitHub page. Provide a clear description of your changes and their purpose.
+
+Please ensure that your code follows the established code style and guidelines. Also, make sure to test your changes thoroughly before submitting a pull request.
+
+## License
+
+This project is licensed under the MIT License. You are free to use, modify, and distribute the code as per the terms of the license.
+
+Feel free to explore the code, make improvements, and contribute to the Typing Practice App. We appreciate your contributions!
+
 ```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
