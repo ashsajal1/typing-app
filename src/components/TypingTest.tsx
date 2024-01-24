@@ -2,9 +2,10 @@ import { ChangeEvent, useEffect, useState } from "react"
 import Timer from "./Timer";
 import calculateAccuracy from "../lib/compare";
 import Result from "./Result";
+import generateRandomWords from "../lib/genrerateRandomWords";
 
 export default function TypingTest() {
-    const [text, setText] = useState('This is the text to write and test.');
+    const [text, setText] = useState('');
     const [userInput, setUserInput] = useState('');
     const [timer, setTimer] = useState<number>(0);
     const [isStarted, setIsStarted] = useState(false);
@@ -13,6 +14,11 @@ export default function TypingTest() {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
+        if (!text) {
+            const randomWordString: string = generateRandomWords();
+            setText(randomWordString);
+        }
+
         if (isStarted) {
             const interval = setInterval(() => {
                 setTimer((prevTimer) => prevTimer + 1);
