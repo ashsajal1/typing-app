@@ -24,7 +24,7 @@ export default function TypingTest() {
     }, [isStarted]);
 
     useEffect(() => {
-        if (timer === 5) {
+        if (timer === 60) {
             handleSubmit()
             setIsSubmitted(true);
         }
