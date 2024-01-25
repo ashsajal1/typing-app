@@ -66,7 +66,7 @@ export default function TypingTest() {
                 <p className="p-2 border runded text-lg font-medium">{text}</p>
                 <input disabled={!isStarted} onChange={handleInputChange} className="p-2 rounded border outline-none" title="Text field" type="text" />
 
-                <button onClick={handleSubmit} className="p-1 font-mono border rounded bg-teal-700 hover:bg-teal-800 text-slate-50">{isStarted ? "Submit" : "Start"}</button>
+                <button onClick={handleSubmit} className="p-2 text-sm font-mono border rounded bg-teal-700 hover:bg-teal-800 text-slate-50">{isStarted ? "Submit" : "Start"}</button>
             </section>
         </>
     )
