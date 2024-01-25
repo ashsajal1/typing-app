@@ -14,11 +14,6 @@ export default function TypingTest() {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
-        if (!text) {
-            const randomWordString: string = generateRandomWords();
-            setText(randomWordString);
-        }
-
         if (isStarted) {
             const interval = setInterval(() => {
                 setTimer((prevTimer) => prevTimer + 1);
@@ -27,6 +22,20 @@ export default function TypingTest() {
             return () => clearInterval(interval);
         }
     }, [isStarted]);
+
+    useEffect(() => {
+        if (timer === 5) {
+            handleSubmit()
+            setIsSubmitted(true);
+        }
+    }, [timer]);
+
+    useEffect(() => {
+        if (!text) {
+            const randomWordString: string = generateRandomWords();
+            setText(randomWordString);
+        }
+    }, [text]);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setUserInput(e.target.value);
