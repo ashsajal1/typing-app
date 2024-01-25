@@ -48,10 +48,11 @@ export default function TypingTest() {
         }
 
         const wordPerMinute = Math.round(userInput.split(' ').length / (timer / 60));
-        setWpm(wordPerMinute);
+        setWpm(Number.isFinite(wordPerMinute) ? wordPerMinute : 0);
 
-        const accuracy = calculateAccuracy(userInput.length <= text.length ? text.slice(0, userInput.length) : text, userInput);
-        setAccuracy(parseInt(accuracy));
+        const slicedText = userInput.length <= text.length ? text.slice(0, userInput.length) : text;
+        const accuracy = calculateAccuracy(slicedText, userInput);
+        setAccuracy(Number.isFinite(parseInt(accuracy)) ? parseInt(accuracy) : 0);
 
         setIsSubmitted(true);
     };
