@@ -37,7 +37,7 @@ export default function TypingTest() {
         }
     }, [text]);
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         setUserInput(e.target.value);
     };
 
