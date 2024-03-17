@@ -12,6 +12,26 @@ export default function TypingTest() {
     const [accuracy, setAccuracy] = useState<number>(0);
     const [wpm, setWpm] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [fontSize, setFontSize] = useState<number>(4);
+
+    useEffect(() => {
+        // Calculate initial font size based on screen width
+        const calculateFontSize = () => {
+            const screenWidth = window.innerWidth;
+            const baseFontSize = 2; // Base font size (2xl)
+            const scaleFactor = screenWidth / 1440;
+            const calculatedFontSize = baseFontSize * scaleFactor;
+            setFontSize(calculatedFontSize);
+        };
+
+        
+        calculateFontSize();
+        window.addEventListener('resize', calculateFontSize);
+
+        return () => {
+            window.removeEventListener('resize', calculateFontSize);
+        };
+    }, []);
 
     useEffect(() => {
         if (isStarted) {
@@ -81,7 +101,7 @@ export default function TypingTest() {
         <>
             <section className="p-2 flex flex-col gap-3">
                 <Timer time={timer} />
-                <p className="p-2 border rounded text-4xl font-medium">
+                <p className="p-2 border rounded" style={{ fontSize: `${fontSize}rem` }}>
                     {text.split('').map((_, index) => renderLetter(index))}
                 </p>
                 <textarea
