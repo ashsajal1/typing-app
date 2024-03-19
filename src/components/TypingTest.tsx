@@ -12,26 +12,6 @@ export default function TypingTest() {
     const [accuracy, setAccuracy] = useState<number>(0);
     const [wpm, setWpm] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [fontSize, setFontSize] = useState<number>(4);
-
-    useEffect(() => {
-        // Calculate initial font size based on screen width
-        const calculateFontSize = () => {
-            const screenWidth = window.innerWidth;
-            const baseFontSize = 2; // Base font size (2xl)
-            const scaleFactor = screenWidth / 1440;
-            const calculatedFontSize = baseFontSize * scaleFactor;
-            setFontSize(calculatedFontSize);
-        };
-
-        
-        calculateFontSize();
-        window.addEventListener('resize', calculateFontSize);
-
-        return () => {
-            window.removeEventListener('resize', calculateFontSize);
-        };
-    }, []);
 
     useEffect(() => {
         if (isStarted) {
@@ -86,10 +66,10 @@ export default function TypingTest() {
             return <span key={index}>{letter}</span>;
         } else if (letter === enteredLetter) {
             // Correctly entered letter
-            return <span key={index} className="text-green-500">{letter}</span>;
+            return <span key={index} className="text-green-500 md:text-2xl">{letter}</span>;
         } else {
             // Incorrectly entered letter
-            return <span key={index} className="text-red-500">{letter}</span>;
+            return <span key={index} className="text-red-500 md:text-2xl">{letter}</span>;
         }
     };
 
@@ -101,13 +81,13 @@ export default function TypingTest() {
         <>
             <section className="p-2 flex flex-col gap-3">
                 <Timer time={timer} />
-                <p className="p-2 border rounded" style={{ fontSize: `${fontSize}rem` }}>
+                <p className="p-2 border rounded md:text-2xl">
                     {text.split('').map((_, index) => renderLetter(index))}
                 </p>
                 <textarea
                     disabled={!isStarted}
                     onChange={handleInputChange}
-                    className="p-2 rounded border outline-none text-lg"
+                    className="p-2 rounded border outline-none text-lg md:text-2xl"
                     title="Text area"
                 />
 
