@@ -37,7 +37,7 @@ export default function TypingTest() {
         }
     }, [text]);
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         setUserInput(e.target.value);
     };
 
@@ -66,10 +66,10 @@ export default function TypingTest() {
             return <span key={index}>{letter}</span>;
         } else if (letter === enteredLetter) {
             // Correctly entered letter
-            return <span key={index} className="text-green-500">{letter}</span>;
+            return <span key={index} className="text-green-500 md:text-2xl">{letter}</span>;
         } else {
             // Incorrectly entered letter
-            return <span key={index} className="text-red-500">{letter}</span>;
+            return <span key={index} className="text-red-500 md:text-2xl">{letter}</span>;
         }
     };
 
@@ -81,15 +81,14 @@ export default function TypingTest() {
         <>
             <section className="p-2 flex flex-col gap-3">
                 <Timer time={timer} />
-                <p className="p-2 border rounded text-lg font-medium">
+                <p className="p-2 border rounded md:text-2xl">
                     {text.split('').map((_, index) => renderLetter(index))}
                 </p>
-                <input
+                <textarea
                     disabled={!isStarted}
                     onChange={handleInputChange}
-                    className="p-2 rounded border outline-none"
-                    title="Text field"
-                    type="text"
+                    className="p-2 rounded border outline-none text-lg md:text-2xl"
+                    title="Text area"
                 />
 
                 <button
