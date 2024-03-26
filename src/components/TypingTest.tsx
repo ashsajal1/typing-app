@@ -81,7 +81,7 @@ export default function TypingTest() {
         <>
             <section className="p-2 flex flex-col gap-3">
                 <Timer time={timer} />
-                <p className="p-2 border rounded md:text-2xl">
+                <p className="p-2 border rounded md:text-2xl select-none">
                     {text.split('').map((_, index) => renderLetter(index))}
                 </p>
                 <textarea
