@@ -5,6 +5,9 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    fontFamily: {
+      'sans': ['Ubuntu', 'ui-sans-serif', 'system-ui'],
+    },
     extend: {},
   },
   plugins: [],
