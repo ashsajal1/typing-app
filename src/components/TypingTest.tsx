@@ -23,7 +23,6 @@ export default function TypingTest() {
         }
     }, [isStarted]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const handleSubmit = useCallback(() => {
         if (!isStarted) {
             setIsStarted(true);
