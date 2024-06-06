@@ -1,7 +1,7 @@
 import words from "./words";
 
 export default function generateRandomWords(): string {
-  let randomWords: string[] = [];
+  const randomWords: string[] = [];
 
   while (randomWords.length < 50) {
     const randomIndex: number = Math.floor(Math.random() * words.length);
