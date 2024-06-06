@@ -23,6 +23,9 @@ export default function Result({ accuracy, wpm }: { accuracy: number, wpm: numbe
                 <div className="text-xl">{status}</div>
                 <div className="">Accuracy : {accuracy}%</div>
                 <div>WPM (Word Per Minute) : {wpm}</div>
+                <div>
+                    <button onClick={() => window.location.reload()} className="bg-teal-700 p-2 rounded border">Restart</button>
+                </div>
             </section>
         </div>
     )
