@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import Timer from './Timer';
 import Result from './Result';
 import generateRandomWords from '../lib/generateRandomWords';
@@ -23,25 +23,8 @@ export default function TypingTest() {
         }
     }, [isStarted]);
 
-    useEffect(() => {
-        if (timer === 60) {
-            handleSubmit();
-            setIsSubmitted(true);
-        }
-    }, [timer]);
-
-    useEffect(() => {
-        if (!text) {
-            const randomWordString: string = generateRandomWords();
-            setText(randomWordString);
-        }
-    }, [text]);
-
-    const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        setUserInput(e.target.value);
-    };
-
-    const handleSubmit = () => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const handleSubmit = useCallback(() => {
         if (!isStarted) {
             setIsStarted(true);
             return;
@@ -55,7 +38,27 @@ export default function TypingTest() {
         setAccuracy(Number.isFinite(parseInt(accuracy)) ? parseInt(accuracy) : 0);
 
         setIsSubmitted(true);
+    }, [isStarted, text, timer, userInput]);
+    
+    useEffect(() => {
+        if (timer === 60) {
+            handleSubmit();
+            setIsSubmitted(true);
+        }
+    }, [handleSubmit, timer]);
+
+    useEffect(() => {
+        if (!text) {
+            const randomWordString: string = generateRandomWords();
+            setText(randomWordString);
+        }
+    }, [text]);
+
+    const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        setUserInput(e.target.value);
     };
+
+    
 
     const renderLetter = (index: number) => {
         const letter = text[index];
