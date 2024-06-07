@@ -1,11 +1,11 @@
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import Timer from './Timer';
 import Result from './Result';
-import generateRandomWords from '../lib/generateRandomWords';
+
 import calculateAccuracy from '../lib/compare';
 
-export default function TypingTest() {
-    const [text, setText] = useState('');
+export default function TypingTest({text}:{text:string}) {
+    // const [text, setText] = useState('');
     const [userInput, setUserInput] = useState('');
     const [timer, setTimer] = useState<number>(0);
     const [isStarted, setIsStarted] = useState(false);
@@ -58,12 +58,6 @@ export default function TypingTest() {
         }
     }, [handleSubmit, timer]);
 
-    useEffect(() => {
-        if (!text) {
-            const randomWordString: string = generateRandomWords();
-            setText(randomWordString);
-        }
-    }, [text]);
 
     const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         setUserInput(e.target.value);
