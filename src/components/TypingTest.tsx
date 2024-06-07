@@ -57,8 +57,6 @@ export default function TypingTest() {
         setUserInput(e.target.value);
     };
 
-
-
     const renderLetter = (index: number) => {
         const letter = text[index];
         const enteredLetter = userInput[index];
