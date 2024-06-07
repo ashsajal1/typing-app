@@ -16,7 +16,7 @@ export default function App() {
 
   return (
     <>
-      <div className="flex flex-col gap-3 p-4">
+      <div className="flex flex-col gap-3 p-12 py-48">
         <select value={selectedTopic} onChange={handleSelectChange} className="select select-success w-full">
           <option value="" disabled>Pick your favorite anime</option>
           {topics.map(topic => (
