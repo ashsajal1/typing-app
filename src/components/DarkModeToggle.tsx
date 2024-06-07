@@ -19,7 +19,7 @@ const DarkModeToggle = () => {
   return (
     <button
       onClick={toggleDarkMode}
-      className="btn"
+      className="btn btn-ghost"
     >
       {isDarkMode ? <SunIcon />: <MoonIcon />}
     </button>
