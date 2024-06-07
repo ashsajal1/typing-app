@@ -1,21 +1,31 @@
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface StoreState {
-    isDarkMode: boolean;
-    toggleDarkMode: () => void;
+interface ThemeState {
+  isDarkMode: boolean;
+  toggleTheme: () => void;
 }
 
-const useStore = create(
-    persist<StoreState>(
-        (set) => ({
-            isDarkMode: false,
-            toggleDarkMode: () => set((state) => ({ isDarkMode: !state.isDarkMode })),
-        }),
-        {
-            name: 'theme',
-        }
-    )
+const useThemeStore = create<ThemeState>()(
+  persist(
+    (set) => ({
+      isDarkMode: false,
+      toggleTheme: () => {
+        set((state) => {
+          const newTheme = !state.isDarkMode ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', newTheme);
+          return { isDarkMode: !state.isDarkMode };
+        });
+      },
+    }),
+    {
+      name: 'theme', // name of the item in local storage
+      onRehydrateStorage: () => (state) => {
+        const theme = state?.isDarkMode ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+      },
+    }
+  )
 );
 
-export default useStore;
+export default useThemeStore;

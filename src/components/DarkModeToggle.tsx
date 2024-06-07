@@ -5,7 +5,7 @@ import { MoonIcon, SunIcon } from 'lucide-react';
 const DarkModeToggle = () => {
   const { isDarkMode, toggleDarkMode } = useStore((state) => ({
     isDarkMode: state.isDarkMode,
-    toggleDarkMode: state.toggleDarkMode,
+    toggleDarkMode: state.toggleTheme,
   }));
 
   React.useEffect(() => {
