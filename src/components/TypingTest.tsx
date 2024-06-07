@@ -80,10 +80,19 @@ export default function TypingTest() {
     return (
         <>
             <section className="p-2 flex flex-col gap-3">
-                <Timer time={timer} />
+
                 <p className="p-2 border dark:border-gray-700 rounded md:text-2xl select-none">
                     {text.split('').map((_, index) => renderLetter(index))}
                 </p>
+                <div className='flex items-center gap-2 w-full'>
+                    <Timer time={timer} />
+                    <div className='p-2 w-full rounded border-success border'>
+                        <p>Accuracy : <span>20%</span></p>
+                    </div>
+                    <div className='p-2 w-full rounded border-success border'>
+                        <p>WPM : <span>20</span></p>
+                    </div>
+                </div>
                 <textarea
                     disabled={!isStarted}
                     onChange={handleInputChange}
