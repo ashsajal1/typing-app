@@ -18,7 +18,7 @@ interface SentenceStore {
 const initialSentences: Sentence[] = biologySentece
 
 // Create the Zustand store with TypeScript types
-export const useSentenceStore = create<SentenceStore>((set, get) => ({
+export const useSentenceStore = create<SentenceStore>((_set, get) => ({
   sentences: initialSentences,
   getSentencesByTopic: (topic: string) => {
     const state = get();
