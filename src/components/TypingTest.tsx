@@ -12,6 +12,7 @@ export default function TypingTest() {
     const [accuracy, setAccuracy] = useState<number>(0);
     const [wpm, setWpm] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    // const [topics, setTopics] = useState([]);
 
     useEffect(() => {
         if (isStarted && !isSubmitted) {
