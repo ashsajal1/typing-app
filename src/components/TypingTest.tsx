@@ -4,7 +4,7 @@ import Result from './Result';
 
 import calculateAccuracy from '../lib/compare';
 
-export default function TypingTest({ text, eclipsedTime }: { text: string, eclipsedTime: 30 | 60 | 120 }) {
+export default function TypingTest({ text, eclipsedTime }: { text: string, eclipsedTime: number}) {
     // const [text, setText] = useState('');
     const [userInput, setUserInput] = useState('');
     const [timer, setTimer] = useState<number>(0);

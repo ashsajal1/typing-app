@@ -5,7 +5,8 @@ import TypingTest from '../components/TypingTest'
 import { shuffleArray } from '../lib/utils'
 
 const topicsSearchSchema = z.object({
-  topic: z.string().catch('biology')
+  topic: z.string().catch('biology'),
+  eclipsedTime: z.number().catch(60),
 })
 export const Route = createFileRoute('/practice')({
   component: () => <Practice />,
@@ -13,12 +14,12 @@ export const Route = createFileRoute('/practice')({
 })
 
 const Practice = () => {
-  const { topic } = Route.useSearch()
+  const { topic, eclipsedTime } = Route.useSearch()
   const sentences = useSentenceStore((state) => state.getSentencesByTopic(topic || ''));
   if (sentences.length === 0) {
     return <div>
       Not found text of topic {topic}
     </div>
   }
-  return <TypingTest eclipsedTime={60} text={shuffleArray([...sentences]).join(" ").slice(0, 500)} />
+  return <TypingTest eclipsedTime={eclipsedTime} text={shuffleArray([...sentences]).join(" ").slice(0, 500)} />
 }

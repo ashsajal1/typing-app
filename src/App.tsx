@@ -30,7 +30,7 @@ export default function App() {
               <option key={topic} value={topic}>{topic}</option>
             ))}
           </select>
-          
+
           <select value={eclipsedTime} onChange={handleEclipsedChange} className="select select-success w-full">
             <option value="" disabled>Pick eclipsed time</option>
               <option value={30}>30</option>
@@ -39,7 +39,7 @@ export default function App() {
           </select>
         </div>
 
-        <Link className="w-full" to='/practice' search={{ topic: selectedTopic }}>
+        <Link className="w-full" to='/practice' search={{ topic: selectedTopic, eclipsedTime: eclipsedTime }}>
           <button className="btn btn-active w-full btn-success">Start Practice</button>
         </Link>
       </div>
