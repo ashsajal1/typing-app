@@ -17,6 +17,6 @@ export const Route = createFileRoute('/practice')({
 const Practice = () => {
   const { topic } = Route.useSearch()
   const sentences = useSentenceStore((state) => state.getSentencesByTopic(topic || ''));
-  console.log(sentences.sort(() => Math.floor(Math.random() * 3) - 1))
+  // console.log(sentences.sort(() => Math.floor(Math.random() * 3) - 1))
   return <TypingTest text={sentences.sort(() => Math.floor(Math.random() * 3) - 1).join(" ").slice(0, 500)} />
 }
