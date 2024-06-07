@@ -56,7 +56,7 @@ export default function TypingTest({ text, eclipsedTime }: { text: string, eclip
             handleSubmit();
             setIsSubmitted(true);
         }
-    }, [handleSubmit, timer]);
+    }, [eclipsedTime, handleSubmit, timer]);
 
 
     const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
