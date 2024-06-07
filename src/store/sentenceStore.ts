@@ -12,10 +12,11 @@ type Sentence = {
 interface SentenceStore {
   sentences: Sentence[];
   getSentencesByTopic: (topic: string) => string[];
+  getAllTopics: () => string[];
 }
 
 // Initial sentences data
-const initialSentences: Sentence[] = biologySentece
+const initialSentences: Sentence[] = biologySentece;
 
 // Create the Zustand store with TypeScript types
 export const useSentenceStore = create<SentenceStore>((_set, get) => ({
@@ -25,5 +26,10 @@ export const useSentenceStore = create<SentenceStore>((_set, get) => ({
     return state.sentences
       .filter((sentence) => sentence.topic === topic)
       .map((sentence) => sentence.text);
+  },
+  getAllTopics: () => {
+    const state = get();
+    const topics = state.sentences.map((sentence) => sentence.topic);
+    return Array.from(new Set(topics));
   },
 }));
