@@ -10,6 +10,12 @@
           "meta[name=theme-color]"
         ]
       }
+    ],
+    "axe/name-role-value": [
+      "default",
+      {
+        "button-name": "off"
+      }
     ]
   }
 }
