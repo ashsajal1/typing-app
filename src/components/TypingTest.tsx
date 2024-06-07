@@ -23,6 +23,15 @@ export default function TypingTest() {
         }
     }, [isStarted]);
 
+    useEffect(() => {
+        const wordPerMinute = Math.round(userInput.split(' ').length / (timer / 60));
+        setWpm(Number.isFinite(wordPerMinute) ? wordPerMinute : 0);
+
+        const slicedText = userInput.length <= text.length ? text.slice(0, userInput.length) : text;
+        const accuracy = calculateAccuracy(slicedText, userInput);
+        setAccuracy(Number.isFinite(parseInt(accuracy)) ? parseInt(accuracy) : 0);
+    }, [text, timer, userInput])
+
     const handleSubmit = useCallback(() => {
         if (!isStarted) {
             setIsStarted(true);
@@ -87,10 +96,10 @@ export default function TypingTest() {
                 <div className='flex items-center gap-2 w-full'>
                     <Timer time={timer} />
                     <div className='p-2 w-full rounded border-success border'>
-                        <p>Accuracy : <span>20%</span></p>
+                        <p>Accuracy : <span>{accuracy}%</span></p>
                     </div>
                     <div className='p-2 w-full rounded border-success border'>
-                        <p>WPM : <span>20</span></p>
+                        <p>WPM : <span>{wpm}</span></p>
                     </div>
                 </div>
                 <textarea
