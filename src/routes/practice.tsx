@@ -20,5 +20,5 @@ const Practice = () => {
       Not found text of topic {topic}
     </div>
   }
-  return <TypingTest text={shuffleArray([...sentences]).join(" ").slice(0, 500)} />
+  return <TypingTest eclipsedTime={60} text={shuffleArray([...sentences]).join(" ").slice(0, 500)} />
 }
