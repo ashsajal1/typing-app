@@ -95,10 +95,10 @@ export default function TypingTest() {
                 </p>
                 <div className='flex items-center gap-2 w-full'>
                     <Timer time={timer} />
-                    <div className='p-2 w-full rounded border-success border'>
+                    <div className='p-2 w-full rounded border-success border text-success'>
                         <p>Accuracy : <span>{accuracy}%</span></p>
                     </div>
-                    <div className='p-2 w-full rounded border-success border'>
+                    <div className='p-2 w-full rounded border-success border text-success'>
                         <p>WPM : <span>{wpm}</span></p>
                     </div>
                 </div>
