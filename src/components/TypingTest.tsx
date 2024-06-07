@@ -95,7 +95,7 @@ export default function TypingTest() {
 
                 <button
                     onClick={handleSubmit}
-                    className="p-2 text-sm font-mono border rounded bg-teal-700 hover:bg-teal-800 text-slate-50"
+                    className="btn btn-active btn-success"
                 >
                     {isStarted ? 'Submit' : 'Start'}
                 </button>
@@ -103,7 +103,7 @@ export default function TypingTest() {
                     onClick={() => {
                         window.location.reload();
                     }}
-                    className="p-2 text-sm font-mono border rounded bg-red-700 hover:bg--800 text-slate-50 reset-button"
+                    className="btn btn-outline btn-success"
                 >
                     {'Reset'}
                 </button>
