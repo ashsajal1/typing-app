@@ -14,23 +14,25 @@ export default function TypingTest() {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
-        if (isStarted) {
+        if (isStarted && !isSubmitted) {
             const interval = setInterval(() => {
                 setTimer((prevTimer) => prevTimer + 1);
             }, 1000);
 
             return () => clearInterval(interval);
         }
-    }, [isStarted]);
+    }, [isStarted, isSubmitted]);
 
     useEffect(() => {
-        const wordPerMinute = Math.round(userInput.split(' ').length / (timer / 60));
-        setWpm(Number.isFinite(wordPerMinute) ? wordPerMinute : 0);
+        if (isStarted && !isSubmitted) {
+            const wordPerMinute = Math.round(userInput.split(' ').length / (timer / 60));
+            setWpm(Number.isFinite(wordPerMinute) ? wordPerMinute : 0);
 
-        const slicedText = userInput.length <= text.length ? text.slice(0, userInput.length) : text;
-        const accuracy = calculateAccuracy(slicedText, userInput);
-        setAccuracy(Number.isFinite(parseInt(accuracy)) ? parseInt(accuracy) : 0);
-    }, [text, timer, userInput])
+            const slicedText = userInput.length <= text.length ? text.slice(0, userInput.length) : text;
+            const accuracy = calculateAccuracy(slicedText, userInput);
+            setAccuracy(Number.isFinite(parseInt(accuracy)) ? parseInt(accuracy) : 0);
+        }
+    }, [text, timer, userInput, isStarted, isSubmitted]);
 
     const handleSubmit = useCallback(() => {
         if (!isStarted) {
