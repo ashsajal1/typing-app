@@ -107,7 +107,7 @@ export default function TypingTest() {
                 <textarea
                     disabled={!isStarted}
                     onChange={handleInputChange}
-                    className="p-2 dark:text-white dark:bg-black textarea rounded textarea-bordered text-lg md:text-2xl"
+                    className="p-2 textarea rounded textarea-bordered text-lg md:text-2xl"
                     title="Text area"
                 />
 
