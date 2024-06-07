@@ -8,7 +8,7 @@ const topicsSearchSchema = z.object({
 })
 export const Route = createFileRoute('/practice')({
   component: () => <Practice />,
-  validateSearch: (search) => topicsSearchSchema.parse(search)
+  validateSearch: (search: Record<string, unknown>) => topicsSearchSchema.parse(search)
 })
 
 const Practice = () => {

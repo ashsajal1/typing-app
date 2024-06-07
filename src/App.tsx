@@ -1,12 +1,14 @@
 import { ChangeEvent, useState } from "react";
 import { useSentenceStore } from "./store/sentenceStore";
+import { Link } from "@tanstack/react-router";
 
 export default function App() {
-  const [selectedTopics, setSelectedTopics] = useState('')
+  const [selectedTopic, setSelectedTopic] = useState('')
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
-    setSelectedTopics(value);
+    setSelectedTopic(value);
+    console.log(value)
   };
 
   const { getAllTopics } = useSentenceStore();
@@ -15,14 +17,16 @@ export default function App() {
   return (
     <>
       <div className="flex flex-col gap-3 p-4">
-        <select value={selectedTopics} onChange={handleSelectChange} className="select select-success w-full">
-          <option disabled selected>Pick your favorite anime</option>
+        <select value={selectedTopic} onChange={handleSelectChange} className="select select-success w-full">
+          <option value="" disabled>Pick your favorite anime</option>
           {topics.map(topic => (
-            <option>{topic}</option>
+            <option key={topic} value={topic}>{topic}</option>
           ))}
         </select>
 
-        <button className="btn btn-active btn-success">Start Practice</button>
+        <Link className="w-full" to='/practice' search={{ topic: selectedTopic }}>
+          <button className="btn btn-active w-full btn-success">Start Practice</button>
+        </Link>
       </div>
     </>
   )
