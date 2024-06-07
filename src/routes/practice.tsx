@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 import { useSentenceStore } from '../store/sentenceStore'
 import TypingTest from '../components/TypingTest'
+import { shuffleArray } from '../lib/utils'
 
 const topicsSearchSchema = z.object({
   topic: z.string().catch('biology')
@@ -19,5 +20,5 @@ const Practice = () => {
       Not found text of topic {topic}
     </div>
   }
-  return <TypingTest text={sentences.sort(() => Math.floor(Math.random() * 3) - 1).join(" ").slice(0, 500)} />
+  return <TypingTest text={shuffleArray([...sentences]).join(" ").slice(0, 500)} />
 }
