@@ -1,5 +1,5 @@
 import create from 'zustand';
-import { biologySentece } from '../lib/topics/biology';
+import { sentences } from '../lib/topics';
 
 // Define the type for a sentence
 type Sentence = {
@@ -16,7 +16,7 @@ interface SentenceStore {
 }
 
 // Initial sentences data
-const initialSentences: Sentence[] = biologySentece;
+const initialSentences: Sentence[] = sentences;
 
 // Create the Zustand store with TypeScript types
 export const useSentenceStore = create<SentenceStore>((_set, get) => ({
