@@ -20,7 +20,7 @@ const Practice = () => {
   if (sentences.length === 0) {
     return <div className='grid place-items-center p-12'>
       <div className='flex flex-col items-center'>
-        <h1 className='mb-4 font-bold text-3xl'>Not found text of topic {topic}!</h1>
+        <h1 className='mb-4 font-bold text-3xl text-center'>Not found text of topic {topic}!</h1>
 
         <div className='flex items-center gap-2'>
           <button onClick={() => history.back()} className='btn btn-success btn-outline'>
