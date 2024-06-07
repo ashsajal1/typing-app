@@ -5,14 +5,12 @@ import Result from './Result';
 import calculateAccuracy from '../lib/compare';
 
 export default function TypingTest({ text, eclipsedTime }: { text: string, eclipsedTime: number}) {
-    // const [text, setText] = useState('');
     const [userInput, setUserInput] = useState('');
     const [timer, setTimer] = useState<number>(0);
     const [isStarted, setIsStarted] = useState(false);
     const [accuracy, setAccuracy] = useState<number>(0);
     const [wpm, setWpm] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    // const [topics, setTopics] = useState([]);
 
     useEffect(() => {
         if (isStarted && !isSubmitted) {
