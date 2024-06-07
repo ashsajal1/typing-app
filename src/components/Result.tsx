@@ -17,8 +17,8 @@ export default function Result({ accuracy, wpm }: { accuracy: number, wpm: numbe
     }
 
     return (
-        <div className="h-screen flex items-center justify-center">
-            <section className="p-2 w-1/2 h-1/2 rounded flex flex-col gap-3 bg-success justify-center items-center text-slate-50">
+        <div className="h-screen flex items-center justify-center p-4">
+            <section className="p-2 w-full md:w-1/2 h-1/2 rounded flex flex-col gap-3 bg-success justify-center items-center text-slate-50">
                 <div className="text-4xl">{emoji}</div>
                 <div className="text-xl">{status}</div>
                 <div className="">Accuracy : {accuracy}%</div>
