@@ -7,7 +7,7 @@ export default function Navbar() {
       <Link to='/' className="text-success">Typing practice app</Link>
       <div className="flex items-center gap-2">
         <ModeToggle />
-        <button className="btn btm-nav-sm btn-success">Category</button>
+        {/* <button className="btn btm-nav-sm btn-success">Category</button> */}
       </div>
     </nav>
   )
