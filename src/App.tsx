@@ -19,6 +19,7 @@ export default function App() {
 
   const { getAllTopics } = useSentenceStore();
   const topics = getAllTopics();
+  const { sentences } = useSentenceStore()
 
   return (
     <>
@@ -27,15 +28,15 @@ export default function App() {
           <select value={selectedTopic} onChange={handleSelectChange} className="select select-success w-full">
             <option value="" disabled>Pick your favorite topic</option>
             {topics.map(topic => (
-              <option key={topic} value={topic}>{topic}</option>
+              <option key={topic} value={topic}>{topic} ({sentences.filter(sen => sen.topic === topic).length})</option>
             ))}
           </select>
 
           <select value={eclipsedTime} onChange={handleEclipsedChange} className="select select-success w-full">
             <option value="" disabled>Pick eclipsed time</option>
-              <option value={30}>30</option>
-              <option value={60}>60</option>
-              <option value={120}>120</option>
+            <option value={30}>30</option>
+            <option value={60}>60</option>
+            <option value={120}>120</option>
           </select>
         </div>
 
