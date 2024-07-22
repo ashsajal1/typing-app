@@ -13,16 +13,9 @@ export default function TypingTest({ text, eclipsedTime }: { text: string, eclip
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [reload, setReload] = useState(false);
     const [textToPractice, setTextToPractice] = useState(text);
-    const [infinity, setInfinity] = useState(false);
 
     useEffect(() => {
-      if(eclipsedTime === 0) {
-        setInfinity(true)
-      }
-    }, [eclipsedTime])
-    
-    useEffect(() => {
-        if(reload) {
+        if (reload) {
             setTextToPractice(textToPractice + " " + text);
             setReload(false)
         }
@@ -30,7 +23,7 @@ export default function TypingTest({ text, eclipsedTime }: { text: string, eclip
 
     useEffect(() => {
         const isReload = userInput.length === textToPractice.length;
-        if(isReload) {
+        if (isReload) {
             setReload(true)
         }
     }, [reload, textToPractice.length, userInput.length])
@@ -73,11 +66,11 @@ export default function TypingTest({ text, eclipsedTime }: { text: string, eclip
     }, [isStarted, textToPractice, timer, userInput]);
 
     useEffect(() => {
-        if (timer === eclipsedTime && !infinity) {
+        if (!(eclipsedTime === 0) && timer === eclipsedTime) {
             handleSubmit();
             setIsSubmitted(true);
         }
-    }, [eclipsedTime, handleSubmit, infinity, timer]);
+    }, [eclipsedTime, handleSubmit, timer])
 
 
     const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
