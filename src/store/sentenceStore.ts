@@ -1,5 +1,5 @@
-import create from 'zustand';
-import { sentences } from '../lib/topics';
+import { create } from "zustand";
+import { sentences } from "../lib/topics";
 
 // Define the type for a sentence
 type Sentence = {
