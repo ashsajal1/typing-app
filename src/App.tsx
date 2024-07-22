@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from "react";
 import { useSentenceStore } from "./store/sentenceStore";
 import { Link } from "@tanstack/react-router";
+import { Infinity } from "lucide-react";
 
 export default function App() {
   const [selectedTopic, setSelectedTopic] = useState('physics')
@@ -37,6 +38,7 @@ export default function App() {
             <option value={30}>30</option>
             <option value={60}>60</option>
             <option value={120}>120</option>
+            <option value={0}>Infinity</option>
           </select>
         </div>
 
