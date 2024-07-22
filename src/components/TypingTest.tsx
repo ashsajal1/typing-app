@@ -13,7 +13,14 @@ export default function TypingTest({ text, eclipsedTime }: { text: string, eclip
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [reload, setReload] = useState(false);
     const [textToPractice, setTextToPractice] = useState(text);
+    const [infinity, setInfinity] = useState(false);
 
+    useEffect(() => {
+      if(eclipsedTime === 0) {
+        setInfinity(true)
+      }
+    }, [eclipsedTime])
+    
     useEffect(() => {
         if(reload) {
             setTextToPractice(textToPractice + " " + text);
@@ -66,11 +73,11 @@ export default function TypingTest({ text, eclipsedTime }: { text: string, eclip
     }, [isStarted, textToPractice, timer, userInput]);
 
     useEffect(() => {
-        if (timer === eclipsedTime) {
+        if (timer === eclipsedTime && !infinity) {
             handleSubmit();
             setIsSubmitted(true);
         }
-    }, [eclipsedTime, handleSubmit, timer]);
+    }, [eclipsedTime, handleSubmit, infinity, timer]);
 
 
     const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
