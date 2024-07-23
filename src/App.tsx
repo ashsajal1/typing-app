@@ -1,7 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { useSentenceStore } from "./store/sentenceStore";
 import { Link } from "@tanstack/react-router";
-import { Infinity } from "lucide-react";
 
 export default function App() {
   const [selectedTopic, setSelectedTopic] = useState('physics')
