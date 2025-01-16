@@ -34,6 +34,9 @@ export default function TypingTest({
 
     if (event.key === "Backspace") {
       setUserInput((prevKeys) => prevKeys.slice(0, -1)); // Remove the last character
+    } else if (event.key === " ") {
+      event.preventDefault(); // Prevent the default action of space
+      setUserInput((prevKeys) => prevKeys + event.key); // Append to user input
     } else {
       setUserInput((prevKeys) => prevKeys + event.key); // Append to user input
     }
@@ -127,7 +130,10 @@ export default function TypingTest({
       <section className="p-2 flex flex-col gap-3">
         <div className="p-2 border dark:border-gray-700 rounded md:text-3xl select-none flex flex-wrap w-full">
           {textToPractice.split(" ").map((word, wordIndex) => (
-            <div key={wordIndex} className="flex py-1 border-b light:border-b-base-300">
+            <div
+              key={wordIndex}
+              className="flex py-1 border-b light:border-b-base-300"
+            >
               {[...word.split(""), " "].map((char, charIndex) => {
                 // Calculate the absolute character index in textToPractice
                 const globalCharIndex =
