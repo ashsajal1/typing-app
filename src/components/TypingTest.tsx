@@ -28,6 +28,10 @@ export default function TypingTest({
       return;
     }
 
+    if (!isStarted) {
+      setIsStarted(true);
+    }
+
     if (event.key === "Backspace") {
       setUserInput((prevKeys) => prevKeys.slice(0, -1)); // Remove the last character
     } else {
