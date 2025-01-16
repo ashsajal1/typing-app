@@ -121,9 +121,9 @@ export default function TypingTest({
   return (
     <>
       <section className="p-2 flex flex-col gap-3">
-        <div className="p-2 border dark:border-gray-700 rounded md:text-3xl select-none flex flex-wrap">
+        <div className="p-2 border dark:border-gray-700 rounded md:text-3xl select-none flex flex-wrap w-full">
           {textToPractice.split(" ").map((word, wordIndex) => (
-            <div key={wordIndex} className="flex py-1">
+            <div key={wordIndex} className="flex py-1 border-b light:border-b-base-300">
               {[...word.split(""), " "].map((char, charIndex) => {
                 // Calculate the absolute character index in textToPractice
                 const globalCharIndex =
