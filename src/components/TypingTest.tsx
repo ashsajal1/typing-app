@@ -173,9 +173,6 @@ export default function TypingTest({
           </div>
         </div>
 
-        <button onClick={handleSubmit} className="btn btn-active btn-success">
-          {isStarted ? "Submit" : "Start"}
-        </button>
         <button
           onClick={() => {
             window.location.reload();
