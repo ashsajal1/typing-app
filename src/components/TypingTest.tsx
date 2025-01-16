@@ -24,10 +24,10 @@ export default function TypingTest({
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (ignoredKeys.includes(event.key)) {
-        // Do nothing for ignored keys
-        return;
-      }
-      
+      // Do nothing for ignored keys
+      return;
+    }
+
     if (event.key === "Backspace") {
       setUserInput((prevKeys) => prevKeys.slice(0, -1)); // Remove the last character
     } else {
@@ -43,7 +43,7 @@ export default function TypingTest({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -132,24 +132,26 @@ export default function TypingTest({
                   wordIndex +
                   charIndex;
 
-                const isCorrect = userInput[globalCharIndex] === char;
+                const isSpace = char === " ";
+                const userChar = userInput[globalCharIndex];
+                const isCorrect = userChar === char;
                 const isIncorrect =
-                  userInput[globalCharIndex] &&
-                  userInput[globalCharIndex] !== char;
+                  userChar &&
+                  (userChar !== char || (isSpace && userChar !== " "));
 
                 return (
                   <span
                     key={charIndex}
-                    className={`${
+                    className={`mx-[0.5px] p-[1px] rounded w-[20px] text-center ${
                       isCorrect
-                        ? "text-green-500"
+                        ? "text-green-500 bg-green-100"
                         : isIncorrect
-                          ? "text-red-500"
+                          ? "text-red-500 bg-red-100"
                           : ""
                     }`}
                   >
-                    {char === " " ? "\u00A0" : char}{" "}
-                    {/* Render non-breaking space */}
+                    {isSpace ? "\u00A0" : char}{" "}
+                    {/* Render non-breaking space if it's a space character */}
                   </span>
                 );
               })}
