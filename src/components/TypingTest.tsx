@@ -128,46 +128,46 @@ export default function TypingTest({
   return (
     <>
       <section className="p-2 flex flex-col gap-3">
-        <div className="p-2 border dark:border-gray-700 rounded md:text-3xl select-none flex flex-wrap w-full">
-          {textToPractice.split(" ").map((word, wordIndex) => (
-            <div
-              key={wordIndex}
-              className="flex py-1 border-b light:border-b-base-300"
-            >
-              {[...word.split(""), " "].map((char, charIndex) => {
-                // Calculate the absolute character index in textToPractice
-                const globalCharIndex =
-                  textToPractice.split(" ").slice(0, wordIndex).join(" ")
-                    .length +
-                  wordIndex +
-                  charIndex;
+      <div className="p-2 border dark:border-gray-700 rounded md:text-3xl select-none flex flex-wrap w-full">
+  {textToPractice.split(" ").map((word, wordIndex) => (
+    <div
+      key={wordIndex}
+      className="flex py-1 border-b light:border-b-base-300"
+    >
+      {[...word.split(""), " "].map((char, charIndex) => {
+        // Calculate the absolute character index in textToPractice
+        const globalCharIndex =
+          textToPractice.split(" ").slice(0, wordIndex).join(" ").length +
+          wordIndex +
+          charIndex;
 
-                const isSpace = char === " ";
-                const userChar = userInput[globalCharIndex];
-                const isCorrect = userChar === char;
-                const isIncorrect =
-                  userChar &&
-                  (userChar !== char || (isSpace && userChar !== " "));
+        const isSpace = char === " ";
+        const userChar = userInput[globalCharIndex];
+        const isCorrect = userChar === char;
+        const isIncorrect =
+          userChar &&
+          (userChar !== char || (isSpace && userChar !== " "));
 
-                return (
-                  <span
-                    key={charIndex}
-                    className={`mx-[0.5px] p-[1px] rounded w-[20px] text-center ${
-                      isCorrect
-                        ? "text-green-500 bg-green-100"
-                        : isIncorrect
-                          ? "text-red-500 bg-red-100"
-                          : ""
-                    }`}
-                  >
-                    {isSpace ? "\u00A0" : char}{" "}
-                    {/* Render non-breaking space if it's a space character */}
-                  </span>
-                );
-              })}
-            </div>
-          ))}
-        </div>
+        return (
+          <span
+            key={charIndex}
+            className={`mx-[0.5px] p-[1px] rounded w-[20px] text-center ${
+              isCorrect
+                ? "text-green-500 bg-green-100"
+                : isIncorrect
+                  ? "text-red-500 bg-red-100"
+                  : ""
+            }`}
+          >
+            {char}
+            {/* Render non-breaking space if it's a space character */}
+          </span>
+        );
+      })}
+    </div>
+  ))}
+</div>
+
 
         <div className="flex items-center gap-2 w-full">
           <Timer time={timer} />
