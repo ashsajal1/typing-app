@@ -110,32 +110,41 @@ export default function TypingTest({
   return (
     <>
       <section className="p-2 flex flex-col gap-3">
-        <div className="p-2 border dark:border-gray-700 rounded md:text-2xl select-none flex flex-wrap">
-          {textToPractice.split(" ").map((word, index) => (
-            <div key={index}>
-              {[...word.split(""), " "].map((char, index) => {
-                const isCorrect = userInput[index] === char;
-                const isIncorrect =
-                  userInput[index] && userInput[index] !== char;
+      <div className="p-2 border dark:border-gray-700 rounded md:text-2xl select-none flex flex-wrap">
+  {textToPractice.split(" ").map((word, wordIndex) => (
+    <div key={wordIndex} className="flex">
+      {[...word.split(""), " "].map((char, charIndex) => {
+        // Calculate the absolute character index in textToPractice
+        const globalCharIndex =
+          textToPractice
+            .split(" ")
+            .slice(0, wordIndex)
+            .join(" ").length + wordIndex + charIndex;
 
-                return (
-                  <span
-                    key={index}
-                    className={`${
-                      isCorrect
-                        ? "text-green-500"
-                        : isIncorrect
-                          ? "text-red-500"
-                          : ""
-                    }`}
-                  >
-                    {char === " " ? "\u00A0" : char}
-                  </span>
-                );
-              })}
-            </div>
-          ))}
-        </div>
+        const isCorrect = userInput[globalCharIndex] === char;
+        const isIncorrect =
+          userInput[globalCharIndex] &&
+          userInput[globalCharIndex] !== char;
+
+        return (
+          <span
+            key={charIndex}
+            className={`${
+              isCorrect
+                ? "text-green-500"
+                : isIncorrect
+                ? "text-red-500"
+                : ""
+            }`}
+          >
+            {char === " " ? "\u00A0" : char} {/* Render non-breaking space */}
+          </span>
+        );
+      })}
+    </div>
+  ))}
+</div>
+
         <div className="flex items-center gap-2 w-full">
           <Timer time={timer} />
           <div className="p-2 w-full rounded border-success border text-success">
