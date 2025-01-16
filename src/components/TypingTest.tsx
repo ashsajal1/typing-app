@@ -20,7 +20,14 @@ export default function TypingTest({
   const [reload, setReload] = useState(false);
   const [textToPractice, setTextToPractice] = useState(text);
 
+  const ignoredKeys = ["Shift", "Alt", "Control", "Meta"];
+
   const handleKeyDown = (event: KeyboardEvent) => {
+    if (ignoredKeys.includes(event.key)) {
+        // Do nothing for ignored keys
+        return;
+      }
+      
     if (event.key === "Backspace") {
       setUserInput((prevKeys) => prevKeys.slice(0, -1)); // Remove the last character
     } else {
