@@ -1,4 +1,4 @@
-import { SetStateAction, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Timer from "./Timer";
 import Result from "./Result";
 
@@ -20,25 +20,21 @@ export default function TypingTest({
   const [reload, setReload] = useState(false);
   const [textToPractice, setTextToPractice] = useState(text);
 
-  const [keyPressed, setKeyPressed] = useState('');
-
-  // Update state on key press
-  const handleKeyDown = (event: { key: SetStateAction<string>; }) => {
-    setKeyPressed(event.key); // Single key press
-    setUserInput((prevKeys) => prevKeys + event.key); // Append to history
-    // console.log(event.key)
+  const handleKeyDown = (event: KeyboardEvent) => {
+    console.log(event.key);
+    setUserInput((prevKeys) => prevKeys + event.key); // Append to user input
   };
 
   useEffect(() => {
-    // Attach event listener to the window
-    window.addEventListener('keydown', handleKeyDown);
+    // Attach event listener
+    window.addEventListener("keydown", handleKeyDown);
 
-    // Cleanup function to remove the listener
+    // Cleanup
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
-  
+
   useEffect(() => {
     if (reload) {
       setTextToPractice(textToPractice + " " + text);
@@ -107,7 +103,6 @@ export default function TypingTest({
     }
   }, [eclipsedTime, handleSubmit, timer]);
 
-
   if (isSubmitted) {
     return <Result wpm={wpm} accuracy={accuracy} />;
   }
@@ -117,10 +112,27 @@ export default function TypingTest({
       <section className="p-2 flex flex-col gap-3">
         <div className="p-2 border dark:border-gray-700 rounded md:text-2xl select-none flex flex-wrap">
           {textToPractice.split(" ").map((word, index) => (
-            <div key={index} className="mx-1 flex flex-wrap items-center">
-                {word.split("").map((char, index) => (
-                    <div key={index} className="">{char}</div>
-                ))}
+            <div key={index}>
+              {[...word.split(""), " "].map((char, index) => {
+                const isCorrect = userInput[index] === char;
+                const isIncorrect =
+                  userInput[index] && userInput[index] !== char;
+
+                return (
+                  <span
+                    key={index}
+                    className={`${
+                      isCorrect
+                        ? "text-green-500"
+                        : isIncorrect
+                          ? "text-red-500"
+                          : ""
+                    }`}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </span>
+                );
+              })}
             </div>
           ))}
         </div>
