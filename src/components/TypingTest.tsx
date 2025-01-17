@@ -127,7 +127,9 @@ export default function TypingTest({
   return (
     <>
       <section className="p-2 flex flex-col gap-3">
+      <progress className="progress progress-success w-full" value={timer} max={eclipsedTime}></progress>
       <div className="p-2 border dark:border-gray-700 rounded md:text-3xl select-none flex flex-wrap w-full">
+     
   {textToPractice.split(" ").map((word, wordIndex) => (
     <div
       key={wordIndex}
