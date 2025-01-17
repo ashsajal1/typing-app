@@ -142,7 +142,7 @@ export default function TypingTest({
             return (
               <span
                 key={charIndex}
-                className={`mx-[0.5px] p-[1px] rounded w-[27px] text-center ${
+                className={`mx-[0.5px] border-b border-b-base-300 p-[1px] rounded w-[27px] text-center ${
                   isCorrect
                     ? "text-green-500 bg-green-100"
                     : isIncorrect
