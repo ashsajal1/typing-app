@@ -3,6 +3,7 @@ import Timer from "./Timer";
 import Result from "./Result";
 
 import calculateAccuracy from "../lib/compare";
+import { ignoredKeys } from "../lib/utils";
 
 export default function TypingTest({
   text,
@@ -19,8 +20,6 @@ export default function TypingTest({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [reload, setReload] = useState(false);
   const [textToPractice, setTextToPractice] = useState(text);
-
-  const ignoredKeys = ["Shift", "Alt", "Control", "Meta"];
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (ignoredKeys.includes(event.key)) {
