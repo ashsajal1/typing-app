@@ -132,7 +132,7 @@ export default function TypingTest({
           value={timer}
           max={eclipsedTime}
         ></progress>
-        <div className="p-2 border dark:border-gray-700 rounded md:text-3xl select-none flex flex-wrap w-full">
+        <div className="p-2 border dark:border-gray-700 rounded md:text-3xl select-none flex flex-wrap gap-y-2 w-full">
           {textToPractice.split("").map((char, charIndex) => {
             const isSpace = char === " ";
             const userChar = userInput[charIndex];
