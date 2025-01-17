@@ -37,5 +37,5 @@ const Practice = () => {
       </div>
     </div>
   }
-  return <TypingTest eclipsedTime={eclipsedTime} text={shuffleArray([...sentences]).join(" ").slice(0, 500)} />
+  return <TypingTest eclipsedTime={eclipsedTime} text={shuffleArray([...sentences]).join(" ").slice(0, 300)} />
 }
