@@ -44,6 +44,16 @@ export default function App() {
         <Link className="w-full" to='/practice' search={{ topic: selectedTopic, eclipsedTime: eclipsedTime }}>
           <button className="btn btn-active w-full btn-success">Start Practice</button>
         </Link>
+
+        <div className="flex items-center gap-2 justify-between w-full">
+          <Link className="w-full" to='/saved-text'>
+            <button className="btn w-full">Saved Text</button>
+          </Link>
+          <Link className="w-full" to='/custom-text'>
+            <button className="btn w-full">Create Custom Text</button>
+          </Link>
+
+        </div>
       </div>
     </>
   )
