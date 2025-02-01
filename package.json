@@ -11,10 +11,12 @@
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.png"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
     "@tanstack/react-router": "^1.97.1",
     "lucide-react": "^0.390.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.2",
     "zod": "^3.24.1",
     "zustand": "^4.5.6"
   },
