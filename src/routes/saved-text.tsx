@@ -21,7 +21,9 @@ function RouteComponent() {
   }, []);
 
   const deleteData = (id: number) => {
+    console.log("Deleting data with id:", id);
     const dataAfterDeletion = existingData.filter((data) => data.id !== id);
+    console.log(dataAfterDeletion);
 
     localStorage.setItem("customTextData", JSON.stringify(dataAfterDeletion.sort((a, b) => a.id - b.id)));
     setExistingData(dataAfterDeletion);
@@ -36,10 +38,10 @@ function RouteComponent() {
         </Link>
       </div>
       <div className="grid gird-cols-1 md:grid-cols-2 gap-4 w-full">
-        {existingData.map((data, index) => (
+        {existingData.map((data) => (
           <div
             className="flex flex-col justify-between items-center w-full shadow p-3 gap-2 border border-base-200 rounded"
-            key={index}
+            key={data.id}
           >
             <div>
               <div className="flex items-center justify-between py-4">
