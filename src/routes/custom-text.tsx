@@ -14,19 +14,11 @@ const formSchema = z.object({
 });
 
 function RouteComponent() {
-  // Form state management
-  const [formValues, setFormValues] = useState({ label: "", text: "" });
-  const [isAdded, setIsAdded] = useState(false);
-  const [isDuplicate, setIsDuplicate] = useState(false);
-
-  // useForm hook for validation
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(formSchema),
   });
+  const [isAdded, setIsAdded] = useState(false);
+  const [isDuplicate, setIsDuplicate] = useState(false);
 
   // Handle form submission
   const onSubmit = (data: { label: string; text: string }) => {
@@ -56,9 +48,6 @@ function RouteComponent() {
 
     // Save the updated array back to localStorage
     localStorage.setItem("customTextData", JSON.stringify(dataArray));
-
-    // Manually clear the form fields by updating the state
-    setFormValues({ label: "", text: "" });
 
     setIsAdded(true);
 
@@ -106,6 +95,7 @@ function RouteComponent() {
           <span>Error! Duplicate text found.</span>
         </div>
       )}
+
       <h1 className="label">Enter text label</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
@@ -113,10 +103,6 @@ function RouteComponent() {
           className="input input-bordered mb-2 w-full"
           placeholder="Enter label, eg. Paragraph about Climate Change etc.."
           {...register("label")}
-          value={formValues.label}
-          onChange={(e) =>
-            setFormValues({ ...formValues, label: e.target.value })
-          }
         />
         {errors.label && <p className="text-red-500">{errors.label.message}</p>}
 
@@ -127,10 +113,6 @@ function RouteComponent() {
           rows={12}
           cols={50}
           {...register("text")}
-          value={formValues.text}
-          onChange={(e) =>
-            setFormValues({ ...formValues, text: e.target.value })
-          }
         ></textarea>
         {errors.text && <p className="text-red-500">{errors.text.message}</p>}
 
