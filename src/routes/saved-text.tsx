@@ -19,6 +19,18 @@ function RouteComponent() {
     }
   }, []);
 
+  const deleteData = (id: number) => {
+    const dataAfterDeletion = existingData.filter(
+      (data) => data.id !== id
+    );
+
+    localStorage.setItem(
+      "customTextData",
+      JSON.stringify(dataAfterDeletion)
+    );
+    setExistingData(dataAfterDeletion);
+  };
+
   return (
     <div className="p-2">
       <div className="flex items-center gap-3 mb-2">
@@ -38,7 +50,7 @@ function RouteComponent() {
                 <p className="card-title">{data.label.slice(0, 50)}...</p>
 
                 <div className="flex items-center gap-2">
-                  <button className="btn btn-error btn-sm">
+                  <button onClick={() => deleteData(data.id)} className="btn btn-error btn-sm">
                     <Trash2 className="w-4 h-4" />
                   </button>
                   <button className="btn btn-sm">
