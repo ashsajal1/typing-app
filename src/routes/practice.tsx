@@ -3,7 +3,7 @@ import { z } from "zod";
 import { useSentenceStore } from "../store/sentenceStore";
 import TypingTest from "../components/TypingTest";
 import { shuffleArray } from "../lib/utils";
-// import { ArrowLeft, HomeIcon } from "lucide-react";
+import { ArrowLeft, HomeIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const topicsSearchSchema = z.object({
@@ -36,6 +36,10 @@ const Practice = () => {
           item.id === savedTextId
       );
 
+      if(savedSentenceObj === undefined) {
+        return;
+      }
+
       console.log("Saved sentence:", savedSentenceObj);
 
       setSavedSentence(savedSentenceObj);
@@ -46,33 +50,33 @@ const Practice = () => {
     state.getSentencesByTopic(topic || "")
   );
 
-  // if (1===0) {
-  //   return (
-  //     <div className="grid place-items-center p-12">
-  //       <div className="flex flex-col items-center">
-  //         <h1 className="mb-4 font-bold text-3xl text-center">
-  //           Not found text of topic {topic}!
-  //         </h1>
+  if (sentences.length === 0 && savedSentence === null) {
+    return (
+      <div className="grid place-items-center p-12">
+        <div className="flex flex-col items-center">
+          <h1 className="mb-4 font-bold text-3xl text-center">
+            Not found text of topic {topic}!
+          </h1>
 
-  //         <div className="flex items-center gap-2">
-  //           <button
-  //             onClick={() => history.back()}
-  //             className="btn btn-success btn-outline"
-  //           >
-  //             <ArrowLeft className="h-5 w-5" />
-  //             Back
-  //           </button>
-  //           <Link to="/">
-  //             <button className="btn btn-success btn-outline">
-  //               <HomeIcon className="h-5 w-5" />
-  //               Go Home
-  //             </button>
-  //           </Link>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => history.back()}
+              className="btn btn-success btn-outline"
+            >
+              <ArrowLeft className="h-5 w-5" />
+              Back
+            </button>
+            <Link to="/">
+              <button className="btn btn-success btn-outline">
+                <HomeIcon className="h-5 w-5" />
+                Go Home
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (savedSentence) {
     return (
