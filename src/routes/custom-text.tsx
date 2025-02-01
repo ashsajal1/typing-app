@@ -14,7 +14,7 @@ const formSchema = z.object({
 });
 
 function RouteComponent() {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: zodResolver(formSchema),
   });
   const [isAdded, setIsAdded] = useState(false);
@@ -49,6 +49,7 @@ function RouteComponent() {
     // Save the updated array back to localStorage
     localStorage.setItem("customTextData", JSON.stringify(dataArray));
 
+    reset();
     setIsAdded(true);
 
     setTimeout(() => {
