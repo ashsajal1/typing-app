@@ -22,7 +22,7 @@ function RouteComponent() {
   const deleteData = (id: number) => {
     const dataAfterDeletion = existingData.filter((data) => data.id !== id);
 
-    localStorage.setItem("customTextData", JSON.stringify(dataAfterDeletion));
+    localStorage.setItem("customTextData", JSON.stringify(dataAfterDeletion.sort((a, b) => a.id - b.id)));
     setExistingData(dataAfterDeletion);
   };
 
