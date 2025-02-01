@@ -7,7 +7,7 @@ export const Route = createFileRoute("/saved-text")({
 
 function RouteComponent() {
   const [existingData, setExistingData] = useState<
-    { id:number, label: string; text: string }[]
+    { id: number; label: string; text: string }[]
   >([]);
 
   useEffect(() => {
@@ -22,7 +22,9 @@ function RouteComponent() {
     <div className="p-2">
       <div className="flex items-center gap-3 mb-2">
         <h1 className="text-3xl font-bold">Custom Text</h1>
-        <button className="btn btn-success">Create</button>
+        <Link to="/custom-text">
+          <button className="btn btn-sm btn-success">Create</button>
+        </Link>
       </div>
       <div className="grid gird-cols-1 md:grid-cols-2 gap-4 w-full">
         {existingData.map((data, index) => (
@@ -41,7 +43,7 @@ function RouteComponent() {
               <p className="font-light text-sm">{data.text.slice(0, 150)}...</p>
             </div>
             <div className="flex w-full items-center justify-between gap-2">
-              <Link to="/practice" search={{ savedTextId: data.id }} >
+              <Link to="/practice" search={{ savedTextId: data.id }}>
                 <button className="btn w-full">Practice</button>
               </Link>
             </div>
