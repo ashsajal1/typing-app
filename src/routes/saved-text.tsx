@@ -15,7 +15,8 @@ function RouteComponent() {
     // Retrieve existing data from localStorage
     const existingData = localStorage.getItem("customTextData");
     if (existingData) {
-      setExistingData(JSON.parse(existingData));
+      const data : { id: number; label: string; text: string }[] = JSON.parse(existingData);
+      setExistingData(data.sort((a, b) => a.id - b.id));
     }
   }, []);
 
