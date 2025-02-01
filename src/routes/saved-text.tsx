@@ -17,7 +17,7 @@ function RouteComponent() {
     if (existingData) {
       setExistingData(JSON.parse(existingData));
     }
-  }, [existingData]);
+  }, []);
 
   return (
     <div className="p-2">
