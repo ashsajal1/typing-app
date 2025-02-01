@@ -16,7 +16,11 @@ interface SentenceStore {
 }
 
 // Initial sentences data
-const initialSentences: Sentence[] = sentences;
+// Convert all sentence ids to string
+const initialSentences: Sentence[] = sentences.map((sentence) => ({
+  ...sentence,
+  id: sentence.id.toString(), // Convert id to string if it's a number
+}));
 
 // Create the Zustand store with TypeScript types
 export const useSentenceStore = create<SentenceStore>((_set, get) => ({
