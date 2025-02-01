@@ -4,6 +4,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 
+interface FormData {
+  label: string;
+  text: string;
+}
+
 export const Route = createFileRoute("/custom-text")({
   component: RouteComponent,
 });
@@ -14,14 +19,19 @@ const formSchema = z.object({
 });
 
 function RouteComponent() {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
   const [isAdded, setIsAdded] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
 
   // Handle form submission
-  const onSubmit = (data: { label: string; text: string }) => {
+  const onSubmit = (data: FormData) => {
     // Retrieve existing data from localStorage
     const existingData = localStorage.getItem("customTextData");
 
