@@ -27,8 +27,8 @@ importers:
         specifier: ^7.54.2
         version: 7.54.2(react@18.3.1)
       zod:
-        specifier: link:@hookform/resolvers/zod
-        version: link:@hookform/resolvers/zod
+        specifier: ^3.24.1
+        version: 3.24.1
       zustand:
         specifier: ^4.5.6
         version: 4.5.6(@types/react@18.3.18)(react@18.3.1)

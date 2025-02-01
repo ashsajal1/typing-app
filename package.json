@@ -17,7 +17,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.54.2",
-    "zod": "link:@hookform/resolvers/zod",
+    "zod": "^3.24.1",
     "zustand": "^4.5.6"
   },
   "devDependencies": {
