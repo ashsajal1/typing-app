@@ -1,0 +1,7 @@
+export const englishWrittingSentences = [
+  {
+    id: 1,
+    text: "Climate change is caused mainly by human activities like burning coal, oil, and gas, which release harmful gases such as carbon dioxide into the atmosphere. These gases trap heat from the sun, making the Earth's temperature rise. This process is called global warming. Another major cause is deforestation—cutting down too many trees reduces the Earth’s ability to absorb carbon dioxide, making the air even dirtier. As a result, glaciers and ice caps in places like Antarctica and Greenland are melting, causing sea levels to rise. This leads to flooding in coastal cities, forcing people to leave their homes. Climate change also makes weather more extreme. Some areas experience heavy rainfall and floods, while others suffer from long droughts, making it hard to grow food. Wildfires are becoming more common, destroying forests and killing animals. Hurricanes and storms are getting stronger, damaging homes and cities. Many species of plants and animals are at risk of extinction because their natural habitats are changing too fast. People also suffer from heatwaves and air pollution, which lead to health problems. To slow down climate change, we must use clean energy like wind and solar power, plant more trees, and reduce waste. If we act together, we can protect our planet for future generations.",
+    topic: "english-writting",
+  },
+];
