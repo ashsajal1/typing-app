@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Pencil, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/saved-text")({
@@ -36,8 +37,9 @@ function RouteComponent() {
               <div>
                 <p className="card-title">{data.label.slice(0, 50)}...</p>
                 <div className="flex o items-center gap-2">
-                  <button className="btn btn-primary btn-sm">Edit</button>
-                  <button className="btn btn-error btn-sm">Delete</button>
+                  
+                  <button className="btn btn-error btn-sm"><Trash2 className="w-4 h-4" /></button>
+                  <button className="btn btn-sm"><Pencil className="w-4 h-4" /></button>
                 </div>
               </div>
               <p className="font-light text-sm">{data.text.slice(0, 150)}...</p>
