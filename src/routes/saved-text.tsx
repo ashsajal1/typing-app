@@ -20,14 +20,9 @@ function RouteComponent() {
   }, []);
 
   const deleteData = (id: number) => {
-    const dataAfterDeletion = existingData.filter(
-      (data) => data.id !== id
-    );
+    const dataAfterDeletion = existingData.filter((data) => data.id !== id);
 
-    localStorage.setItem(
-      "customTextData",
-      JSON.stringify(dataAfterDeletion)
-    );
+    localStorage.setItem("customTextData", JSON.stringify(dataAfterDeletion));
     setExistingData(dataAfterDeletion);
   };
 
@@ -50,9 +45,33 @@ function RouteComponent() {
                 <p className="card-title">{data.label.slice(0, 50)}...</p>
 
                 <div className="flex items-center gap-2">
-                  <button onClick={() => deleteData(data.id)} className="btn btn-error btn-sm">
+                  <label htmlFor="my_modal_6" className="btn btn-error btn-sm">
                     <Trash2 className="w-4 h-4" />
-                  </button>
+                  </label>
+
+                  {/* Show dialog here */}
+                  <input
+                    type="checkbox"
+                    id="my_modal_6"
+                    className="modal-toggle"
+                  />
+                  <div className="modal" role="dialog">
+                    <div className="modal-box">
+                      <h3 className="text-lg font-bold">Confirm Delete!</h3>
+                      <p className="py-4">
+                        Are you sure you want to delete this text?
+                      </p>
+                      <div className="modal-action">
+                        <label htmlFor="my_modal_6" className="btn">Cancel</label>
+                        <label onClick={() => deleteData(data.id)} htmlFor="my_modal_6" className="btn btn-error">
+                          Yes, delete
+                        </label>
+                      </div>
+                      
+                    </div>
+
+                    <label className="modal-backdrop" htmlFor="my_modal_6">Close</label>
+                  </div>
                   <button className="btn btn-sm">
                     <Pencil className="w-4 h-4" />
                   </button>
