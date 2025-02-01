@@ -28,7 +28,18 @@ function RouteComponent() {
     // Parse the existing data or initialize an empty array if none exists
     const dataArray = existingData ? JSON.parse(existingData) : [];
 
-    // Push the new data to the array
+    // Check for duplicate data based on both label and text
+    const isDuplicate = dataArray.some(
+      (item: { label: string; text: string }) =>
+        item.label === data.label && item.text === data.text
+    );
+
+    if (isDuplicate) {
+      console.log("Duplicate entry found. Not saving.");
+      return; // Stop if it's a duplicate
+    }
+
+    // Push the new data to the array if no duplicate is found
     dataArray.push(data);
 
     // Save the updated array back to localStorage
