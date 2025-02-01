@@ -16,6 +16,7 @@ const formSchema = z.object({
 function RouteComponent() {
   // Form state management
   const [formValues, setFormValues] = useState({ label: "", text: "" });
+  const [isAdded, setIsAdded] = useState(false);
 
   // useForm hook for validation
   const {
@@ -53,10 +54,34 @@ function RouteComponent() {
 
     // Manually clear the form fields by updating the state
     setFormValues({ label: "", text: "" });
+
+    setIsAdded(true);
+
+    setTimeout(() => {
+      setIsAdded(false);
+    }, 2000);
   };
 
   return (
     <div className="w-full p-2">
+      {isAdded && (
+        <div role="alert" className="alert alert-success">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>Your text has been saved!</span>
+        </div>
+      )}
       <h1 className="label">Enter text label</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
@@ -65,7 +90,9 @@ function RouteComponent() {
           placeholder="Enter label, eg. Paragraph about Climate Change etc.."
           {...register("label")}
           value={formValues.label}
-          onChange={(e) => setFormValues({ ...formValues, label: e.target.value })}
+          onChange={(e) =>
+            setFormValues({ ...formValues, label: e.target.value })
+          }
         />
         {errors.label && <p className="text-red-500">{errors.label.message}</p>}
 
@@ -77,7 +104,9 @@ function RouteComponent() {
           cols={50}
           {...register("text")}
           value={formValues.text}
-          onChange={(e) => setFormValues({ ...formValues, text: e.target.value })}
+          onChange={(e) =>
+            setFormValues({ ...formValues, text: e.target.value })
+          }
         ></textarea>
         {errors.text && <p className="text-red-500">{errors.text.message}</p>}
 
