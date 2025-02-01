@@ -38,6 +38,11 @@ function RouteComponent() {
     // Parse the existing data or initialize an empty array if none exists
     const dataArray = existingData ? JSON.parse(existingData) : [];
 
+    const newData = {
+      id: dataArray?.length + 1,
+      ...data,
+    };
+
     // Check for duplicate data based on both label and text
     const isDuplicate = dataArray.some(
       (item: { label: string; text: string }) =>
@@ -54,7 +59,7 @@ function RouteComponent() {
     }
 
     // Push the new data to the array if no duplicate is found
-    dataArray.push(data);
+    dataArray.push(newData);
 
     // Save the updated array back to localStorage
     localStorage.setItem("customTextData", JSON.stringify(dataArray));
