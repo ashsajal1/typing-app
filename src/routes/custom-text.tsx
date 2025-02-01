@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +29,7 @@ function RouteComponent() {
   });
   const [isAdded, setIsAdded] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
+  const navigate = useNavigate();
 
   // Handle form submission
   const onSubmit = (data: FormData) => {
@@ -63,6 +64,10 @@ function RouteComponent() {
 
     // Save the updated array back to localStorage
     localStorage.setItem("customTextData", JSON.stringify(dataArray));
+
+    navigate({
+      to: `/practice?savedTextId=${newData.id}`,
+    })
 
     reset();
     setIsAdded(true);
