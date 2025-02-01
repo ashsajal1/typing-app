@@ -11,12 +11,19 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SavedTextImport } from './routes/saved-text'
 import { Route as PracticeImport } from './routes/practice'
 import { Route as CustomTextImport } from './routes/custom-text'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const SavedTextRoute = SavedTextImport.update({
+  id: '/saved-text',
+  path: '/saved-text',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const PracticeRoute = PracticeImport.update({
   id: '/practice',
@@ -74,6 +81,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PracticeImport
       parentRoute: typeof rootRoute
     }
+    '/saved-text': {
+      id: '/saved-text'
+      path: '/saved-text'
+      fullPath: '/saved-text'
+      preLoaderRoute: typeof SavedTextImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -84,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/custom-text': typeof CustomTextRoute
   '/practice': typeof PracticeRoute
+  '/saved-text': typeof SavedTextRoute
 }
 
 export interface FileRoutesByTo {
@@ -91,6 +106,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/custom-text': typeof CustomTextRoute
   '/practice': typeof PracticeRoute
+  '/saved-text': typeof SavedTextRoute
 }
 
 export interface FileRoutesById {
@@ -99,14 +115,15 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/custom-text': typeof CustomTextRoute
   '/practice': typeof PracticeRoute
+  '/saved-text': typeof SavedTextRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/custom-text' | '/practice'
+  fullPaths: '/' | '/about' | '/custom-text' | '/practice' | '/saved-text'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/custom-text' | '/practice'
-  id: '__root__' | '/' | '/about' | '/custom-text' | '/practice'
+  to: '/' | '/about' | '/custom-text' | '/practice' | '/saved-text'
+  id: '__root__' | '/' | '/about' | '/custom-text' | '/practice' | '/saved-text'
   fileRoutesById: FileRoutesById
 }
 
@@ -115,6 +132,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   CustomTextRoute: typeof CustomTextRoute
   PracticeRoute: typeof PracticeRoute
+  SavedTextRoute: typeof SavedTextRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -122,6 +140,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   CustomTextRoute: CustomTextRoute,
   PracticeRoute: PracticeRoute,
+  SavedTextRoute: SavedTextRoute,
 }
 
 export const routeTree = rootRoute
@@ -137,7 +156,8 @@ export const routeTree = rootRoute
         "/",
         "/about",
         "/custom-text",
-        "/practice"
+        "/practice",
+        "/saved-text"
       ]
     },
     "/": {
@@ -151,6 +171,9 @@ export const routeTree = rootRoute
     },
     "/practice": {
       "filePath": "practice.tsx"
+    },
+    "/saved-text": {
+      "filePath": "saved-text.tsx"
     }
   }
 }
