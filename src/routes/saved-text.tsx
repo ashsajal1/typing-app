@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/saved-text")({
@@ -7,7 +7,7 @@ export const Route = createFileRoute("/saved-text")({
 
 function RouteComponent() {
   const [existingData, setExistingData] = useState<
-    { label: string; text: string }[]
+    { id:number, label: string; text: string }[]
   >([]);
 
   useEffect(() => {
@@ -41,7 +41,9 @@ function RouteComponent() {
               <p className="font-light text-sm">{data.text.slice(0, 150)}...</p>
             </div>
             <div className="flex w-full items-center justify-between gap-2">
-              <button className="btn w-full">Practice</button>
+              <Link to="/practice" search={{ savedTextId: data.id }} >
+                <button className="btn w-full">Practice</button>
+              </Link>
             </div>
           </div>
         ))}
