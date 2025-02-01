@@ -34,8 +34,9 @@ function RouteComponent() {
             key={index}
           >
             <div>
-              <div>
+              <div className="flex items-center justify-between py-4">
                 <p className="card-title">{data.label.slice(0, 50)}...</p>
+
                 <div className="flex items-center gap-2">
                   <button className="btn btn-error btn-sm">
                     <Trash2 className="w-4 h-4" />
