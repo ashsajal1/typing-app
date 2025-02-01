@@ -31,13 +31,17 @@ function RouteComponent() {
             key={index}
           >
             <div className="card-body">
-              <p className="card-title">{data.label}</p>
-              <p className="font-light text-sm">{data.text}</p>
+              <div>
+                <p className="card-title">{data.label.slice(0, 50)}...</p>
+                <div className="flex o items-center gap-2">
+                  <button className="btn btn-primary btn-sm">Edit</button>
+                  <button className="btn btn-error btn-sm">Delete</button>
+                </div>
+              </div>
+              <p className="font-light text-sm">{data.text.slice(0, 150)}...</p>
             </div>
-            <div className="flex items-center justify-between gap-2">
-              <button className="btn btn-sm">Practice</button>
-              <button className="btn btn-primary btn-sm">Edit</button>
-              <button className="btn btn-error btn-sm">Delete</button>
+            <div className="flex w-full items-center justify-between gap-2">
+              <button className="btn w-full">Practice</button>
             </div>
           </div>
         ))}
