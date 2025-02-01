@@ -22,7 +22,17 @@ function RouteComponent() {
   });
 
   const onSubmit = (data: { label: string; text: string }) => {
-    console.log("Form submitted:", data);
+    // Retrieve existing data from localStorage
+    const existingData = localStorage.getItem("customTextData");
+
+    // Parse the existing data or initialize an empty array if none exists
+    const dataArray = existingData ? JSON.parse(existingData) : [];
+
+    // Push the new data to the array
+    dataArray.push(data);
+
+    // Save the updated array back to localStorage
+    localStorage.setItem("customTextData", JSON.stringify(dataArray));
   };
 
   return (
@@ -46,7 +56,10 @@ function RouteComponent() {
       ></textarea>
       {errors.text && <p className="text-red-500">{errors.text.message}</p>}
 
-      <button className="btn btn-success w-full mt-2" onClick={handleSubmit(onSubmit)}>
+      <button
+        className="btn btn-success w-full mt-2"
+        onClick={handleSubmit(onSubmit)}
+      >
         Submit
       </button>
     </div>
