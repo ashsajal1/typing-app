@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 
 export const Route = createFileRoute("/custom-text")({
   component: RouteComponent,
@@ -20,6 +21,8 @@ function RouteComponent() {
   } = useForm({
     resolver: zodResolver(formSchema),
   });
+
+  const [isAdded, setIsAdded] = useState(false);
 
   const onSubmit = (data: { label: string; text: string }) => {
     // Retrieve existing data from localStorage
@@ -44,10 +47,33 @@ function RouteComponent() {
 
     // Save the updated array back to localStorage
     localStorage.setItem("customTextData", JSON.stringify(dataArray));
+
+    setIsAdded(true);
+    setTimeout(() => {
+      setIsAdded(false);
+    }, 2000);
   };
 
   return (
     <div className="w-full p-2">
+      {isAdded && (
+        <div role="alert" className="alert alert-success">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>Your text has been saved!</span>
+        </div>
+      )}
       <h1 className="label">Enter text label</h1>
       <input
         type="text"
