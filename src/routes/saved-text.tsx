@@ -108,7 +108,7 @@ function RouteComponent() {
               <Link
                 to="/practice"
                 className="w-full btn"
-                search={{ savedTextId: data.id }}
+                search={{ savedTextId: parseInt(data.id) }}
               >
                 Practice
               </Link>
