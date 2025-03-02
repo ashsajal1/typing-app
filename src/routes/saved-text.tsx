@@ -11,6 +11,8 @@ function RouteComponent() {
     { id: string; label: string; text: string }[]
   >([]);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [itemToEdit, setItemToEdit] = useState<string | null>(null);
+  const [editText, setEditText] = useState<string>("");
 
   useEffect(() => {
     // Retrieve existing data from localStorage
@@ -37,6 +39,21 @@ function RouteComponent() {
       localStorage.setItem("customTextData", JSON.stringify(dataAfterDeletion));
       setExistingData(dataAfterDeletion);
       setItemToDelete(null);
+    }
+  };
+
+  const editData = () => {
+    if (itemToEdit) {
+      console.log("Editing data with id:", itemToEdit);
+      const dataAfterEdit = existingData.map((data) =>
+        data.id === itemToEdit ? { ...data, text: editText } : data
+      );
+      console.log(dataAfterEdit);
+
+      localStorage.setItem("customTextData", JSON.stringify(dataAfterEdit));
+      setExistingData(dataAfterEdit);
+      setItemToEdit(null);
+      setEditText("");
     }
   };
 
@@ -97,9 +114,16 @@ function RouteComponent() {
                       Close
                     </label>
                   </div>
-                  <button className="btn btn-sm">
+                  <label
+                    htmlFor="my_modal_7"
+                    className="btn btn-sm"
+                    onClick={() => {
+                      setItemToEdit(data.id);
+                      setEditText(data.text);
+                    }}
+                  >
                     <Pencil className="w-4 h-4" />
-                  </button>
+                  </label>
                 </div>
               </div>
               <p className="font-light text-sm">{data.text.slice(0, 150)}...</p>
@@ -116,6 +140,32 @@ function RouteComponent() {
           </div>
         ))}
       </div>
+
+      <input type="checkbox" id="my_modal_7" className="modal-toggle" />
+
+      {itemToEdit && (
+        <div className="modal" role="dialog">
+          <div className="modal-box">
+            <h3 className="text-lg font-bold">Edit Text</h3>
+            <textarea
+              className="textarea h-96 textarea-bordered w-full"
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+            />
+            <div className="modal-action">
+              <button className="btn" onClick={() => setItemToEdit(null)}>
+                Cancel
+              </button>
+              <button className="btn btn-success" onClick={editData}>
+                Save
+              </button>
+            </div>
+          </div>
+          <label className="modal-backdrop" onClick={() => setItemToEdit(null)}>
+            Close
+          </label>
+        </div>
+      )}
     </div>
   );
 }
