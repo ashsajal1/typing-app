@@ -10,23 +10,34 @@ function RouteComponent() {
   const [existingData, setExistingData] = useState<
     { id: string; label: string; text: string }[]
   >([]);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     // Retrieve existing data from localStorage
     const existingData = localStorage.getItem("customTextData");
     if (existingData) {
-      const data : { id: string; label: string; text: string, time: typeof Date }[] = JSON.parse(existingData);
+      const data: {
+        id: string;
+        label: string;
+        text: string;
+        time: typeof Date;
+      }[] = JSON.parse(existingData);
       setExistingData(data);
     }
   }, []);
 
-  const deleteData = (id: string) => {
-    console.log("Deleting data with id:", id);
-    const dataAfterDeletion = existingData.filter((data) => data.id !== id);
-    console.log(dataAfterDeletion);
+  const deleteData = () => {
+    if (itemToDelete) {
+      console.log("Deleting data with id:", itemToDelete);
+      const dataAfterDeletion = existingData.filter(
+        (data) => data.id !== itemToDelete
+      );
+      console.log(dataAfterDeletion);
 
-    localStorage.setItem("customTextData", JSON.stringify(dataAfterDeletion));
-    setExistingData(dataAfterDeletion);
+      localStorage.setItem("customTextData", JSON.stringify(dataAfterDeletion));
+      setExistingData(dataAfterDeletion);
+      setItemToDelete(null);
+    }
   };
 
   return (
@@ -48,7 +59,11 @@ function RouteComponent() {
                 <p className="card-title">{data.label.slice(0, 50)}...</p>
 
                 <div className="flex items-center gap-2">
-                  <label htmlFor="my_modal_6" className="btn btn-error btn-sm">
+                  <label
+                    htmlFor="my_modal_6"
+                    className="btn btn-error btn-sm"
+                    onClick={() => setItemToDelete(data.id)}
+                  >
                     <Trash2 className="w-4 h-4" />
                   </label>
 
@@ -65,15 +80,22 @@ function RouteComponent() {
                         Are you sure you want to delete this text?
                       </p>
                       <div className="modal-action">
-                        <label htmlFor="my_modal_6" className="btn">Cancel</label>
-                        <label onClick={() => deleteData(data.id)} htmlFor="my_modal_6" className="btn btn-error">
+                        <label htmlFor="my_modal_6" className="btn">
+                          Cancel
+                        </label>
+                        <label
+                          onClick={deleteData}
+                          htmlFor="my_modal_6"
+                          className="btn btn-error"
+                        >
                           Yes, delete
                         </label>
                       </div>
-                      
                     </div>
 
-                    <label className="modal-backdrop" htmlFor="my_modal_6">Close</label>
+                    <label className="modal-backdrop" htmlFor="my_modal_6">
+                      Close
+                    </label>
                   </div>
                   <button className="btn btn-sm">
                     <Pencil className="w-4 h-4" />
