@@ -8,24 +8,24 @@ export const Route = createFileRoute("/saved-text")({
 
 function RouteComponent() {
   const [existingData, setExistingData] = useState<
-    { id: number; label: string; text: string }[]
+    { id: string; label: string; text: string }[]
   >([]);
 
   useEffect(() => {
     // Retrieve existing data from localStorage
     const existingData = localStorage.getItem("customTextData");
     if (existingData) {
-      const data : { id: number; label: string; text: string }[] = JSON.parse(existingData);
-      setExistingData(data.sort((a, b) => a.id - b.id));
+      const data : { id: string; label: string; text: string, time: typeof Date }[] = JSON.parse(existingData);
+      setExistingData(data);
     }
   }, []);
 
-  const deleteData = (id: number) => {
+  const deleteData = (id: string) => {
     console.log("Deleting data with id:", id);
     const dataAfterDeletion = existingData.filter((data) => data.id !== id);
     console.log(dataAfterDeletion);
 
-    localStorage.setItem("customTextData", JSON.stringify(dataAfterDeletion.sort((a, b) => a.id - b.id)));
+    localStorage.setItem("customTextData", JSON.stringify(dataAfterDeletion));
     setExistingData(dataAfterDeletion);
   };
 

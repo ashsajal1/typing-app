@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 const topicsSearchSchema = z.object({
   topic: z.string().optional(),
   eclipsedTime: z.number().optional().catch(60).optional(),
-  savedTextId: z.number().optional(),
+  savedTextId: z.string().optional(),
 });
 export const Route = createFileRoute("/practice")({
   component: () => <Practice />,
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/practice")({
 const Practice = () => {
   const { topic, eclipsedTime, savedTextId } = Route.useSearch();
   const [savedSentence, setSavedSentence] = useState<{
-    id: number;
+    id: string;
     label: string;
     text: string;
   } | null>(null);
@@ -32,7 +32,7 @@ const Practice = () => {
       console.log(textArray);
 
       const savedSentenceObj = textArray.find(
-        (item: { id: number; label: string; text: string }) =>
+        (item: { id: string; label: string; text: string }) =>
           item.id === savedTextId
       );
 

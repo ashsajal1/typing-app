@@ -40,8 +40,9 @@ function RouteComponent() {
     const dataArray = existingData ? JSON.parse(existingData) : [];
 
     const newData = {
-      id: dataArray?.length + 1,
+      id: dataArray?.length + 1 + Math.floor(Math.random() * 1000) + new Date().getTime(), 
       ...data,
+      time: new Date().toLocaleString(),
     };
 
     // Check for duplicate data based on both label and text
