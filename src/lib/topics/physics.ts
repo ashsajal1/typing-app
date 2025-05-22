@@ -1,52 +1,37 @@
-export const physicsSentences = [
+export const physicsSentence = [
     {
       id: "physics-1",
-      text: "Newton's first law of motion states that an object will remain at rest or in uniform motion unless acted upon by an external force.",
+      text: "La physique est l'étude de la matière, de l'énergie, de l'espace et du temps, et des interactions fondamentales entre eux.",
       topic: "physics",
     },
     {
       id: "physics-2",
-      text: "Energy is the ability to do work, and it comes in various forms such as kinetic energy, potential energy, and thermal energy.",
+      text: "Selon la théorie de la relativité d'Einstein, la vitesse de la lumière dans le vide est une constante universelle, environ 299 792 458 mètres par seconde.",
       topic: "physics",
     },
     {
       id: "physics-3",
-      text: "The law of conservation of energy states that energy cannot be created or destroyed, only transformed from one form to another.",
+      text: "Les trois lois du mouvement de Newton décrivent la relation entre un corps et les forces agissant sur lui, et son mouvement en réponse à ces forces.",
       topic: "physics",
     },
     {
       id: "physics-4",
-      text: "Electricity is the flow of electric charge, typically through conductors such as wires.",
+      text: "L'énergie ne peut être ni créée ni détruite, seulement transformée d'une forme à une autre (principe de conservation de l'énergie).",
       topic: "physics",
     },
     {
       id: "physics-5",
-      text: "The electromagnetic spectrum encompasses all forms of electromagnetic radiation, from radio waves to gamma rays.",
+      text: "La mécanique quantique décrit le comportement de la matière et de la lumière au niveau atomique et subatomique.",
       topic: "physics",
     },
     {
       id: "physics-6",
-      text: "Gravity is the force of attraction between objects with mass, and it governs the motion of planets, stars, and galaxies.",
+      text: "Les trous noirs sont des régions de l'espace-temps où la gravité est si intense que rien, pas même la lumière, ne peut s'en échapper.",
       topic: "physics",
     },
     {
       id: "physics-7",
-      text: "The laws of thermodynamics govern the transfer of energy and describe the behavior of systems in terms of heat and work.",
+      text: "Le son est une vibration qui se propage sous forme d'onde, et sa vitesse dépend du milieu dans lequel il voyage.",
       topic: "physics",
     },
-    {
-      id: "physics-8",
-      text: "Quantum mechanics is the branch of physics that deals with the behavior of particles on the smallest scales, such as atoms and subatomic particles.",
-      topic: "physics",
-    },
-    {
-      id: "physics-9",
-      text: "Optics is the study of light and its interactions with matter, including reflection, refraction, and diffraction.",
-      topic: "physics",
-    },
-    {
-      id: "physics-10",
-      text: "Nuclear physics explores the properties and behavior of atomic nuclei, including nuclear reactions and radioactive decay.",
-      topic: "physics",
-    }
-  ];
+];

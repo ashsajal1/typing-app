@@ -5,44 +5,60 @@ import TypingTest from "../components/TypingTest";
 import { shuffleArray } from "../lib/utils";
 import { ArrowLeft, HomeIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { deobfuscateText } from "../lib/obfuscation"; // Import deobfuscation util
 
-const topicsSearchSchema = z.object({
+// No need to pass all params in URL if loading from localStorage by ID
+const practiceSearchSchema = z.object({
   topic: z.string().optional(),
   eclipsedTime: z.number().optional().catch(60).optional(),
-  savedTextId: z.number().optional(),
+  savedTextId: z.number().optional(), // Will use this to load all details from localStorage
 });
+
 export const Route = createFileRoute("/practice")({
   component: () => <Practice />,
   validateSearch: (search: Record<string, unknown>) =>
-    topicsSearchSchema.parse(search),
+    practiceSearchSchema.parse(search),
 });
+
+// Type for items stored in localStorage
+interface SavedPracticeData {
+  id: number;
+  label: string;
+  text: string; // Raw text or Base64 string if obfuscated
+  language: "python" | "cpp" | "plaintext";
+  isObfuscated: boolean;
+  time?: string; // From previous implementation
+}
+
 
 const Practice = () => {
   const { topic, eclipsedTime, savedTextId } = Route.useSearch();
-  const [savedSentence, setSavedSentence] = useState<{
-    id: number;
-    label: string;
-    text: string;
-  } | null>(null);
+  const [practiceItem, setPracticeItem] = useState<Omit<SavedPracticeData, 'isObfuscated' | 'time'> & { text: string } | null>(null); // Text will be deobfuscated
 
   useEffect(() => {
     if (savedTextId) {
-      const text = localStorage.getItem("customTextData");
-      const textArray = JSON.parse(text!);
-      console.log(textArray);
+      const storedCustomTexts = localStorage.getItem("customTextData");
+      if (storedCustomTexts) {
+        const customTextsArray: SavedPracticeData[] = JSON.parse(storedCustomTexts);
+        const foundItem = customTextsArray.find(item => item.id === savedTextId);
 
-      const savedSentenceObj = textArray.find(
-        (item: { id: number; label: string; text: string }) =>
-          item.id === savedTextId
-      );
-
-      if(savedSentenceObj === undefined) {
-        return;
+        if (foundItem) {
+          let finalText = foundItem.text;
+          if (foundItem.isObfuscated) {
+            finalText = deobfuscateText(foundItem.text);
+          }
+          setPracticeItem({
+            id: foundItem.id,
+            label: foundItem.label,
+            text: finalText,
+            language: foundItem.language,
+          });
+        } else {
+          setPracticeItem(null); // Item not found
+        }
       }
-
-      console.log("Saved sentence:", savedSentenceObj);
-
-      setSavedSentence(savedSentenceObj);
+    } else {
+      setPracticeItem(null); // No savedTextId
     }
   }, [savedTextId]);
 
@@ -50,46 +66,54 @@ const Practice = () => {
     state.getSentencesByTopic(topic || "")
   );
 
-  if (sentences.length === 0 && savedSentence === null) {
+  // Loading state for saved text
+  if (savedTextId && !practiceItem) {
     return (
       <div className="grid place-items-center p-12">
-        <div className="flex flex-col items-center">
-          <h1 className="mb-4 font-bold text-3xl text-center">
-            Not found text of topic {topic}!
-          </h1>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => history.back()}
-              className="btn btn-success btn-outline"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              Back
-            </button>
-            <Link to="/">
-              <button className="btn btn-success btn-outline">
-                <HomeIcon className="h-5 w-5" />
-                Go Home
-              </button>
-            </Link>
-          </div>
-        </div>
+        <span className="loading loading-lg text-success"></span>
+        <p className="mt-2">Loading custom text...</p>
       </div>
     );
   }
 
-  if (savedSentence) {
+  // If a practiceItem is loaded (custom text)
+  if (practiceItem) {
     return (
-      <TypingTest eclipsedTime={Infinity} text={savedSentence.text} />
+      <TypingTest
+        eclipsedTime={eclipsedTime || Infinity}
+        text={practiceItem.text} // Already deobfuscated
+        language={practiceItem.language}
+      />
     );
   }
 
+  // Fallback to topic-based sentences if no savedTextId or practiceItem not found
+  if (topic && sentences.length > 0) {
+    return (
+      <TypingTest
+        eclipsedTime={eclipsedTime || 60}
+        text={shuffleArray([...sentences]).join(" ").slice(0, 500)}
+        language={"plaintext"}
+      />
+    );
+  }
+  
+  // Default/Error case: No valid text source found
   return (
-    <TypingTest
-      eclipsedTime={eclipsedTime || 60}
-      text={shuffleArray([...sentences])
-        .join(" ")
-        .slice(0, 350)}
-    />
+    <div className="grid place-items-center p-12">
+      <div className="flex flex-col items-center">
+        <h1 className="mb-4 font-bold text-3xl text-center">
+          {topic ? `No sentences found for topic: ${topic}.` : "No text selected for practice."}
+        </h1>
+        <div className="flex items-center gap-2">
+          <button onClick={() => history.back()} className="btn btn-success btn-outline">
+            <ArrowLeft className="h-5 w-5" /> Back
+          </button>
+          <Link to="/" className="btn btn-success btn-outline">
+            <HomeIcon className="h-5 w-5" /> Go Home
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 };

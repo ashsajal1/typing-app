@@ -34,7 +34,6 @@ export default function App() {
 
           <select value={eclipsedTime} onChange={handleEclipsedChange} className="select select-success w-full">
             <option value="" disabled>Pick eclipsed time</option>
-            <option value={30}>30</option>
             <option value={60}>60</option>
             <option value={120}>120</option>
             <option value={0}>Infinity</option>
