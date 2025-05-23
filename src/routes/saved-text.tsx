@@ -60,9 +60,9 @@ function RouteComponent() {
   return (
     <div className="p-2">
       <div className="flex items-center gap-3 mb-2">
-        <h1 className="text-3xl font-bold">Custom Text</h1>
+        <h1 className="text-3xl font-bold">Textes Personnalisés</h1>
         <Link to="/custom-text">
-          <button className="btn btn-sm btn-success">Create</button>
+          <button className="btn btn-sm btn-success">Créer</button>
         </Link>
       </div>
       <div className="grid gird-cols-1 md:grid-cols-2 gap-4 w-full">
@@ -92,26 +92,26 @@ function RouteComponent() {
                   />
                   <div className="modal" role="dialog">
                     <div className="modal-box">
-                      <h3 className="text-lg font-bold">Confirm Delete!</h3>
+                      <h3 className="text-lg font-bold">Confirmer la suppression !</h3>
                       <p className="py-4">
-                        Are you sure you want to delete this text?
+                        Êtes-vous sûr de vouloir supprimer ce texte ?
                       </p>
                       <div className="modal-action">
                         <label htmlFor="my_modal_6" className="btn">
-                          Cancel
+                          Annuler
                         </label>
                         <label
                           onClick={deleteData}
                           htmlFor="my_modal_6"
                           className="btn btn-error"
                         >
-                          Yes, delete
+                          Oui, supprimer
                         </label>
                       </div>
                     </div>
 
                     <label className="modal-backdrop" htmlFor="my_modal_6">
-                      Close
+                      Fermer
                     </label>
                   </div>
                   <label
@@ -134,7 +134,7 @@ function RouteComponent() {
                 className="w-full btn"
                 search={{ savedTextId: parseInt(data.id) }}
               >
-                Practice
+                S'entraîner
               </Link>
             </div>
           </div>
@@ -146,7 +146,7 @@ function RouteComponent() {
       {itemToEdit && (
         <div className="modal" role="dialog">
           <div className="modal-box">
-            <h3 className="text-lg font-bold">Edit Text</h3>
+            <h3 className="text-lg font-bold">Modifier le texte</h3>
             <textarea
               className="textarea h-96 textarea-bordered w-full"
               value={editText}
@@ -154,15 +154,15 @@ function RouteComponent() {
             />
             <div className="modal-action">
               <button className="btn" onClick={() => setItemToEdit(null)}>
-                Cancel
+                Annuler
               </button>
               <button className="btn btn-success" onClick={editData}>
-                Save
+                Sauvegarder
               </button>
             </div>
           </div>
           <label className="modal-backdrop" onClick={() => setItemToEdit(null)}>
-            Close
+            Fermer
           </label>
         </div>
       )}

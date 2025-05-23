@@ -6,17 +6,17 @@ export default function NotFound() {
         <div className="grid place-items-center p-12">
             <div>
                 <h1 className="text-4xl text-center">404</h1>
-                <p className="text-lg text-center">The page you're looking for doesn't exist!</p>
+                <p className="text-lg text-center">La page que vous recherchez n'existe pas !</p>
 
                 <div className="flex items-center gap-3 w-full mt-4">
                     <button onClick={() => history.back()} className="btn btn-wide btn-success btn-outline">
                         <ArrowLeft className="w-4 h-4" />
-                        Back
+                        Retour
                     </button>
                     <Link to='/'>
                         <button className="btn btn-wide btn-success btn-outline">
                             <HomeIcon className="w-4 h-4" />
-                            Home
+                            Accueil
                         </button></Link>
                 </div>
             </div>

@@ -71,7 +71,7 @@ const Practice = () => {
     return (
       <div className="grid place-items-center p-12">
         <span className="loading loading-lg text-success"></span>
-        <p className="mt-2">Loading custom text...</p>
+        <p className="mt-2">Chargement du texte personnalisé...</p>
       </div>
     );
   }
@@ -103,14 +103,14 @@ const Practice = () => {
     <div className="grid place-items-center p-12">
       <div className="flex flex-col items-center">
         <h1 className="mb-4 font-bold text-3xl text-center">
-          {topic ? `No sentences found for topic: ${topic}.` : "No text selected for practice."}
+          {topic ? `Aucune phrase trouvée pour le sujet : ${topic}.` : "Aucun texte sélectionné pour l'entraînement."}
         </h1>
         <div className="flex items-center gap-2">
           <button onClick={() => history.back()} className="btn btn-success btn-outline">
-            <ArrowLeft className="h-5 w-5" /> Back
+            <ArrowLeft className="h-5 w-5" /> Retour
           </button>
           <Link to="/" className="btn btn-success btn-outline">
-            <HomeIcon className="h-5 w-5" /> Go Home
+            <HomeIcon className="h-5 w-5" /> Aller à l'accueil
           </Link>
         </div>
       </div>

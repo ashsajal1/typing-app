@@ -26,14 +26,14 @@ export default function App() {
       <div className="flex flex-col gap-3 p-12 py-48">
         <div className="flex items-center gap-2">
           <select value={selectedTopic} onChange={handleSelectChange} className="select select-success w-full">
-            <option value="" disabled>Pick your favorite topic</option>
+            <option value="" disabled>Choisissez votre sujet préféré</option>
             {topics.map(topic => (
               <option key={topic} value={topic}>{topic} ({sentences.filter(sen => sen.topic === topic).length})</option>
             ))}
           </select>
 
           <select value={eclipsedTime} onChange={handleEclipsedChange} className="select select-success w-full">
-            <option value="" disabled>Pick eclipsed time</option>
+            <option value="" disabled>Choisissez le temps écoulé</option>
             <option value={60}>60</option>
             <option value={120}>120</option>
             <option value={0}>Infinity</option>
@@ -41,15 +41,15 @@ export default function App() {
         </div>
 
         <Link className="w-full" to='/practice' search={{ topic: selectedTopic, eclipsedTime: eclipsedTime }}>
-          <button className="btn btn-active w-full btn-success">Start Practice</button>
+          <button className="btn btn-active w-full btn-success">Commencer l'entraînement</button>
         </Link>
 
         <div className="flex items-center gap-2 justify-between w-full">
           <Link className="w-full" to='/saved-text'>
-            <button className="btn w-full">Saved Text</button>
+            <button className="btn w-full">Texte Sauvegardé</button>
           </Link>
           <Link className="w-full" to='/custom-text'>
-            <button className="btn w-full">Create Custom Text</button>
+            <button className="btn w-full">Créer un Texte Personnalisé</button>
           </Link>
 
         </div>
