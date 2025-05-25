@@ -80,7 +80,7 @@ export default function Result({ accuracy, wpm, wpmHistory = [] }: { accuracy: n
 
     return (
         <div className="min-h-screen w-full overflow-x-hidden bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
-            <section className={`p-6 sm:p-8 w-full max-w-3xl mx-auto my-4 rounded-lg shadow-2xl flex flex-col gap-6 ${backgroundColor} text-white relative overflow-hidden`}>
+            <section className={`p-4 sm:p-6 w-full max-w-4xl mx-auto my-4 rounded-lg shadow-2xl ${backgroundColor} text-white relative overflow-hidden`}>
                 {/* Background pattern */}
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute top-0 left-0 w-full h-full">
@@ -101,138 +101,167 @@ export default function Result({ accuracy, wpm, wpmHistory = [] }: { accuracy: n
                     </div>
                 </div>
                 
-                {/* Content */}
-                <div className="flex justify-center items-center mb-2">
-                    <div className="text-6xl mb-2 animate-bounce">{emoji}</div>
-                </div>
-                
-                <div className="text-center">
-                    <h1 className="text-3xl font-bold mb-2 animate-fade-in">{status}</h1>
-                    <p className="text-white/80 mb-6">{description}</p>
-                    
-                    {/* Stars rating */}
-                    <div className="flex justify-center mb-6">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                            <span 
-                                key={i} 
-                                className={`text-2xl transition-all duration-300 ${i < stars ? 'text-yellow-300 scale-110' : 'text-white/30'}`}
-                                style={{ animationDelay: `${i * 0.1}s` }}
+                {/* Main Content Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative">
+                    {/* Left Column - Stats and Chart */}
+                    <div className="space-y-4">
+                        {/* Header with Emoji and Status */}
+                        <div className="flex items-center gap-4 mb-2">
+                            <div className="text-4xl animate-bounce">{emoji}</div>
+                            <div>
+                                <h1 className="text-2xl font-bold animate-fade-in">{status}</h1>
+                                <p className="text-white/80 text-sm">{description}</p>
+                            </div>
+                        </div>
+
+                        {/* Stars rating */}
+                        <div className="flex gap-1 mb-2">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                                <span 
+                                    key={i} 
+                                    className={`text-xl transition-all duration-300 ${i < stars ? 'text-yellow-300 scale-110' : 'text-white/30'}`}
+                                    style={{ animationDelay: `${i * 0.1}s` }}
+                                >
+                                    ★
+                                </span>
+                            ))}
+                        </div>
+
+                        {/* Stats Grid */}
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="bg-white/20 rounded-lg p-3 flex items-center gap-3">
+                                <Target className="w-5 h-5" />
+                                <div>
+                                    <div className="text-xs opacity-80">Accuracy</div>
+                                    <div className="text-xl font-bold">{accuracy}%</div>
+                                </div>
+                            </div>
+                            <div className="bg-white/20 rounded-lg p-3 flex items-center gap-3">
+                                <Zap className="w-5 h-5" />
+                                <div>
+                                    <div className="text-xs opacity-80">WPM</div>
+                                    <div className="text-xl font-bold">{wpm}</div>
+                                </div>
+                            </div>
+                            <div className="bg-white/20 rounded-lg p-3 flex items-center gap-3">
+                                <TrendingUp className="w-5 h-5" />
+                                <div>
+                                    <div className="text-xs opacity-80">Words/Error</div>
+                                    <div className="text-xl font-bold">{wordsPerError}</div>
+                                </div>
+                            </div>
+                            <div className="bg-white/20 rounded-lg p-3 flex items-center gap-3">
+                                <Clock className="w-5 h-5" />
+                                <div>
+                                    <div className="text-xs opacity-80">Error Rate</div>
+                                    <div className="text-xl font-bold">{errorRate}%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* WPM Chart */}
+                        <div className="bg-white/20 rounded-lg p-3">
+                            <h3 className="text-sm font-semibold mb-2">WPM Progress</h3>
+                            <div className="h-24">
+                                <Line
+                                    data={{
+                                        labels: wpmHistory.map((_, i) => i + 1),
+                                        datasets: [
+                                            {
+                                                label: 'WPM',
+                                                data: wpmHistory,
+                                                borderColor: 'rgba(255, 255, 255, 0.8)',
+                                                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                                tension: 0.4,
+                                                fill: true,
+                                            },
+                                        ],
+                                    }}
+                                    options={{
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            legend: {
+                                                display: false,
+                                            },
+                                            tooltip: {
+                                                mode: 'index',
+                                                intersect: false,
+                                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                                titleColor: 'white',
+                                                bodyColor: 'white',
+                                                callbacks: {
+                                                    label: (context) => `WPM: ${context.parsed.y}`
+                                                }
+                                            }
+                                        },
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                grid: {
+                                                    color: 'rgba(255, 255, 255, 0.1)',
+                                                },
+                                                ticks: {
+                                                    color: 'rgba(255, 255, 255, 0.7)',
+                                                    maxTicksLimit: 4,
+                                                }
+                                            },
+                                            x: {
+                                                grid: {
+                                                    color: 'rgba(255, 255, 255, 0.1)',
+                                                },
+                                                ticks: {
+                                                    color: 'rgba(255, 255, 255, 0.7)',
+                                                    maxTicksLimit: 5,
+                                                }
+                                            },
+                                        },
+                                        interaction: {
+                                            mode: 'nearest',
+                                            axis: 'x',
+                                            intersect: false
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right Column - Tips and Action Button */}
+                    <div className="space-y-4">
+                        {/* Tips section */}
+                        <div className="bg-white/10 rounded-lg p-4">
+                            <h3 className="text-lg font-semibold mb-3">Tips for Improvement</h3>
+                            <ul className="space-y-2">
+                                {tips.map((tip, index) => (
+                                    <li key={index} className="flex items-start gap-2">
+                                        <span className="text-yellow-300">•</span>
+                                        <span className="text-sm">{tip}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-col gap-2">
+                            <button 
+                                onClick={() => window.location.reload()} 
+                                className="w-full bg-white text-green-700 py-2 px-4 rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 active:translate-y-0"
                             >
-                                ★
-                            </span>
-                        ))}
+                                <RepeatIcon className="w-4 h-4" />
+                                Try Again
+                            </button>
+                            <button 
+                                onClick={() => window.location.reload()} 
+                                className="w-full bg-white/20 text-white py-2 px-4 rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-white/30 transition-all duration-300"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                Restart Test
+                            </button>
+                        </div>
                     </div>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="bg-white/20 rounded-lg p-4 flex flex-col items-center transform hover:scale-105 transition-all duration-300">
-                        <Target className="w-6 h-6 mb-2" />
-                        <div className="text-sm">Accuracy</div>
-                        <div className="text-2xl font-bold">{accuracy}%</div>
-                    </div>
-                    <div className="bg-white/20 rounded-lg p-4 flex flex-col items-center transform hover:scale-105 transition-all duration-300">
-                        <Zap className="w-6 h-6 mb-2" />
-                        <div className="text-sm">WPM</div>
-                        <div className="text-2xl font-bold">{wpm}</div>
-                    </div>
-                    <div className="bg-white/20 rounded-lg p-4 flex flex-col items-center transform hover:scale-105 transition-all duration-300">
-                        <TrendingUp className="w-6 h-6 mb-2" />
-                        <div className="text-sm">Words per Error</div>
-                        <div className="text-2xl font-bold">{wordsPerError}</div>
-                    </div>
-                    <div className="bg-white/20 rounded-lg p-4 flex flex-col items-center transform hover:scale-105 transition-all duration-300">
-                        <Clock className="w-6 h-6 mb-2" />
-                        <div className="text-sm">Error Rate</div>
-                        <div className="text-2xl font-bold">{errorRate}%</div>
-                    </div>
-                </div>
-
-                {/* WPM History Chart */}
-                <div className="bg-white/20 rounded-lg p-4 mb-6">
-                    <h3 className="text-lg font-semibold mb-3">WPM Progress</h3>
-                    <div className="h-32">
-                        <Line
-                            data={{
-                                labels: wpmHistory.map((_, i) => i + 1),
-                                datasets: [
-                                    {
-                                        label: 'WPM',
-                                        data: wpmHistory,
-                                        borderColor: 'rgba(255, 255, 255, 0.8)',
-                                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                                        tension: 0.4,
-                                        fill: true,
-                                    },
-                                ],
-                            }}
-                            options={{
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                    legend: {
-                                        display: false,
-                                    },
-                                    tooltip: {
-                                        mode: 'index',
-                                        intersect: false,
-                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                        titleColor: 'white',
-                                        bodyColor: 'white',
-                                        callbacks: {
-                                            label: (context) => `WPM: ${context.parsed.y}`
-                                        }
-                                    }
-                                },
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        grid: {
-                                            color: 'rgba(255, 255, 255, 0.1)',
-                                        },
-                                        ticks: {
-                                            color: 'rgba(255, 255, 255, 0.7)',
-                                        }
-                                    },
-                                    x: {
-                                        grid: {
-                                            color: 'rgba(255, 255, 255, 0.1)',
-                                        },
-                                        ticks: {
-                                            color: 'rgba(255, 255, 255, 0.7)',
-                                        }
-                                    },
-                                },
-                                interaction: {
-                                    mode: 'nearest',
-                                    axis: 'x',
-                                    intersect: false
-                                }
-                            }}
-                        />
-                    </div>
-                </div>
-
-                {/* Tips section */}
-                <div className="bg-white/10 rounded-lg p-4 mb-6">
-                    <h3 className="text-lg font-semibold mb-3">Tips for Improvement</h3>
-                    <ul className="space-y-2">
-                        {tips.map((tip, index) => (
-                            <li key={index} className="flex items-start gap-2">
-                                <span className="text-yellow-300">•</span>
-                                <span>{tip}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                
-                <div className="flex justify-center">
-                    <button 
-                        onClick={() => window.location.reload()} 
-                        className="bg-white text-green-700 py-3 px-6 rounded-full font-medium flex items-center gap-2 hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 active:translate-y-0"
-                    >
-                        <RepeatIcon className="w-4 h-4" />
-                        Try Again
-                    </button>
                 </div>
             </section>
         </div>
