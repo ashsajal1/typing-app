@@ -4,6 +4,15 @@ import Result from "./Result";
 import calculateAccuracy from "../lib/compare";
 import { ignoredKeys } from "../lib/utils";
 
+// Command interface
+interface Command {
+  id: string;
+  name: string;
+  shortcut: string;
+  action: () => void;
+  description: string;
+}
+
 export default function TypingTest({
   text,
   eclipsedTime,
@@ -19,8 +28,98 @@ export default function TypingTest({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [reload, setReload] = useState(false);
   const [textToPractice, setTextToPractice] = useState(text);
+  const [showCommandPalette, setShowCommandPalette] = useState(false);
+  const [commandSearch, setCommandSearch] = useState("");
+
+  const handleSubmit = useCallback(() => {
+    if (!isStarted) {
+      setIsStarted(true);
+      return;
+    }
+
+    const wordPerMinute = Math.round(
+      userInput.split(" ").length / (timer / 60)
+    );
+    setWpm(Number.isFinite(wordPerMinute) ? wordPerMinute : 0);
+
+    const slicedText =
+      userInput.length <= textToPractice.length
+        ? textToPractice.slice(0, userInput.length)
+        : textToPractice;
+    const accuracy = calculateAccuracy(slicedText, userInput);
+    setAccuracy(Number.isFinite(parseInt(accuracy)) ? parseInt(accuracy) : 0);
+
+    setIsSubmitted(true);
+  }, [isStarted, textToPractice, timer, userInput]);
+
+  // Define available commands
+  const commands: Command[] = [
+    {
+      id: "restart",
+      name: "Restart Test",
+      shortcut: "⌘R",
+      action: () => window.location.reload(),
+      description: "Start a new typing test"
+    },
+    {
+      id: "finish",
+      name: "Finish Test",
+      shortcut: "⌘Enter",
+      action: handleSubmit,
+      description: "End the current test and view results"
+    },
+    {
+      id: "toggle-theme",
+      name: "Toggle Theme",
+      shortcut: "⌘T",
+      action: () => document.documentElement.classList.toggle("dark"),
+      description: "Switch between light and dark mode"
+    },
+    {
+      id: "focus-input",
+      name: "Focus Input",
+      shortcut: "⌘I",
+      action: () => document.querySelector("textarea")?.focus(),
+      description: "Focus on the typing area"
+    }
+  ];
+
+  // Filter commands based on search
+  const filteredCommands = commands.filter(cmd => 
+    cmd.name.toLowerCase().includes(commandSearch.toLowerCase()) ||
+    cmd.description.toLowerCase().includes(commandSearch.toLowerCase())
+  );
 
   const handleKeyDown = (event: KeyboardEvent) => {
+    // Handle command palette
+    if (event.metaKey || event.ctrlKey) {
+      if (event.key === "k") {
+        event.preventDefault();
+        setShowCommandPalette(true);
+        return;
+      }
+
+      // Handle other command shortcuts
+      switch (event.key.toLowerCase()) {
+        case "r":
+          event.preventDefault();
+          window.location.reload();
+          return;
+        case "enter":
+          event.preventDefault();
+          handleSubmit();
+          return;
+        case "t":
+          event.preventDefault();
+          document.documentElement.classList.toggle("dark");
+          return;
+        case "i":
+          event.preventDefault();
+          document.querySelector("textarea")?.focus();
+          return;
+      }
+    }
+
     if (ignoredKeys.includes(event.key)) {
       // Do nothing for ignored keys
       return;
@@ -32,6 +131,11 @@ export default function TypingTest({
 
     // Add keyboard shortcuts
     if (event.key === "Escape") {
+      if (showCommandPalette) {
+        setShowCommandPalette(false);
+        setCommandSearch("");
+        return;
+      }
       window.location.reload();
       return;
     }
@@ -102,27 +206,6 @@ export default function TypingTest({
     }
   }, [textToPractice, timer, userInput, isStarted, isSubmitted]);
 
-  const handleSubmit = useCallback(() => {
-    if (!isStarted) {
-      setIsStarted(true);
-      return;
-    }
-
-    const wordPerMinute = Math.round(
-      userInput.split(" ").length / (timer / 60)
-    );
-    setWpm(Number.isFinite(wordPerMinute) ? wordPerMinute : 0);
-
-    const slicedText =
-      userInput.length <= textToPractice.length
-        ? textToPractice.slice(0, userInput.length)
-        : textToPractice;
-    const accuracy = calculateAccuracy(slicedText, userInput);
-    setAccuracy(Number.isFinite(parseInt(accuracy)) ? parseInt(accuracy) : 0);
-
-    setIsSubmitted(true);
-  }, [isStarted, textToPractice, timer, userInput]);
-
   useEffect(() => {
     if (!(eclipsedTime === 0) && timer === eclipsedTime) {
       handleSubmit();
@@ -137,6 +220,46 @@ export default function TypingTest({
   return (
     <>
       <section className="p-2 flex flex-col gap-3">
+        {/* Command Palette */}
+        {showCommandPalette && (
+          <div className="fixed inset-0 bg-black/50 flex items-start justify-center pt-20 z-50">
+            <div className="bg-base-100 dark:bg-gray-800 w-full max-w-lg rounded-lg shadow-xl p-4">
+              <div className="flex items-center gap-2 mb-4">
+                <input
+                  type="text"
+                  placeholder="Search commands..."
+                  className="input input-bordered w-full"
+                  value={commandSearch}
+                  onChange={(e) => setCommandSearch(e.target.value)}
+                  autoFocus
+                />
+                <kbd className="kbd kbd-sm">⌘K</kbd>
+              </div>
+              <div className="space-y-2 max-h-96 overflow-y-auto">
+                {filteredCommands.map((cmd) => (
+                  <button
+                    key={cmd.id}
+                    onClick={() => {
+                      cmd.action();
+                      setShowCommandPalette(false);
+                      setCommandSearch("");
+                    }}
+                    className="w-full text-left p-2 hover:bg-base-200 dark:hover:bg-gray-700 rounded-lg flex items-center justify-between group"
+                  >
+                    <div>
+                      <div className="font-medium">{cmd.name}</div>
+                      <div className="text-sm text-base-content/70">{cmd.description}</div>
+                    </div>
+                    <kbd className="kbd kbd-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                      {cmd.shortcut}
+                    </kbd>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         {eclipsedTime !== Infinity && (
           <progress
             className="progress progress-success w-full"
