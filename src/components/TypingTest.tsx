@@ -13,6 +13,40 @@ interface Command {
   description: string;
 }
 
+// Interface for text with translations
+interface TextWithTranslation {
+  text: string;
+  translation?: string;
+}
+
+// Function to parse text with translations
+const parseTextWithTranslations = (text: string): TextWithTranslation[] => {
+  const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const parts: TextWithTranslation[] = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = regex.exec(text)) !== null) {
+    // Add text before the match
+    if (match.index > lastIndex) {
+      parts.push({ text: text.slice(lastIndex, match.index) });
+    }
+    // Add the matched text with translation
+    parts.push({
+      text: match[1],
+      translation: match[2]
+    });
+    lastIndex = match.index + match[0].length;
+  }
+
+  // Add remaining text
+  if (lastIndex < text.length) {
+    parts.push({ text: text.slice(lastIndex) });
+  }
+
+  return parts;
+};
+
 export default function TypingTest({
   text,
   eclipsedTime,
@@ -31,6 +65,11 @@ export default function TypingTest({
   const [textToPractice, setTextToPractice] = useState(text);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [commandSearch, setCommandSearch] = useState("");
+  const [parsedText, setParsedText] = useState<TextWithTranslation[]>([]);
+
+  useEffect(() => {
+    setParsedText(parseTextWithTranslations(textToPractice));
+  }, [textToPractice]);
 
   const handleSubmit = useCallback(() => {
     if (!isStarted) {
@@ -311,68 +350,59 @@ export default function TypingTest({
             {/* Calculate current word index */}
             {(() => {
               const currentIndex = userInput.length;
-              const text = textToPractice.split("");
+              let charIndex = 0;
               
-              // Find word boundaries
-              const wordBoundaries: number[] = [];
-              text.forEach((char, index) => {
-                if (char === " " || index === 0) {
-                  wordBoundaries.push(index === 0 ? 0 : index + 1);
-                }
-              });
-              
-              // Determine current word
-              let currentWordStart = 0;
-              let currentWordEnd = text.length - 1;
-              
-              for (let i = 0; i < wordBoundaries.length; i++) {
-                if (currentIndex >= wordBoundaries[i]) {
-                  currentWordStart = wordBoundaries[i];
-                  currentWordEnd = i < wordBoundaries.length - 1 ? 
-                    wordBoundaries[i + 1] - 2 : // -2 to account for space and indexing
-                    text.length - 1;
-                }
-              }
-              
-              return text.map((char, charIndex) => {
-                const isSpace = char === " ";
-                const userChar = userInput[charIndex];
-                const isCorrect = userChar === char;
-                const isIncorrect = userChar && !isCorrect;
-                const isCurrent = charIndex === currentIndex;
-                const isCurrentWord = charIndex >= currentWordStart && charIndex <= currentWordEnd;
-                
-                return (
-                  <span
-                    key={charIndex}
-                    className={`
-                      mx-[0.5px] 
-                      border-b 
-                      ${isCurrent ? 'border-b-success border-b-2 animate-pulse' : 'border-b-base-300 dark:border-gray-600'} 
-                      ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
-                      p-[1px] rounded w-[27px] text-center 
-                      ${isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
-                        isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : 
-                        isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""
-                      }
-                      ${isCurrent ? 'relative' : ''}
-                    `}
-                    aria-current={isCurrent ? "true" : undefined}
-                    ref={(el) => {
-                      if (isCurrent && el) {
-                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      }
-                    }}
-                  >
-                    {/* Current character indicator */}
-                    {isCurrent && (
-                      <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-xs bg-success text-white px-2 py-1 rounded">
-                        Type
-                      </span>
-                    )}
-                    {isSpace ? "\u00A0" : char} {/* Render non-breaking space */}
-                  </span>
-                );
+              return parsedText.map((part, partIndex) => {
+                const chars = part.text.split("");
+                return chars.map((char, charInPartIndex) => {
+                  const isSpace = char === " ";
+                  const userChar = userInput[charIndex];
+                  const isCorrect = userChar === char;
+                  const isIncorrect = userChar && !isCorrect;
+                  const isCurrent = charIndex === currentIndex;
+                  const isCurrentWord = charIndex >= currentIndex - 5 && charIndex <= currentIndex + 5;
+                  
+                  const element = (
+                    <span
+                      key={`${partIndex}-${charInPartIndex}`}
+                      className={`
+                        mx-[0.5px] 
+                        border-b 
+                        ${isCurrent ? 'border-b-success border-b-2 animate-pulse' : 'border-b-base-300 dark:border-gray-600'} 
+                        ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
+                        p-[1px] rounded w-[27px] text-center 
+                        ${isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
+                          isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : 
+                          isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""
+                        }
+                        ${isCurrent ? 'relative' : ''}
+                      `}
+                      aria-current={isCurrent ? "true" : undefined}
+                      ref={(el) => {
+                        if (isCurrent && el) {
+                          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                      }}
+                    >
+                      {/* Current character indicator */}
+                      {isCurrent && (
+                        <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-xs bg-success text-white px-2 py-1 rounded">
+                          Type
+                        </span>
+                      )}
+                      {/* Translation tooltip */}
+                      {part.translation && isCurrentWord && (
+                        <span className="absolute -top-14 left-1/2 transform -translate-x-1/2 text-xs bg-blue-500 text-white px-2 py-1 rounded whitespace-nowrap">
+                          {part.translation}
+                        </span>
+                      )}
+                      {isSpace ? "\u00A0" : char}
+                    </span>
+                  );
+                  
+                  charIndex++;
+                  return element;
+                });
               });
             })()}
           </div>
