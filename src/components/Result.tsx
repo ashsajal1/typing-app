@@ -33,8 +33,8 @@ export default function Result({ accuracy, wpm }: { accuracy: number, wpm: numbe
     const stars = Math.max(1, Math.min(5, Math.floor((accuracy + wpm) / 30)));
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-900">
-            <section className={`p-8 w-full max-w-md rounded-lg shadow-2xl flex flex-col gap-6 ${backgroundColor} text-white relative overflow-hidden`}>
+        <div className="min-h-screen w-full overflow-x-hidden bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
+            <section className={`p-6 sm:p-8 w-full max-w-3xl mx-auto my-4 rounded-lg shadow-2xl flex flex-col gap-6 ${backgroundColor} text-white relative overflow-hidden`}>
                 {/* Background pattern */}
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute top-0 left-0 w-full h-full">
