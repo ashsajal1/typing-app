@@ -136,7 +136,7 @@ export default function TypingTest({
         <div className="p-2 border dark:border-gray-700 rounded md:text-3xl select-none flex flex-wrap gap-y-2 w-full relative">
           {/* Display a guidance message when not started */}
           {!isStarted && (
-            <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-base-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded z-10">
+            <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-base-100/60 dark:bg-gray-900/70 backdrop-blur-[1px] rounded z-10">
               <p className="text-lg text-center text-success font-medium">
                 Start typing to begin the test
                 <span className="block mt-2 animate-bounce">⌨️</span>
