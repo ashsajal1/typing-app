@@ -30,6 +30,17 @@ export default function TypingTest({
       setIsStarted(true);
     }
 
+    // Add keyboard shortcuts
+    if (event.key === "Escape") {
+      window.location.reload();
+      return;
+    }
+
+    if (event.key === "Enter") {
+      handleSubmit();
+      return;
+    }
+
     if (event.key === "Backspace") {
       setUserInput((prevKeys) => prevKeys.slice(0, -1)); // Remove the last character
     } else if (event.key === " ") {
@@ -138,10 +149,25 @@ export default function TypingTest({
             {/* Display a guidance message when not started */}
             {!isStarted && (
               <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-base-100/60 dark:bg-gray-900/70 backdrop-blur-[1px] rounded z-10">
-                <p className="text-lg text-center text-success font-medium">
-                  Start typing to begin the test
-                  <span className="block mt-2 animate-bounce">⌨️</span>
-                </p>
+                <div className="text-center space-y-4">
+                  <p className="text-2xl text-success font-medium">
+                    Start typing to begin the test
+                  </p>
+                  <div className="flex items-center justify-center gap-2 text-base-content/70">
+                    <kbd className="kbd kbd-sm">⌨️</kbd>
+                    <span>Press any key to start</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-4 text-sm text-base-content/60">
+                    <div className="flex items-center gap-1">
+                      <kbd className="kbd kbd-xs">Esc</kbd>
+                      <span>Reset</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <kbd className="kbd kbd-xs">Enter</kbd>
+                      <span>Finish</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
             
@@ -255,6 +281,7 @@ export default function TypingTest({
               window.location.reload();
             }}
             className="btn btn-outline btn-success flex-1 group transition-all duration-300 hover:scale-105"
+            title="Press Esc to reset"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -265,6 +292,7 @@ export default function TypingTest({
           <button
             onClick={handleSubmit}
             className="btn btn-success flex-1 transition-all duration-300 hover:scale-105"
+            title="Press Enter to finish"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
