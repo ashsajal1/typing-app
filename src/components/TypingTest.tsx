@@ -13,6 +13,40 @@ interface Command {
   description: string;
 }
 
+// Interface for text with translations
+interface TextWithTranslation {
+  text: string;
+  translation?: string;
+}
+
+// Function to parse text with translations
+const parseTextWithTranslations = (text: string): TextWithTranslation[] => {
+  const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const parts: TextWithTranslation[] = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = regex.exec(text)) !== null) {
+    // Add text before the match
+    if (match.index > lastIndex) {
+      parts.push({ text: text.slice(lastIndex, match.index) });
+    }
+    // Add the matched text with translation
+    parts.push({
+      text: match[1],
+      translation: match[2]
+    });
+    lastIndex = match.index + match[0].length;
+  }
+
+  // Add remaining text
+  if (lastIndex < text.length) {
+    parts.push({ text: text.slice(lastIndex) });
+  }
+
+  return parts;
+};
+
 export default function TypingTest({
   text,
   eclipsedTime,
@@ -31,6 +65,22 @@ export default function TypingTest({
   const [textToPractice, setTextToPractice] = useState(text);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [commandSearch, setCommandSearch] = useState("");
+  const [parsedText, setParsedText] = useState<TextWithTranslation[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if user is on mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    setParsedText(parseTextWithTranslations(textToPractice));
+  }, [textToPractice]);
 
   const handleSubmit = useCallback(() => {
     if (!isStarted) {
@@ -92,6 +142,9 @@ export default function TypingTest({
   );
 
   const handleKeyDown = (event: KeyboardEvent) => {
+    // Only handle keyboard events for non-mobile devices
+    if (isMobile) return;
+
     // Handle Escape key first
     if (event.key === "Escape") {
       event.preventDefault();
@@ -166,15 +219,14 @@ export default function TypingTest({
   };
 
   useEffect(() => {
-    // Attach event listener
-    window.addEventListener("keydown", handleKeyDown);
-
-    // Cleanup
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // Only attach keyboard event listener for non-mobile devices
+    if (!isMobile) {
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [isMobile]); // Add isMobile to dependencies
 
   useEffect(() => {
     if (reload) {
@@ -281,6 +333,32 @@ export default function TypingTest({
             max={eclipsedTime}
           ></progress>
         )}
+
+        {/* Mobile input field */}
+        {isMobile && !isSubmitted && (
+          <div className="fixed bottom-0 left-0 right-0 bg-base-100 dark:bg-gray-800 border-t dark:border-gray-700 p-2">
+            <input
+              type="text"
+              value={userInput}
+              onChange={(e) => {
+                if (!isStarted) {
+                  setIsStarted(true);
+                }
+                setUserInput(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSubmit();
+                }
+              }}
+              className="input input-bordered w-full"
+              placeholder="Start typing..."
+              autoFocus
+            />
+          </div>
+        )}
+
         <div className="h-[300px] overflow-y-auto relative border dark:border-gray-700 rounded">
           <div className="p-2 md:text-2xl select-none flex flex-wrap gap-y-2 w-full relative">
             {/* Display a guidance message when not started */}
@@ -311,74 +389,91 @@ export default function TypingTest({
             {/* Calculate current word index */}
             {(() => {
               const currentIndex = userInput.length;
-              const text = textToPractice.split("");
+              let charIndex = 0;
               
               // Find word boundaries
               const wordBoundaries: number[] = [];
-              text.forEach((char, index) => {
-                if (char === " " || index === 0) {
-                  wordBoundaries.push(index === 0 ? 0 : index + 1);
-                }
+              let tempCharIndex = 0;
+              parsedText.forEach(part => {
+                const chars = part.text.split("");
+                chars.forEach((char) => {
+                  if (char === " " || tempCharIndex === 0) {
+                    wordBoundaries.push(tempCharIndex === 0 ? 0 : tempCharIndex + 1);
+                  }
+                  tempCharIndex++;
+                });
               });
               
               // Determine current word
               let currentWordStart = 0;
-              let currentWordEnd = text.length - 1;
+              let currentWordEnd = charIndex - 1;
               
               for (let i = 0; i < wordBoundaries.length; i++) {
                 if (currentIndex >= wordBoundaries[i]) {
                   currentWordStart = wordBoundaries[i];
                   currentWordEnd = i < wordBoundaries.length - 1 ? 
                     wordBoundaries[i + 1] - 2 : // -2 to account for space and indexing
-                    text.length - 1;
+                    tempCharIndex - 1;
                 }
               }
               
-              return text.map((char, charIndex) => {
-                const isSpace = char === " ";
-                const userChar = userInput[charIndex];
-                const isCorrect = userChar === char;
-                const isIncorrect = userChar && !isCorrect;
-                const isCurrent = charIndex === currentIndex;
-                const isCurrentWord = charIndex >= currentWordStart && charIndex <= currentWordEnd;
-                
-                return (
-                  <span
-                    key={charIndex}
-                    className={`
-                      mx-[0.5px] 
-                      border-b 
-                      ${isCurrent ? 'border-b-success border-b-2 animate-pulse' : 'border-b-base-300 dark:border-gray-600'} 
-                      ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
-                      p-[1px] rounded w-[27px] text-center 
-                      ${isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
-                        isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : 
-                        isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""
-                      }
-                      ${isCurrent ? 'relative' : ''}
-                    `}
-                    aria-current={isCurrent ? "true" : undefined}
-                    ref={(el) => {
-                      if (isCurrent && el) {
-                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      }
-                    }}
-                  >
-                    {/* Current character indicator */}
-                    {isCurrent && (
-                      <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-xs bg-success text-white px-2 py-1 rounded">
-                        Type
-                      </span>
-                    )}
-                    {isSpace ? "\u00A0" : char} {/* Render non-breaking space */}
-                  </span>
-                );
+              return parsedText.map((part, partIndex) => {
+                const chars = part.text.split("");
+                return chars.map((char, charInPartIndex) => {
+                  const isSpace = char === " ";
+                  const userChar = userInput[charIndex];
+                  const isCorrect = userChar === char;
+                  const isIncorrect = userChar && !isCorrect;
+                  const isCurrent = charIndex === currentIndex;
+                  const isCurrentWord = charIndex >= currentWordStart && charIndex <= currentWordEnd;
+                  
+                  const element = (
+                    <span
+                      key={`${partIndex}-${charInPartIndex}`}
+                      className={`
+                        mx-[0.5px] 
+                        border-b 
+                        ${isCurrent ? 'border-b-success border-b-2 animate-pulse' : 'border-b-base-300 dark:border-gray-600'} 
+                        ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
+                        p-[1px] rounded w-[27px] text-center 
+                        ${isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
+                          isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : 
+                          isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""
+                        }
+                        ${isCurrent ? 'relative' : ''}
+                      `}
+                      aria-current={isCurrent ? "true" : undefined}
+                      ref={(el) => {
+                        if (isCurrent && el) {
+                          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                      }}
+                    >
+                      {/* Current character indicator */}
+                      {isCurrent && (
+                        <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-xs bg-success text-white px-2 py-1 rounded">
+                          Type
+                        </span>
+                      )}
+                      {/* Translation tooltip */}
+                      {part.translation && isCurrentWord && (
+                        <span className="absolute -top-14 left-1/2 transform -translate-x-1/2 text-xs bg-blue-500 text-white px-2 py-1 rounded whitespace-nowrap">
+                          {part.translation}
+                        </span>
+                      )}
+                      {isSpace ? "\u00A0" : char}
+                    </span>
+                  );
+                  
+                  charIndex++;
+                  return element;
+                });
               });
             })()}
           </div>
         </div>
 
-       <div className="stats shadow w-full bg-base-100 dark:bg-gray-800 rounded-lg border border-success/20">
+        <div className="stats shadow w-full bg-base-100 dark:bg-gray-800 rounded-lg border border-success/20">
           <div className="stat">
             <div className="stat-figure text-success">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
