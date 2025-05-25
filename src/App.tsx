@@ -38,9 +38,43 @@ export default function App() {
     }
   };
 
+  // Keyboard keys and symbols for the background
+  const keyboardElements = [
+    '⌨️', '⌘', '⌥', '⇧', '⌃', '↵', '⌫', '⇥',
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+    '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
+    '←', '→', '↑', '↓'
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-2xl mx-auto p-6">
+    <div className="min-h-screen w-full overflow-x-hidden bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4 relative">
+      {/* Keyboard-inspired background pattern */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-full h-full">
+          {Array.from({ length: 30 }).map((_, i) => (
+            <div 
+              key={i} 
+              className="absolute rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 animate-float"
+              style={{
+                padding: '8px 12px',
+                fontSize: `${Math.random() * 12 + 12}px`,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                opacity: Math.random() * 0.3 + 0.1,
+                animationDelay: `${Math.random() * 5}s`,
+                transform: `rotate(${Math.random() * 20 - 10}deg)`,
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+              }}
+            >
+              {keyboardElements[Math.floor(Math.random() * keyboardElements.length)]}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-2xl mx-auto p-6 relative z-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Typing Practice</h1>
           <p className="text-gray-600 dark:text-gray-300">Improve your typing speed and accuracy</p>

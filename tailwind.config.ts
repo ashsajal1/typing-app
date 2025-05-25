@@ -6,7 +6,17 @@ export default {
     fontFamily: {
       sans: ["Ubuntu", "ui-sans-serif", "system-ui"],
     },
-    extend: {},
+    extend: {
+      animation: {
+        'float': 'float 6s ease-in-out infinite',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+          '50%': { transform: 'translateY(-20px) rotate(5deg)' },
+        }
+      }
+    },
   },
   plugins: [require("daisyui")],
   daisyui: {
