@@ -141,7 +141,7 @@ export default function TypingTest({
     cmd.description.toLowerCase().includes(commandSearch.toLowerCase())
   );
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
     // Only handle keyboard events for non-mobile devices
     if (isMobile) return;
 
@@ -216,7 +216,7 @@ export default function TypingTest({
     } else {
       setUserInput((prevKeys) => prevKeys + event.key); // Append to user input
     }
-  };
+  }, [handleSubmit, isMobile, isStarted, showCommandPalette, text]); // Add dependencies used in the callback
 
   useEffect(() => {
     // Only attach keyboard event listener for non-mobile devices
@@ -226,7 +226,7 @@ export default function TypingTest({
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [isMobile]); // Add isMobile to dependencies
+  }, [handleKeyDown, isMobile]); // Add isMobile to dependencies
 
   useEffect(() => {
     if (reload) {
