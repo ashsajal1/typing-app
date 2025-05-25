@@ -281,8 +281,8 @@ export default function TypingTest({
             max={eclipsedTime}
           ></progress>
         )}
-        <div className="h-[400px] overflow-y-auto relative border dark:border-gray-700 rounded">
-          <div className="p-2 md:text-3xl select-none flex flex-wrap gap-y-2 w-full relative">
+        <div className="h-[300px] overflow-y-auto relative border dark:border-gray-700 rounded">
+          <div className="p-2 md:text-2xl select-none flex flex-wrap gap-y-2 w-full relative">
             {/* Display a guidance message when not started */}
             {!isStarted && (
               <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-base-100/60 dark:bg-gray-900/70 backdrop-blur-[1px] rounded z-10">
