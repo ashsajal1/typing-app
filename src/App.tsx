@@ -49,10 +49,10 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-gray-50 dark:bg-gray-900 flex items-start justify-center pt-8 relative">
+    <div className="min-h-screen w-screen overflow-hidden bg-gray-50 dark:bg-gray-900 flex items-start justify-center pt-8 relative">
       {/* Keyboard-inspired background pattern */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-full h-full">
+      <div className="absolute inset-0 flex justify-center">
+        <div className="relative w-full max-w-2xl">
           {Array.from({ length: 30 }).map((_, i) => (
             <div 
               key={i} 
@@ -74,7 +74,7 @@ export default function App() {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-6 relative z-10">
+      <div className="w-full max-w-2xl px-6 relative z-10">
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Typing Practice</h1>
           <p className="text-gray-600 dark:text-gray-300">Improve your typing speed and accuracy</p>
