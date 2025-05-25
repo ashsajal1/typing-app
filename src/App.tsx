@@ -51,7 +51,7 @@ export default function App() {
   return (
     <div className="min-h-screen w-screen overflow-hidden bg-gray-50 dark:bg-gray-900 flex items-start justify-center pt-8 relative">
       {/* Keyboard-inspired background pattern */}
-      <div className="absolute inset-0 flex justify-center">
+      <div className="absolute inset-0 flex justify-center select-none">
         <div className="relative w-full max-w-2xl">
           {Array.from({ length: 30 }).map((_, i) => (
             <div 
