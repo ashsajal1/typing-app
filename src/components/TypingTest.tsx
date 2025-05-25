@@ -25,6 +25,7 @@ export default function TypingTest({
   const [isStarted, setIsStarted] = useState(false);
   const [accuracy, setAccuracy] = useState<number>(0);
   const [wpm, setWpm] = useState(0);
+  const [wpmHistory, setWpmHistory] = useState<number[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [reload, setReload] = useState(false);
   const [textToPractice, setTextToPractice] = useState(text);
@@ -204,7 +205,11 @@ export default function TypingTest({
       const wordPerMinute = Math.round(
         userInput.split(" ").length / (timer / 60)
       );
-      setWpm(Number.isFinite(wordPerMinute) ? wordPerMinute : 0);
+      const currentWpm = Number.isFinite(wordPerMinute) ? wordPerMinute : 0;
+      setWpm(currentWpm);
+      
+      // Update WPM history
+      setWpmHistory(prev => [...prev, currentWpm]);
 
       const slicedText =
         userInput.length <= textToPractice.length
@@ -223,7 +228,7 @@ export default function TypingTest({
   }, [eclipsedTime, handleSubmit, timer]);
 
   if (isSubmitted) {
-    return <Result wpm={wpm} accuracy={accuracy} />;
+    return <Result wpm={wpm} accuracy={accuracy} wpmHistory={wpmHistory} />;
   }
 
   return (

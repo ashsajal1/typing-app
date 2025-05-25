@@ -1,6 +1,27 @@
 import { RepeatIcon, Target, Zap, Clock, TrendingUp } from "lucide-react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
 
-export default function Result({ accuracy, wpm }: { accuracy: number, wpm: number }) {
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+export default function Result({ accuracy, wpm, wpmHistory = [] }: { accuracy: number, wpm: number, wpmHistory?: number[] }) {
     let status: string;
     let emoji: string;
     let backgroundColor: string;
@@ -123,6 +144,71 @@ export default function Result({ accuracy, wpm }: { accuracy: number, wpm: numbe
                         <Clock className="w-6 h-6 mb-2" />
                         <div className="text-sm">Error Rate</div>
                         <div className="text-2xl font-bold">{errorRate}%</div>
+                    </div>
+                </div>
+
+                {/* WPM History Chart */}
+                <div className="bg-white/20 rounded-lg p-4 mb-6">
+                    <h3 className="text-lg font-semibold mb-3">WPM Progress</h3>
+                    <div className="h-32">
+                        <Line
+                            data={{
+                                labels: wpmHistory.map((_, i) => i + 1),
+                                datasets: [
+                                    {
+                                        label: 'WPM',
+                                        data: wpmHistory,
+                                        borderColor: 'rgba(255, 255, 255, 0.8)',
+                                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                        tension: 0.4,
+                                        fill: true,
+                                    },
+                                ],
+                            }}
+                            options={{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        display: false,
+                                    },
+                                    tooltip: {
+                                        mode: 'index',
+                                        intersect: false,
+                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                        titleColor: 'white',
+                                        bodyColor: 'white',
+                                        callbacks: {
+                                            label: (context) => `WPM: ${context.parsed.y}`
+                                        }
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        grid: {
+                                            color: 'rgba(255, 255, 255, 0.1)',
+                                        },
+                                        ticks: {
+                                            color: 'rgba(255, 255, 255, 0.7)',
+                                        }
+                                    },
+                                    x: {
+                                        grid: {
+                                            color: 'rgba(255, 255, 255, 0.1)',
+                                        },
+                                        ticks: {
+                                            color: 'rgba(255, 255, 255, 0.7)',
+                                        }
+                                    },
+                                },
+                                interaction: {
+                                    mode: 'nearest',
+                                    axis: 'x',
+                                    intersect: false
+                                }
+                            }}
+                        />
                     </div>
                 </div>
 
