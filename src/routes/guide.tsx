@@ -1,12 +1,24 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { ArrowLeft, HomeIcon } from "lucide-react";
+import { ArrowLeft, HomeIcon, Copy, Check } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 
 export const Route = createFileRoute('/guide')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
+  const [topic, setTopic] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  const prompt = `Write a one-paragraph explanation about ${topic || "[topic]"} in simple English. Add the meaning of most English words (except very common words like a, an, the, this, that, etc.) in Bangla using the format [word](বাংলা অর্থ). Make the paragraph suitable for students learning English vocabulary.`;
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(prompt);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="min-h-screen w-screen overflow-hidden bg-gray-50 dark:bg-gray-900 flex items-start justify-center pt-8 relative">
       <div className="w-full max-w-2xl px-6 relative z-10">
@@ -16,9 +28,47 @@ function RouteComponent() {
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-6">
-          {/* Prompt Section */}
+          {/* Interactive Prompt Section */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">The Prompt</h2>
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Generate Your Prompt</h2>
+            <div className="space-y-4">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Enter your topic (e.g., photosynthesis)"
+                  className="input input-bordered flex-1"
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                />
+                <button
+                  onClick={handleCopy}
+                  className="btn btn-success gap-2"
+                  disabled={!topic}
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-4 h-4" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      Copy
+                    </>
+                  )}
+                </button>
+              </div>
+              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <p className="text-gray-700 dark:text-gray-300 font-mono text-sm whitespace-pre-wrap">
+                  {prompt}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Original Prompt Section */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">The Original Prompt</h2>
             <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
               <p className="text-gray-700 dark:text-gray-300 font-mono text-sm">
                 Write a one-paragraph explanation about [topic] in simple English. Add the meaning of most English words (except very common words like a, an, the, this, that, etc.) in Bangla using the format [word](বাংলা অর্থ). Make the paragraph suitable for students learning English vocabulary.
@@ -33,19 +83,19 @@ function RouteComponent() {
               <div className="flex items-start gap-3">
                 <div className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">1</div>
                 <p className="text-gray-700 dark:text-gray-300">
-                  Replace [topic] with your desired subject (e.g., "photosynthesis", "gravity", "democracy")
+                  Enter your topic in the input field above
                 </p>
               </div>
               <div className="flex items-start gap-3">
                 <div className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">2</div>
                 <p className="text-gray-700 dark:text-gray-300">
-                  The AI will generate a paragraph with Bangla translations for important English words using the format [word](বাংলা অর্থ)
+                  Click the "Copy" button to copy the generated prompt
                 </p>
               </div>
               <div className="flex items-start gap-3">
                 <div className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">3</div>
                 <p className="text-gray-700 dark:text-gray-300">
-                  When typing, you'll see tooltips showing the Bangla translations for each word
+                  Paste the prompt into your AI tool of choice
                 </p>
               </div>
             </div>
