@@ -15,17 +15,17 @@ export default function Result({ accuracy, wpm }: { accuracy: number, wpm: numbe
     } else if (accuracy >= 80 && wpm >= 50) {
         status = "Great Job!";
         emoji = "👍";
-        backgroundColor = "bg-gradient-to-br from-teal-500 to-teal-700";
+        backgroundColor = "bg-gradient-to-br from-green-500 to-emerald-700";
         description = "You're getting really good at this!";
     } else if (accuracy >= 70 && wpm >= 40) {
         status = "Good Effort!";
         emoji = "😊";
-        backgroundColor = "bg-gradient-to-br from-blue-500 to-blue-700";
+        backgroundColor = "bg-gradient-to-br from-green-500 to-teal-700";
         description = "Nice work, keep practicing!";
     } else {
         status = "Keep Practicing!";
         emoji = "💪";
-        backgroundColor = "bg-gradient-to-br from-indigo-500 to-indigo-700";
+        backgroundColor = "bg-gradient-to-br from-green-500 to-cyan-700";
         description = "You'll improve with more practice!";
     }
     
