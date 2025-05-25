@@ -352,6 +352,32 @@ export default function TypingTest({
               const currentIndex = userInput.length;
               let charIndex = 0;
               
+              // Find word boundaries
+              const wordBoundaries: number[] = [];
+              let tempCharIndex = 0;
+              parsedText.forEach(part => {
+                const chars = part.text.split("");
+                chars.forEach((char) => {
+                  if (char === " " || tempCharIndex === 0) {
+                    wordBoundaries.push(tempCharIndex === 0 ? 0 : tempCharIndex + 1);
+                  }
+                  tempCharIndex++;
+                });
+              });
+              
+              // Determine current word
+              let currentWordStart = 0;
+              let currentWordEnd = charIndex - 1;
+              
+              for (let i = 0; i < wordBoundaries.length; i++) {
+                if (currentIndex >= wordBoundaries[i]) {
+                  currentWordStart = wordBoundaries[i];
+                  currentWordEnd = i < wordBoundaries.length - 1 ? 
+                    wordBoundaries[i + 1] - 2 : // -2 to account for space and indexing
+                    tempCharIndex - 1;
+                }
+              }
+              
               return parsedText.map((part, partIndex) => {
                 const chars = part.text.split("");
                 return chars.map((char, charInPartIndex) => {
@@ -360,7 +386,7 @@ export default function TypingTest({
                   const isCorrect = userChar === char;
                   const isIncorrect = userChar && !isCorrect;
                   const isCurrent = charIndex === currentIndex;
-                  const isCurrentWord = charIndex >= currentIndex - 5 && charIndex <= currentIndex + 5;
+                  const isCurrentWord = charIndex >= currentWordStart && charIndex <= currentWordEnd;
                   
                   const element = (
                     <span
