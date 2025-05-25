@@ -91,6 +91,26 @@ export default function TypingTest({
   );
 
   const handleKeyDown = (event: KeyboardEvent) => {
+    // Handle Escape key first
+    if (event.key === "Escape") {
+      event.preventDefault();
+      if (showCommandPalette) {
+        setShowCommandPalette(false);
+        setCommandSearch("");
+        return;
+      }
+      // Reset all state
+      setUserInput("");
+      setTimer(0);
+      setIsStarted(false);
+      setAccuracy(0);
+      setWpm(0);
+      setIsSubmitted(false);
+      setReload(false);
+      setTextToPractice(text);
+      return;
+    }
+
     // Handle command palette
     if (event.metaKey || event.ctrlKey) {
       if (event.key === "k") {
@@ -127,17 +147,6 @@ export default function TypingTest({
 
     if (!isStarted) {
       setIsStarted(true);
-    }
-
-    // Add keyboard shortcuts
-    if (event.key === "Escape") {
-      if (showCommandPalette) {
-        setShowCommandPalette(false);
-        setCommandSearch("");
-        return;
-      }
-      window.location.reload();
-      return;
     }
 
     if (event.key === "Enter") {
