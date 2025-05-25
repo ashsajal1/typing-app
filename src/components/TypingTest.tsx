@@ -47,6 +47,14 @@ const parseTextWithTranslations = (text: string): TextWithTranslation[] => {
   return parts;
 };
 
+// Virtual keyboard layout
+const keyboardLayout = [
+  ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+  ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+  ['z', 'x', 'c', 'v', 'b', 'n', 'm', '⌫'],
+  [' ', 'Enter']
+];
+
 export default function TypingTest({
   text,
   eclipsedTime,
@@ -66,10 +74,35 @@ export default function TypingTest({
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [commandSearch, setCommandSearch] = useState("");
   const [parsedText, setParsedText] = useState<TextWithTranslation[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if user is on mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     setParsedText(parseTextWithTranslations(textToPractice));
   }, [textToPractice]);
+
+  const handleKeyPress = (key: string) => {
+    if (!isStarted) {
+      setIsStarted(true);
+    }
+
+    if (key === '⌫') {
+      setUserInput(prev => prev.slice(0, -1));
+    } else if (key === 'Enter') {
+      handleSubmit();
+    } else {
+      setUserInput(prev => prev + key);
+    }
+  };
 
   const handleSubmit = useCallback(() => {
     if (!isStarted) {
@@ -434,7 +467,35 @@ export default function TypingTest({
           </div>
         </div>
 
-       <div className="stats shadow w-full bg-base-100 dark:bg-gray-800 rounded-lg border border-success/20">
+        {/* Mobile Virtual Keyboard */}
+        {isMobile && !isSubmitted && (
+          <div className="fixed bottom-0 left-0 right-0 bg-base-100 dark:bg-gray-800 border-t dark:border-gray-700 p-2 space-y-2">
+            {keyboardLayout.map((row, rowIndex) => (
+              <div key={rowIndex} className="flex justify-center gap-1">
+                {row.map((key) => (
+                  <button
+                    key={key}
+                    onClick={() => handleKeyPress(key)}
+                    className={`
+                      min-w-[2.5rem] h-12 px-2 rounded-lg
+                      ${key === '⌫' ? 'bg-red-500 text-white' : 
+                        key === 'Enter' ? 'bg-success text-white' :
+                        key === ' ' ? 'flex-1 bg-base-200 dark:bg-gray-700' :
+                        'bg-base-200 dark:bg-gray-700'
+                      }
+                      active:scale-95 transition-transform
+                      font-medium
+                    `}
+                  >
+                    {key === ' ' ? 'Space' : key}
+                  </button>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="stats shadow w-full bg-base-100 dark:bg-gray-800 rounded-lg border border-success/20">
           <div className="stat">
             <div className="stat-figure text-success">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
