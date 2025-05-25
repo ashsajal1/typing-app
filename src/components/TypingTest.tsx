@@ -133,79 +133,86 @@ export default function TypingTest({
             max={eclipsedTime}
           ></progress>
         )}
-        <div className="p-2 border dark:border-gray-700 rounded md:text-3xl select-none flex flex-wrap gap-y-2 w-full relative">
-          {/* Display a guidance message when not started */}
-          {!isStarted && (
-            <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-base-100/60 dark:bg-gray-900/70 backdrop-blur-[1px] rounded z-10">
-              <p className="text-lg text-center text-success font-medium">
-                Start typing to begin the test
-                <span className="block mt-2 animate-bounce">⌨️</span>
-              </p>
-            </div>
-          )}
-          
-          {/* Calculate current word index */}
-          {(() => {
-            const currentIndex = userInput.length;
-            const text = textToPractice.split("");
+        <div className="h-[400px] overflow-y-auto relative border dark:border-gray-700 rounded">
+          <div className="p-2 md:text-3xl select-none flex flex-wrap gap-y-2 w-full relative">
+            {/* Display a guidance message when not started */}
+            {!isStarted && (
+              <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-base-100/60 dark:bg-gray-900/70 backdrop-blur-[1px] rounded z-10">
+                <p className="text-lg text-center text-success font-medium">
+                  Start typing to begin the test
+                  <span className="block mt-2 animate-bounce">⌨️</span>
+                </p>
+              </div>
+            )}
             
-            // Find word boundaries
-            const wordBoundaries: number[] = [];
-            text.forEach((char, index) => {
-              if (char === " " || index === 0) {
-                wordBoundaries.push(index === 0 ? 0 : index + 1);
-              }
-            });
-            
-            // Determine current word
-            let currentWordStart = 0;
-            let currentWordEnd = text.length - 1;
-            
-            for (let i = 0; i < wordBoundaries.length; i++) {
-              if (currentIndex >= wordBoundaries[i]) {
-                currentWordStart = wordBoundaries[i];
-                currentWordEnd = i < wordBoundaries.length - 1 ? 
-                  wordBoundaries[i + 1] - 2 : // -2 to account for space and indexing
-                  text.length - 1;
-              }
-            }
-            
-            return text.map((char, charIndex) => {
-              const isSpace = char === " ";
-              const userChar = userInput[charIndex];
-              const isCorrect = userChar === char;
-              const isIncorrect = userChar && !isCorrect;
-              const isCurrent = charIndex === currentIndex;
-              const isCurrentWord = charIndex >= currentWordStart && charIndex <= currentWordEnd;
+            {/* Calculate current word index */}
+            {(() => {
+              const currentIndex = userInput.length;
+              const text = textToPractice.split("");
               
-              return (
-                <span
-                  key={charIndex}
-                  className={`
-                    mx-[0.5px] 
-                    border-b 
-                    ${isCurrent ? 'border-b-success border-b-2 animate-pulse' : 'border-b-base-300 dark:border-gray-600'} 
-                    ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
-                    p-[1px] rounded w-[27px] text-center 
-                    ${isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
-                      isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : 
-                      isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""
-                    }
-                    ${isCurrent ? 'relative' : ''}
-                  `}
-                  aria-current={isCurrent ? "true" : undefined}
-                >
-                  {/* Current character indicator */}
-                  {isCurrent && (
-                    <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-xs bg-success text-white px-2 py-1 rounded">
-                      Type
-                    </span>
-                  )}
-                  {isSpace ? "\u00A0" : char} {/* Render non-breaking space */}
-                </span>
-              );
-            });
-          })()}
+              // Find word boundaries
+              const wordBoundaries: number[] = [];
+              text.forEach((char, index) => {
+                if (char === " " || index === 0) {
+                  wordBoundaries.push(index === 0 ? 0 : index + 1);
+                }
+              });
+              
+              // Determine current word
+              let currentWordStart = 0;
+              let currentWordEnd = text.length - 1;
+              
+              for (let i = 0; i < wordBoundaries.length; i++) {
+                if (currentIndex >= wordBoundaries[i]) {
+                  currentWordStart = wordBoundaries[i];
+                  currentWordEnd = i < wordBoundaries.length - 1 ? 
+                    wordBoundaries[i + 1] - 2 : // -2 to account for space and indexing
+                    text.length - 1;
+                }
+              }
+              
+              return text.map((char, charIndex) => {
+                const isSpace = char === " ";
+                const userChar = userInput[charIndex];
+                const isCorrect = userChar === char;
+                const isIncorrect = userChar && !isCorrect;
+                const isCurrent = charIndex === currentIndex;
+                const isCurrentWord = charIndex >= currentWordStart && charIndex <= currentWordEnd;
+                
+                return (
+                  <span
+                    key={charIndex}
+                    className={`
+                      mx-[0.5px] 
+                      border-b 
+                      ${isCurrent ? 'border-b-success border-b-2 animate-pulse' : 'border-b-base-300 dark:border-gray-600'} 
+                      ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
+                      p-[1px] rounded w-[27px] text-center 
+                      ${isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
+                        isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : 
+                        isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""
+                      }
+                      ${isCurrent ? 'relative' : ''}
+                    `}
+                    aria-current={isCurrent ? "true" : undefined}
+                    ref={(el) => {
+                      if (isCurrent && el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }
+                    }}
+                  >
+                    {/* Current character indicator */}
+                    {isCurrent && (
+                      <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-xs bg-success text-white px-2 py-1 rounded">
+                        Type
+                      </span>
+                    )}
+                    {isSpace ? "\u00A0" : char} {/* Render non-breaking space */}
+                  </span>
+                );
+              });
+            })()}
+          </div>
         </div>
 
        <div className="stats shadow w-full bg-base-100 dark:bg-gray-800 rounded-lg border border-success/20">
