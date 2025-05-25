@@ -48,12 +48,26 @@ const parseTextWithTranslations = (text: string): TextWithTranslation[] => {
 };
 
 // Virtual keyboard layout
-const keyboardLayout = [
-  ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-  ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-  ['z', 'x', 'c', 'v', 'b', 'n', 'm', '⌫'],
-  [' ', 'Enter']
-];
+const keyboardLayout = {
+  lowercase: [
+    ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+    ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+    ['z', 'x', 'c', 'v', 'b', 'n', 'm', '⌫'],
+    [' ', 'Enter']
+  ],
+  uppercase: [
+    ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+    ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '⌫'],
+    [' ', 'Enter']
+  ],
+  symbols: [
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+    ['@', '#', '$', '&', '*', '(', ')', '-', '+', '='],
+    ['.', ',', '!', '?', ':', ';', '"', "'", '⌫'],
+    [' ', 'Enter']
+  ]
+};
 
 export default function TypingTest({
   text,
@@ -75,6 +89,7 @@ export default function TypingTest({
   const [commandSearch, setCommandSearch] = useState("");
   const [parsedText, setParsedText] = useState<TextWithTranslation[]>([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [keyboardMode, setKeyboardMode] = useState<'lowercase' | 'uppercase' | 'symbols'>('lowercase');
 
   // Check if user is on mobile
   useEffect(() => {
@@ -99,8 +114,22 @@ export default function TypingTest({
       setUserInput(prev => prev.slice(0, -1));
     } else if (key === 'Enter') {
       handleSubmit();
+    } else if (key === '⇧') {
+      if (keyboardMode === 'lowercase') {
+        setKeyboardMode('uppercase');
+      } else if (keyboardMode === 'uppercase') {
+        setKeyboardMode('lowercase');
+      }
+    } else if (key === '123') {
+      setKeyboardMode('symbols');
+    } else if (key === 'ABC') {
+      setKeyboardMode('lowercase');
     } else {
       setUserInput(prev => prev + key);
+      // Auto-switch back to lowercase after typing a letter in uppercase mode
+      if (keyboardMode === 'uppercase' && /[A-Z]/.test(key)) {
+        setKeyboardMode('lowercase');
+      }
     }
   };
 
@@ -470,28 +499,118 @@ export default function TypingTest({
         {/* Mobile Virtual Keyboard */}
         {isMobile && !isSubmitted && (
           <div className="fixed bottom-0 left-0 right-0 bg-base-100 dark:bg-gray-800 border-t dark:border-gray-700 p-2 space-y-2">
-            {keyboardLayout.map((row, rowIndex) => (
+            {keyboardLayout[keyboardMode].map((row, rowIndex) => (
               <div key={rowIndex} className="flex justify-center gap-1">
-                {row.map((key) => (
-                  <button
-                    key={key}
-                    onClick={() => handleKeyPress(key)}
-                    className={`
-                      min-w-[2.5rem] h-12 px-2 rounded-lg
-                      ${key === '⌫' ? 'bg-red-500 text-white' : 
-                        key === 'Enter' ? 'bg-success text-white' :
-                        key === ' ' ? 'flex-1 bg-base-200 dark:bg-gray-700' :
-                        'bg-base-200 dark:bg-gray-700'
-                      }
-                      active:scale-95 transition-transform
-                      font-medium
-                    `}
-                  >
-                    {key === ' ' ? 'Space' : key}
-                  </button>
-                ))}
+                {row.map((key) => {
+                  // Add shift key to the first row
+                  if (rowIndex === 0 && keyboardMode === 'lowercase') {
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => handleKeyPress(key)}
+                        className={`
+                          min-w-[2.5rem] h-12 px-2 rounded-lg
+                          ${key === '⌫' ? 'bg-red-500 text-white' : 
+                            key === 'Enter' ? 'bg-success text-white' :
+                            key === ' ' ? 'flex-1 bg-base-200 dark:bg-gray-700' :
+                            'bg-base-200 dark:bg-gray-700'
+                          }
+                          active:scale-95 transition-transform
+                          font-medium
+                        `}
+                      >
+                        {key === ' ' ? 'Space' : key}
+                      </button>
+                    );
+                  }
+                  // Add shift and 123 keys to the last row
+                  if (rowIndex === keyboardLayout[keyboardMode].length - 1) {
+                    if (keyboardMode === 'lowercase' || keyboardMode === 'uppercase') {
+                      return (
+                        <>
+                          <button
+                            key="123"
+                            onClick={() => handleKeyPress('123')}
+                            className="min-w-[2.5rem] h-12 px-2 rounded-lg bg-base-200 dark:bg-gray-700 active:scale-95 transition-transform font-medium"
+                          >
+                            123
+                          </button>
+                          <button
+                            key=" "
+                            onClick={() => handleKeyPress(' ')}
+                            className="flex-1 h-12 px-2 rounded-lg bg-base-200 dark:bg-gray-700 active:scale-95 transition-transform font-medium"
+                          >
+                            Space
+                          </button>
+                          <button
+                            key="Enter"
+                            onClick={() => handleKeyPress('Enter')}
+                            className="min-w-[2.5rem] h-12 px-2 rounded-lg bg-success text-white active:scale-95 transition-transform font-medium"
+                          >
+                            Enter
+                          </button>
+                        </>
+                      );
+                    } else {
+                      return (
+                        <>
+                          <button
+                            key="ABC"
+                            onClick={() => handleKeyPress('ABC')}
+                            className="min-w-[2.5rem] h-12 px-2 rounded-lg bg-base-200 dark:bg-gray-700 active:scale-95 transition-transform font-medium"
+                          >
+                            ABC
+                          </button>
+                          <button
+                            key=" "
+                            onClick={() => handleKeyPress(' ')}
+                            className="flex-1 h-12 px-2 rounded-lg bg-base-200 dark:bg-gray-700 active:scale-95 transition-transform font-medium"
+                          >
+                            Space
+                          </button>
+                          <button
+                            key="Enter"
+                            onClick={() => handleKeyPress('Enter')}
+                            className="min-w-[2.5rem] h-12 px-2 rounded-lg bg-success text-white active:scale-95 transition-transform font-medium"
+                          >
+                            Enter
+                          </button>
+                        </>
+                      );
+                    }
+                  }
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => handleKeyPress(key)}
+                      className={`
+                        min-w-[2.5rem] h-12 px-2 rounded-lg
+                        ${key === '⌫' ? 'bg-red-500 text-white' : 
+                          key === 'Enter' ? 'bg-success text-white' :
+                          key === ' ' ? 'flex-1 bg-base-200 dark:bg-gray-700' :
+                          'bg-base-200 dark:bg-gray-700'
+                        }
+                        active:scale-95 transition-transform
+                        font-medium
+                      `}
+                    >
+                      {key === ' ' ? 'Space' : key}
+                    </button>
+                  );
+                })}
               </div>
             ))}
+            {/* Add shift key to the first row */}
+            {keyboardMode === 'lowercase' && (
+              <div className="flex justify-center gap-1">
+                <button
+                  onClick={() => handleKeyPress('⇧')}
+                  className="min-w-[2.5rem] h-12 px-2 rounded-lg bg-base-200 dark:bg-gray-700 active:scale-95 transition-transform font-medium"
+                >
+                  ⇧
+                </button>
+              </div>
+            )}
           </div>
         )}
 
