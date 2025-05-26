@@ -96,8 +96,8 @@ export default function TypingTest({
 
     // Calculate final accuracy
     const finalAccuracy = totalKeystrokes > 0 ? 
-      ((totalKeystrokes - mistakes) / totalKeystrokes) * 100 : 0;
-    setAccuracy(Number.isFinite(finalAccuracy) ? finalAccuracy : 0); // Remove Math.round to keep exact value
+      Math.round(((totalKeystrokes - mistakes) / totalKeystrokes) * 100) : 0;
+    setAccuracy(Number.isFinite(finalAccuracy) ? finalAccuracy : 0);
 
     setIsSubmitted(true);
   }, [isStarted, timer, userInput, mistakes, totalKeystrokes]);
@@ -284,8 +284,8 @@ export default function TypingTest({
 
       // Calculate accuracy based on mistakes and total keystrokes
       const accuracy = totalKeystrokes > 0 ? 
-        ((totalKeystrokes - mistakes) / totalKeystrokes) * 100 : 0;
-      setAccuracy(Number.isFinite(accuracy) ? accuracy : 0); // Remove Math.round to keep exact value
+        Math.round(((totalKeystrokes - mistakes) / totalKeystrokes) * 100) : 0;
+      setAccuracy(Number.isFinite(accuracy) ? accuracy : 0);
     }
   }, [textToPractice, timer, userInput, isStarted, isSubmitted, mistakes, totalKeystrokes]);
 
