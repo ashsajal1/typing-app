@@ -2,7 +2,6 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { useSentenceStore } from "../store/sentenceStore";
 import TypingTest from "../components/TypingTest";
-import { shuffleArray } from "../lib/utils";
 import { ArrowLeft, HomeIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -46,11 +45,10 @@ const Practice = () => {
     }
   }, [savedTextId]);
 
-  const sentences = useSentenceStore((state) =>
-    state.getSentencesByTopic(topic || "")
-  );
+  const getCompleteSentences = useSentenceStore((state) => state.getCompleteSentences);
+  const sentences = topic ? getCompleteSentences(topic, 1000) : "";
 
-  if (sentences.length === 0 && savedSentence === null) {
+  if (!sentences && savedSentence === null) {
     return (
       <div className="grid place-items-center p-12">
         <div className="flex flex-col items-center">
@@ -87,9 +85,7 @@ const Practice = () => {
   return (
     <TypingTest
       eclipsedTime={eclipsedTime || 60}
-      text={shuffleArray([...sentences])
-        .join(" ")
-        .slice(0, 350)}
+      text={sentences}
     />
   );
 };

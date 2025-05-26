@@ -13,6 +13,7 @@ interface SentenceStore {
   sentences: Sentence[];
   getSentencesByTopic: (topic: string) => string[];
   getAllTopics: () => string[];
+  getCompleteSentences: (topic: string, maxLength: number) => string;
 }
 
 // Initial sentences data
@@ -35,5 +36,22 @@ export const useSentenceStore = create<SentenceStore>((_set, get) => ({
     const state = get();
     const topics = state.sentences.map((sentence) => sentence.topic);
     return Array.from(new Set(topics));
+  },
+  getCompleteSentences: (topic: string, maxLength: number) => {
+    const state = get();
+    const topicSentences = state.sentences
+      .filter((sentence) => sentence.topic === topic)
+      .map((sentence) => sentence.text);
+    
+    let result = "";
+    for (const sentence of topicSentences) {
+      // Check if adding this sentence would exceed maxLength
+      if (result.length + sentence.length + 1 > maxLength) {
+        break;
+      }
+      // Add sentence with a space if not the first sentence
+      result += (result ? " " : "") + sentence;
+    }
+    return result;
   },
 }));
