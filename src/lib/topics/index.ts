@@ -1,11 +1,13 @@
-import { biologySentences } from "./biology";
+import { biologySentece } from "./biology";
 import { chemistrySentences } from "./chemistry";
 import { englishWrittingSentences } from "./english-writting";
 import { physicsSentences } from "./physics";
+import { computerSciencesSentences } from "./computer_sciences";
 
 export const sentences = [
-  ...biologySentences,
+  ...biologySentece,
   ...physicsSentences,
   ...chemistrySentences,
   ...englishWrittingSentences,
+  ...computerSciencesSentences,
 ];
