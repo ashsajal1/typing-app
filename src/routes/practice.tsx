@@ -93,7 +93,7 @@ const Practice = () => {
       <TypingTest
         eclipsedTime={eclipsedTime || 60}
         text={shuffleArray([...sentences]).join(" ").slice(0, 500)}
-        language={"plaintext"}
+        language={"python"}
       />
     );
   }

@@ -108,11 +108,22 @@ function RouteComponent() {
     const existingData = localStorage.getItem("customTextData");
     const dataArray = existingData ? JSON.parse(existingData) : [];
 
+    let newLabel = data.label;
+    let counter = 1;
+    // Ensure dataArray is actually an array before calling .some
+    if (Array.isArray(dataArray)) {
+      while (dataArray.some((item: { label: string; }) => item.label === newLabel)) {
+        newLabel = `${data.label}_${counter}`;
+        counter++;
+      }
+    }
+    // Now newLabel contains the unique label
+
     // The 'text' field in `data` for obfuscated files is the Base64 string itself.
     // De-obfuscation will happen on the practice page.
     const newData = {
       id: dataArray?.length + 1 + Math.floor(Math.random() * 1000) + new Date().getTime(),
-      label: data.label,
+      label: newLabel, // Use the potentially modified newLabel here
       text: data.text, // Raw text or Base64 string
       language: data.language,
       isObfuscated: data.isObfuscated,

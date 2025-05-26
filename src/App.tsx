@@ -3,7 +3,7 @@ import { useSentenceStore } from "./store/sentenceStore";
 import { Link } from "@tanstack/react-router";
 
 export default function App() {
-  const [selectedTopic, setSelectedTopic] = useState('physics')
+  const [selectedTopic, setSelectedTopic] = useState('computer_sciences')
   const [eclipsedTime, setEclipsedTime] = useState(60)
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
