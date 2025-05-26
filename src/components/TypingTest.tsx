@@ -222,6 +222,17 @@ export default function TypingTest({
       return;
     }
 
+    // Get the expected character from parsedText
+    let expectedChar = '';
+    let currentIndex = 0;
+    for (const part of parsedText) {
+      if (currentIndex + part.text.length > userInput.length) {
+        expectedChar = part.text[userInput.length - currentIndex];
+        break;
+      }
+      currentIndex += part.text.length;
+    }
+
     if (event.key === "Backspace") {
       setUserInput((prevKeys) => {
         const newInput = prevKeys.slice(0, -1);
@@ -237,7 +248,6 @@ export default function TypingTest({
       setUserInput((prevKeys) => {
         const newInput = prevKeys + event.key;
         // Check if the space is correct
-        const expectedChar = textToPractice[prevKeys.length];
         if (expectedChar !== event.key) {
           setMistakes(prev => prev + 1);
           setHasMistake(true);
@@ -252,7 +262,6 @@ export default function TypingTest({
       setUserInput((prevKeys) => {
         const newInput = prevKeys + event.key;
         // Check if the character is correct
-        const expectedChar = textToPractice[prevKeys.length];
         if (expectedChar !== event.key) {
           setMistakes(prev => prev + 1);
           setHasMistake(true);
@@ -264,7 +273,7 @@ export default function TypingTest({
         return newInput;
       });
     }
-  }, [handleSubmit, isMobile, isStarted, showCommandPalette, text, textToPractice, hasMistake, userInput.length]);
+  }, [handleSubmit, isMobile, isStarted, showCommandPalette, text, parsedText, hasMistake, userInput.length]);
 
   useEffect(() => {
     // Only attach keyboard event listener for non-mobile devices
