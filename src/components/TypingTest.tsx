@@ -68,6 +68,8 @@ export default function TypingTest({
   const [isMobile, setIsMobile] = useState(false);
   const [mistakes, setMistakes] = useState<number>(0);
   const [totalKeystrokes, setTotalKeystrokes] = useState<number>(0);
+  const [hasMistake, setHasMistake] = useState(false);
+  const [showMistakeAlert, setShowMistakeAlert] = useState(false);
 
   // Check if user is on mobile
   useEffect(() => {
@@ -163,6 +165,8 @@ export default function TypingTest({
       setTextToPractice(text);
       setMistakes(0);
       setTotalKeystrokes(0);
+      setHasMistake(false);
+      setShowMistakeAlert(false);
       return;
     }
 
@@ -209,8 +213,25 @@ export default function TypingTest({
       return;
     }
 
+    // If there's a mistake and user tries to type more, show alert
+    if (hasMistake && event.key !== "Backspace") {
+      event.preventDefault();
+      setShowMistakeAlert(true);
+      // Hide alert after 2 seconds
+      setTimeout(() => setShowMistakeAlert(false), 2000);
+      return;
+    }
+
     if (event.key === "Backspace") {
-      setUserInput((prevKeys) => prevKeys.slice(0, -1)); // Remove the last character
+      setUserInput((prevKeys) => {
+        const newInput = prevKeys.slice(0, -1);
+        // If we're backspacing the mistake, reset the mistake state
+        if (hasMistake && newInput.length === userInput.length - 1) {
+          setHasMistake(false);
+          setShowMistakeAlert(false);
+        }
+        return newInput;
+      });
     } else if (event.key === " ") {
       event.preventDefault(); // Prevent the default action of space
       setUserInput((prevKeys) => {
@@ -219,6 +240,10 @@ export default function TypingTest({
         const expectedChar = textToPractice[prevKeys.length];
         if (expectedChar !== event.key) {
           setMistakes(prev => prev + 1);
+          setHasMistake(true);
+          setShowMistakeAlert(true);
+          // Hide alert after 2 seconds
+          setTimeout(() => setShowMistakeAlert(false), 2000);
         }
         setTotalKeystrokes(prev => prev + 1);
         return newInput;
@@ -230,12 +255,16 @@ export default function TypingTest({
         const expectedChar = textToPractice[prevKeys.length];
         if (expectedChar !== event.key) {
           setMistakes(prev => prev + 1);
+          setHasMistake(true);
+          setShowMistakeAlert(true);
+          // Hide alert after 2 seconds
+          setTimeout(() => setShowMistakeAlert(false), 2000);
         }
         setTotalKeystrokes(prev => prev + 1);
         return newInput;
       });
     }
-  }, [handleSubmit, isMobile, isStarted, showCommandPalette, text, textToPractice]);
+  }, [handleSubmit, isMobile, isStarted, showCommandPalette, text, textToPractice, hasMistake, userInput.length]);
 
   useEffect(() => {
     // Only attach keyboard event listener for non-mobile devices
@@ -303,6 +332,13 @@ export default function TypingTest({
   return (
     <>
       <section className="p-2 flex flex-col gap-3">
+        {/* Mistake Alert */}
+        {showMistakeAlert && (
+          <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-bounce">
+            Fix the mistake before continuing!
+          </div>
+        )}
+
         {/* Command Palette */}
         {showCommandPalette && (
           <div className="fixed inset-0 bg-black/50 flex items-start justify-center pt-20 z-50">
