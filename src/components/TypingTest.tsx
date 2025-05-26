@@ -70,6 +70,7 @@ export default function TypingTest({
   const [totalKeystrokes, setTotalKeystrokes] = useState<number>(0);
   const [hasMistake, setHasMistake] = useState(false);
   const [showMistakeAlert, setShowMistakeAlert] = useState(false);
+  const [lastCorrectPosition, setLastCorrectPosition] = useState<number>(-1);
 
   // Check if user is on mobile
   useEffect(() => {
@@ -167,6 +168,7 @@ export default function TypingTest({
       setTotalKeystrokes(0);
       setHasMistake(false);
       setShowMistakeAlert(false);
+      setLastCorrectPosition(-1);
       return;
     }
 
@@ -233,6 +235,18 @@ export default function TypingTest({
       currentIndex += part.text.length;
     }
 
+    // Prevent typing if we're trying to rewrite a correct character
+    if (userInput.length <= lastCorrectPosition && event.key !== "Backspace") {
+      event.preventDefault();
+      return;
+    }
+
+    // Prevent backspacing over correct letters
+    if (event.key === "Backspace" && userInput.length <= lastCorrectPosition + 1) {
+      event.preventDefault();
+      return;
+    }
+
     if (event.key === "Backspace") {
       setUserInput((prevKeys) => {
         const newInput = prevKeys.slice(0, -1);
@@ -254,6 +268,9 @@ export default function TypingTest({
           setShowMistakeAlert(true);
           // Hide alert after 2 seconds
           setTimeout(() => setShowMistakeAlert(false), 2000);
+        } else {
+          // Update last correct position when typing correctly
+          setLastCorrectPosition(newInput.length - 1);
         }
         setTotalKeystrokes(prev => prev + 1);
         return newInput;
@@ -268,12 +285,15 @@ export default function TypingTest({
           setShowMistakeAlert(true);
           // Hide alert after 2 seconds
           setTimeout(() => setShowMistakeAlert(false), 2000);
+        } else {
+          // Update last correct position when typing correctly
+          setLastCorrectPosition(newInput.length - 1);
         }
         setTotalKeystrokes(prev => prev + 1);
         return newInput;
       });
     }
-  }, [handleSubmit, isMobile, isStarted, showCommandPalette, text, parsedText, hasMistake, userInput.length]);
+  }, [handleSubmit, isMobile, isStarted, showCommandPalette, text, parsedText, hasMistake, userInput.length, lastCorrectPosition]);
 
   useEffect(() => {
     // Only attach keyboard event listener for non-mobile devices
