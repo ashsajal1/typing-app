@@ -1,7 +1,7 @@
 export const biologySentece = [
     {
       id: "biology-1",
-      text: "Biology gives \tyou a brain, life \nturns it into a mind.",
+      text: "Biology gives you a brain, life turns it into a mind.",
       topic: "biology",
     },
     {
