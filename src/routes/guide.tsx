@@ -11,7 +11,7 @@ function RouteComponent() {
   const [topic, setTopic] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const prompt = `Write a one-paragraph explanation about ${topic || "[topic]"} in simple English. Add the meaning of most English words (except very common words like a, an, the, this, that, etc.) in Bangla using the format [word](বাংলা অর্থ). Make the paragraph suitable for students learning English vocabulary.`;
+  const prompt = `Write a one-paragraph explanation about ${topic || "[topic]"} in English. Add the meaning of most English words (except very common words like a, an, the, this, that, etc.) in Bangla using the format [word](বাংলা অর্থ). Make the paragraph suitable for students learning English vocabulary.`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(prompt);
