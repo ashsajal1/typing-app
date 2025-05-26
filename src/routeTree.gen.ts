@@ -10,13 +10,13 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as SavedTextImport } from './routes/saved-text'
-import { Route as PracticeImport } from './routes/practice'
-import { Route as GuideImport } from './routes/guide'
-import { Route as CustomTextImport } from './routes/custom-text'
-import { Route as AboutImport } from './routes/about'
-import { Route as IndexImport } from './routes/index'
+import { Route as rootRoute } from './pages/__root'
+import { Route as SavedTextImport } from './pages/saved-text'
+import { Route as PracticeImport } from './pages/practice'
+import { Route as GuideImport } from './pages/guide'
+import { Route as CustomTextImport } from './pages/custom-text'
+import { Route as AboutImport } from './pages/about'
+import { Route as IndexImport } from './pages/index'
 
 // Create/Update Routes
 
