@@ -67,6 +67,8 @@ export default function TypingTest({
   const [commandSearch, setCommandSearch] = useState("");
   const [parsedText, setParsedText] = useState<TextWithTranslation[]>([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [mistakes, setMistakes] = useState<number>(0);
+  const [totalKeystrokes, setTotalKeystrokes] = useState<number>(0);
 
   // Check if user is on mobile
   useEffect(() => {
@@ -162,6 +164,8 @@ export default function TypingTest({
       setIsSubmitted(false);
       setReload(false);
       setTextToPractice(text);
+      setMistakes(0);
+      setTotalKeystrokes(0);
       return;
     }
 
@@ -212,11 +216,29 @@ export default function TypingTest({
       setUserInput((prevKeys) => prevKeys.slice(0, -1)); // Remove the last character
     } else if (event.key === " ") {
       event.preventDefault(); // Prevent the default action of space
-      setUserInput((prevKeys) => prevKeys + event.key); // Append to user input
+      setUserInput((prevKeys) => {
+        const newInput = prevKeys + event.key;
+        // Check if the space is correct
+        const expectedChar = textToPractice[prevKeys.length];
+        if (expectedChar !== event.key) {
+          setMistakes(prev => prev + 1);
+        }
+        setTotalKeystrokes(prev => prev + 1);
+        return newInput;
+      });
     } else {
-      setUserInput((prevKeys) => prevKeys + event.key); // Append to user input
+      setUserInput((prevKeys) => {
+        const newInput = prevKeys + event.key;
+        // Check if the character is correct
+        const expectedChar = textToPractice[prevKeys.length];
+        if (expectedChar !== event.key) {
+          setMistakes(prev => prev + 1);
+        }
+        setTotalKeystrokes(prev => prev + 1);
+        return newInput;
+      });
     }
-  }, [handleSubmit, isMobile, isStarted, showCommandPalette, text]); // Add dependencies used in the callback
+  }, [handleSubmit, isMobile, isStarted, showCommandPalette, text, textToPractice]);
 
   useEffect(() => {
     // Only attach keyboard event listener for non-mobile devices
@@ -263,14 +285,12 @@ export default function TypingTest({
       // Update WPM history
       setWpmHistory(prev => [...prev, currentWpm]);
 
-      const slicedText =
-        userInput.length <= textToPractice.length
-          ? textToPractice.slice(0, userInput.length)
-          : textToPractice;
-      const accuracy = calculateAccuracy(slicedText, userInput);
-      setAccuracy(Number.isFinite(parseInt(accuracy)) ? parseInt(accuracy) : 0);
+      // Calculate accuracy based on mistakes and total keystrokes
+      const accuracy = totalKeystrokes > 0 ? 
+        ((totalKeystrokes - mistakes) / totalKeystrokes) * 100 : 0;
+      setAccuracy(Number.isFinite(accuracy) ? Math.round(accuracy) : 0);
     }
-  }, [textToPractice, timer, userInput, isStarted, isSubmitted]);
+  }, [textToPractice, timer, userInput, isStarted, isSubmitted, mistakes, totalKeystrokes]);
 
   useEffect(() => {
     if (!(eclipsedTime === 0) && timer === eclipsedTime) {
