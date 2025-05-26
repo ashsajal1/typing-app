@@ -1,8 +1,9 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { BookOpen } from "lucide-react";
 
 interface FormData {
   label: string;
@@ -80,6 +81,16 @@ function RouteComponent() {
 
   return (
     <div className="w-full p-2">
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-3xl font-bold">Create Custom Text</h1>
+        <Link to="/guide">
+          <button className="btn btn-outline btn-success gap-2">
+            <BookOpen className="w-4 h-4" />
+            View Guide
+          </button>
+        </Link>
+      </div>
+
       {isAdded && (
         <div role="alert" className="alert alert-success">
           <svg

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/saved-text")({
@@ -59,10 +59,18 @@ function RouteComponent() {
 
   return (
     <div className="p-2">
-      <div className="flex items-center gap-3 mb-2">
-        <h1 className="text-3xl font-bold">Custom Text</h1>
-        <Link to="/custom-text">
-          <button className="btn btn-sm btn-success">Create</button>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <h1 className="text-3xl font-bold">Custom Text</h1>
+          <Link to="/custom-text">
+            <button className="btn btn-sm btn-success">Create</button>
+          </Link>
+        </div>
+        <Link to="/guide">
+          <button className="btn btn-outline btn-success gap-2">
+            <BookOpen className="w-4 h-4" />
+            View Guide
+          </button>
         </Link>
       </div>
       <div className="grid gird-cols-1 md:grid-cols-2 gap-4 w-full">
