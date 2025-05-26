@@ -21,8 +21,8 @@ export const Route = createFileRoute("/custom-text")({
 });
 
 const formSchema = z.object({
-  label: z.string().min(3, "Label must be at least 3 characters long"),
-  text: z.string().min(10, "Text/Content must be available"),
+  label: z.string().min(3, "Le libellé doit comporter au moins 3 caractères"),
+  text: z.string().min(10, "Le texte/contenu doit être disponible"),
   language: z.enum(["python", "cpp", "plaintext"]),
   isObfuscated: z.boolean().default(false),
   sourceFileName: z.string().optional(),
@@ -58,7 +58,7 @@ function RouteComponent() {
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setFileSelectedMessage(`Selected file: ${file.name}. Processing...`);
+      setFileSelectedMessage(`Fichier sélectionné : ${file.name}. Traitement en cours...`);
       setValue("sourceFileName", file.name); // Store original filename
 
       const reader = new FileReader();
@@ -92,7 +92,7 @@ function RouteComponent() {
           setValue("language", "plaintext");
           setValue("isObfuscated", false);
         }
-        setFileSelectedMessage(`File "${file.name}" loaded. Label and language may have been auto-detected.`);
+        setFileSelectedMessage(`Fichier "${file.name}" chargé. Le libellé et la langue peuvent avoir été détectés automatiquement.`);
       };
 
       // For .bin, we assume it contains Base64 *text*. If it's true binary, use readAsArrayBuffer
@@ -151,7 +151,7 @@ function RouteComponent() {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <span>Your text has been saved!</span>
+          <span>Votre texte a été sauvegardé !</span>
         </div>
       )}
 
@@ -160,7 +160,7 @@ function RouteComponent() {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <span>Error! Duplicate text found.</span>
+          <span>Erreur ! Texte dupliqué trouvé.</span>
         </div>
       )}
 
@@ -168,7 +168,7 @@ function RouteComponent() {
         {/* ... (rest of the form remains the same as in the previous correct version) ... */}
         <div>
           <label htmlFor="fileInput" className="label label-text">
-            Upload Code/Text File (.py, .cpp, .txt, or .bin for obfuscated)
+            Télécharger un fichier de code/texte (.py, .cpp, .txt, ou .bin pour obfusqué)
           </label>
           <input
             type="file"
@@ -181,12 +181,12 @@ function RouteComponent() {
         </div>
 
         <div>
-          <label htmlFor="label" className="label label-text">Practice Label</label>
+          <label htmlFor="label" className="label label-text">Libellé de l'entraînement</label>
           <input
             type="text"
             id="label"
             className="input input-bordered w-full"
-            placeholder="Enter label (e.g., Python script, C++ function)"
+            placeholder="Entrez un libellé (par ex., script Python, fonction C++)"
             {...register("label")}
           />
           {errors.label && <p className="text-red-500 text-sm mt-1">{errors.label.message}</p>}
@@ -194,11 +194,11 @@ function RouteComponent() {
 
         <div>
             <label htmlFor="textManual" className="label label-text">
-                Or Paste Text Manually (Content from uploaded file will not be shown here)
+                Ou collez le texte manuellement (Le contenu du fichier téléchargé ne sera pas affiché ici)
             </label>
             <textarea
                 id="textManual"
-                placeholder={sourceFileName ? `Content from "${sourceFileName}" is loaded and will appear on the practice screen. You can also paste manual text here to override file selection.` : "Paste your text or code here if not uploading a file..."}
+                placeholder={sourceFileName ? `Le contenu de "${sourceFileName}" est chargé et apparaîtra sur l'écran d'entraînement. Vous pouvez également coller du texte manuellement ici pour remplacer la sélection de fichier.` : "Collez votre texte ou code ici si vous ne téléchargez pas de fichier..."}
                 className="textarea textarea-bordered w-full font-mono"
                 rows={sourceFileName ? 3 : 10}
                 cols={50}
@@ -206,13 +206,13 @@ function RouteComponent() {
                 disabled={!!sourceFileName}
             />
             {errors.text && <p className="text-red-500 text-sm mt-1">{errors.text.message}</p>}
-            {sourceFileName && <p className="text-sm text-info mt-1">Content from uploaded file will be used unless you clear the file selection and paste new content.</p>}
+            {sourceFileName && <p className="text-sm text-info mt-1">Le contenu du fichier téléchargé sera utilisé sauf si vous désélectionnez le fichier et collez un nouveau contenu.</p>}
         </div>
         
         <div>
-          <label htmlFor="language" className="label label-text">Language (for syntax highlighting)</label>
+          <label htmlFor="language" className="label label-text">Langue (pour la coloration syntaxique)</label>
           <select {...register("language")} className="select select-bordered w-full">
-            <option value="plaintext">Plain Text</option>
+            <option value="plaintext">Texte brut</option>
             <option value="python">Python</option>
             <option value="cpp">C++</option>
           </select>
@@ -221,7 +221,7 @@ function RouteComponent() {
         <input type="hidden" {...register("isObfuscated")} />
 
         <button className="btn btn-success w-full mt-6" type="submit">
-          Save and Go to Practice
+          Sauvegarder et Aller à l'entraînement
         </button>
       </form>
     </div>

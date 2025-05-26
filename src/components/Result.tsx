@@ -21,12 +21,12 @@ async function generateSha256Hash(text: string): Promise<string> {
 
 export default function Result({
   accuracy,
-  wpm,
+  cpm,
   originalText,
   userInput,
 }: {
   accuracy: number;
-  wpm: number;
+  cpm: number;
   originalText: string;
   userInput: string;
 }) {
@@ -71,17 +71,17 @@ export default function Result({
   let status: string;
   let emoji: string;
 
-  if (accuracy >= 90 && wpm >= 60) {
-    status = "Excellent!";
+  if (accuracy >= 90 && cpm >= 60) {
+    status = "Excellent !";
     emoji = "🎉";
-  } else if (accuracy >= 80 && wpm >= 50) {
-    status = "Great Job!";
+  } else if (accuracy >= 80 && cpm >= 50) {
+    status = "Beau travail !";
     emoji = "👍";
-  } else if (accuracy >= 70 && wpm >= 40) {
-    status = "Good Effort!";
+  } else if (accuracy >= 70 && cpm >= 40) {
+    status = "Bel effort !";
     emoji = "😊";
   } else {
-    status = "Keep Practicing!";
+    status = "Continuez à vous entraîner !";
     emoji = "💪";
   }
 
@@ -94,10 +94,10 @@ export default function Result({
         </div>
         <div className="grid grid-cols-2 gap-4 text-lg">
           <div className="bg-success-content bg-opacity-20 p-3 rounded">
-            Accuracy: <span className="font-bold">{accuracy}%</span>
+            Précision : <span className="font-bold">{accuracy}%</span>
           </div>
           <div className="bg-success-content bg-opacity-20 p-3 rounded">
-            WPM: <span className="font-bold">{wpm}</span>
+            CPM : <span className="font-bold">{cpm}</span>
           </div>
         </div>
         <div>
@@ -106,40 +106,40 @@ export default function Result({
             className="w-full bg-success-content bg-opacity-30 hover:bg-opacity-40 p-3 flex items-center justify-center gap-2 rounded border border-success-content text-lg"
           >
             <RepeatIcon className="w-5 h-5" />
-            Restart Practice
+            Recommencer l'entraînement
           </button>
         </div>
       </section>
 
       <section className="p-6 w-full md:w-3/4 lg:w-1/2 rounded-lg bg-base-200 dark:bg-base-300 shadow-xl">
         <h2 className="text-2xl font-semibold mb-4 text-center">
-          Detailed Character Performance
+          Performance détaillée des caractères
         </h2>
         <div className="mt-6">
-          <h3 className="text-xl font-semibold mb-2">Practice Text Integrity</h3>
+          <h3 className="text-xl font-semibold mb-2">Intégrité du texte d'entraînement</h3>
           <p className="text-sm text-base-content dark:text-gray-400">
-            SHA-256 Hash of original text:
+            Hachage SHA-256 du texte original :
           </p>
           <p className="font-mono text-xs break-all bg-base-100 dark:bg-base-200 p-2 rounded">
-            {textHash || "Calculating..."}
+            {textHash || "Calcul en cours..."}
           </p>
         </div>
         <div className="overflow-x-auto max-h-96">
           <table className="table table-zebra table-pin-rows w-full">
             <thead>
               <tr>
-                <th className="text-base">Character</th>
-                <th className="text-base text-center">Total Count</th>
-                <th className="text-base text-center">Error Count</th>
+                <th className="text-base">Caractère</th>
+                <th className="text-base text-center">Nombre total</th>
+                <th className="text-base text-center">Nombre d'erreurs</th>
               </tr>
             </thead>
             <tbody>
               {charStats.map((stat) => (
                 <tr key={stat.character}>
                   <td className="font-mono text-lg">
-                    {stat.character === " " ? "[Space]" : stat.character}
-                    {stat.character === "\n" ? "[Newline]" : ""}
-                    {stat.character === "\t" ? "[Tab]" : ""}
+                    {stat.character === " " ? "[Espace]" : stat.character}
+                    {stat.character === "\n" ? "[Saut de ligne]" : ""}
+                    {stat.character === "\t" ? "[Tabulation]" : ""}
                   </td>
                   <td className="text-center text-lg">{stat.totalCount}</td>
                   <td
@@ -154,7 +154,7 @@ export default function Result({
               {charStats.length === 0 && (
                 <tr>
                   <td colSpan={3} className="text-center">
-                    No character data to display.
+                    Aucune donnée de caractère à afficher.
                   </td>
                 </tr>
               )}

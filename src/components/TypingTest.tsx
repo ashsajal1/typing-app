@@ -36,7 +36,7 @@ export default function TypingTest({
   const [timer, setTimer] = useState<number>(0);
   const [isStarted, setIsStarted] = useState(false);
   const [accuracy, setAccuracy] = useState<number>(0);
-  const [wpm, setWpm] = useState(0);
+  const [cpm, setCpm] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [textToPractice, setTextToPractice] = useState(text);
 
@@ -94,11 +94,11 @@ export default function TypingTest({
 
   useEffect(() => {
     if (isStarted && !isSubmitted) {
-      const wordsTyped = userInput.split(/[\s\n]+/).filter(Boolean).length;
+      const charactersTyped = userInput.length;
       const minutes = timer / 60;
-      const currentWpm = minutes > 0 ? Math.round(wordsTyped / minutes) : 0;
+      const currentCpm = minutes > 0 ? Math.round(charactersTyped / minutes) : 0;
 
-      setWpm(Number.isFinite(currentWpm) ? currentWpm : 0);
+      setCpm(Number.isFinite(currentCpm) ? currentCpm : 0);
 
       const comparisonLength = Math.min(textToPractice.length, userInput.length);
       const textSlice = textToPractice.slice(0, comparisonLength);
@@ -124,7 +124,7 @@ export default function TypingTest({
 
   if (isSubmitted) {
     // Pass originalText and userInput to the Result component
-    return <Result wpm={wpm} accuracy={accuracy} originalText={textToPractice} userInput={userInput} />;
+    return <Result cpm={cpm} accuracy={accuracy} originalText={textToPractice} userInput={userInput} />;
   }
 
   const lines = textToPractice.split('\n');
@@ -202,18 +202,18 @@ export default function TypingTest({
         <div className="flex items-center gap-2 w-full">
           <Timer time={timer} />
           <div className="p-2 w-full rounded border-success border text-success">
-            Accuracy : <span>{accuracy}%</span>
+            Précision : <span>{accuracy}%</span>
           </div>
           <div className="p-2 w-full rounded border-success border text-success">
-            WPM : <span>{wpm}</span>
+            CPM : <span>{cpm}</span>
           </div>
         </div>
 
         <button onClick={handleSubmit} className="btn btn-success mt-2">
-          Submit / Finish
+          Soumettre / Terminer
         </button>
         <button onClick={() => window.location.reload()} className="btn btn-outline btn-accent mt-2">
-          Reset Practice
+          Réinitialiser l'entraînement
         </button>
       </section>
     </>
