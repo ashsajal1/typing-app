@@ -427,12 +427,65 @@ export default function TypingTest({
                   if (!isStarted) {
                     setIsStarted(true);
                   }
-                  setUserInput(e.target.value);
+
+                  // If there's a mistake and user tries to type more, prevent it
+                  if (hasMistake) {
+                    e.preventDefault();
+                    setShowMistakeAlert(true);
+                    setTimeout(() => setShowMistakeAlert(false), 2000);
+                    return;
+                  }
+
+                  const newInput = e.target.value;
+                  
+                  // Prevent typing if we're trying to rewrite a correct character
+                  if (newInput.length <= lastCorrectPosition + 1) {
+                    setUserInput(newInput);
+                    return;
+                  }
+
+                  // Calculate accuracy for mobile
+                  const expectedChar = parsedText.reduce((acc, part) => {
+                    if (acc.length >= newInput.length) return acc;
+                    return acc + part.text;
+                  }, "")[newInput.length - 1];
+
+                  const currentChar = newInput[newInput.length - 1];
+                  if (currentChar && expectedChar && currentChar !== expectedChar) {
+                    setMistakes(prev => prev + 1);
+                    setHasMistake(true);
+                    setShowMistakeAlert(true);
+                    setTimeout(() => setShowMistakeAlert(false), 2000);
+                    // Update input to show the wrong character
+                    setUserInput(newInput);
+                    return;
+                  } else if (currentChar && expectedChar && currentChar === expectedChar) {
+                    setLastCorrectPosition(newInput.length - 1);
+                    setUserInput(newInput);
+                  }
+                  setTotalKeystrokes(prev => prev + 1);
                 }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
                     handleSubmit();
+                  }
+                  // Handle backspace for mobile
+                  if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    setUserInput(prev => {
+                      const newInput = prev.slice(0, -1);
+                      // If we're backspacing the mistake, reset the mistake state
+                      if (hasMistake && newInput.length === prev.length - 1) {
+                        setHasMistake(false);
+                        setShowMistakeAlert(false);
+                      }
+                      // Prevent backspacing over correct letters
+                      if (newInput.length <= lastCorrectPosition) {
+                        return prev;
+                      }
+                      return newInput;
+                    });
                   }
                 }}
                 className="input input-bordered w-full"
