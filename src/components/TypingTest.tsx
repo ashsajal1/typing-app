@@ -552,7 +552,7 @@ export default function TypingTest({
                       )}
                       {/* Translation tooltip */}
                       {part.translation && isCurrentWord && (
-                        <span className="absolute -top-14 left-1/2 transform -translate-x-1/2 text-xs bg-blue-500 text-white px-2 py-1 rounded whitespace-nowrap">
+                        <span className="absolute -bottom-7 left-1/2 transform -translate-x-1/2 text-xs bg-blue-500 text-white px-2 py-1 rounded whitespace-nowrap">
                           {part.translation}
                         </span>
                       )}
