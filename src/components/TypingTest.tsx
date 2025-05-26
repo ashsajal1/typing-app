@@ -444,7 +444,10 @@ export default function TypingTest({
                   left: '0',
                   right: '0',
                   opacity: '0',
-                  pointerEvents: 'none'
+                  pointerEvents: 'none',
+                  transform: 'translateZ(0)',
+                  backfaceVisibility: 'hidden',
+                  perspective: '1000px'
                 }}
               />
               <div className="text-sm text-base-content/70 text-center py-2">
@@ -454,7 +457,14 @@ export default function TypingTest({
           </div>
         )}
 
-        <div className="h-[300px] overflow-y-auto relative border dark:border-gray-700 rounded" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className="h-[300px] overflow-y-auto relative border dark:border-gray-700 rounded" style={{ 
+          scrollbarWidth: 'none', 
+          msOverflowStyle: 'none',
+          WebkitOverflowScrolling: 'touch',
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
+          perspective: '1000px'
+        }}>
           <div className="p-2 md:text-2xl select-none flex flex-wrap gap-y-2 w-full relative [&::-webkit-scrollbar]:hidden">
             {/* Display a guidance message when not started */}
             {!isStarted && (
