@@ -8,24 +8,6 @@ export default function Footer() {
                     <TypeIcon />
                     <p>Application d'Entraînement à la Dactylographie.<br />Entraînez-vous à taper</p>
                 </aside>
-                <nav>
-                    <h6 className="footer-title">Services</h6>
-                    <a className="link link-hover">Image de marque</a>
-                    <a className="link link-hover">Conception</a>
-                    <a className="link link-hover">Marketing</a>
-                    <a className="link link-hover">Publicité</a>
-                </nav>
-                <nav>
-                    <h6 className="footer-title">Entreprise</h6>
-                    <a className="link link-hover">Emplois</a>
-                    <a className="link link-hover">Dossier de presse</a>
-                </nav>
-                <nav>
-                    <h6 className="footer-title">Légal</h6>
-                    <a className="link link-hover">Conditions d'utilisation</a>
-                    <a className="link link-hover">Politique de confidentialité</a>
-                    <a className="link link-hover">Politique concernant les cookies</a>
-                </nav>
             </footer>
 
             <footer className="footer footer-center p-4 bg-base-300 text-base-content">
