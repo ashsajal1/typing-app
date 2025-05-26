@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Result from "./Result";
 
-import calculateAccuracy from "../lib/compare";
 import { ignoredKeys } from "../lib/utils";
 
 // Command interface
@@ -95,15 +94,13 @@ export default function TypingTest({
     );
     setWpm(Number.isFinite(wordPerMinute) ? wordPerMinute : 0);
 
-    const slicedText =
-      userInput.length <= textToPractice.length
-        ? textToPractice.slice(0, userInput.length)
-        : textToPractice;
-    const accuracy = calculateAccuracy(slicedText, userInput);
-    setAccuracy(Number.isFinite(parseInt(accuracy)) ? parseInt(accuracy) : 0);
+    // Calculate final accuracy
+    const finalAccuracy = totalKeystrokes > 0 ? 
+      ((totalKeystrokes - mistakes) / totalKeystrokes) * 100 : 0;
+    setAccuracy(Number.isFinite(finalAccuracy) ? finalAccuracy : 0); // Remove Math.round to keep exact value
 
     setIsSubmitted(true);
-  }, [isStarted, textToPractice, timer, userInput]);
+  }, [isStarted, timer, userInput, mistakes, totalKeystrokes]);
 
   // Define available commands
   const commands: Command[] = [
@@ -288,7 +285,7 @@ export default function TypingTest({
       // Calculate accuracy based on mistakes and total keystrokes
       const accuracy = totalKeystrokes > 0 ? 
         ((totalKeystrokes - mistakes) / totalKeystrokes) * 100 : 0;
-      setAccuracy(Number.isFinite(accuracy) ? Math.round(accuracy) : 0);
+      setAccuracy(Number.isFinite(accuracy) ? accuracy : 0); // Remove Math.round to keep exact value
     }
   }, [textToPractice, timer, userInput, isStarted, isSubmitted, mistakes, totalKeystrokes]);
 
