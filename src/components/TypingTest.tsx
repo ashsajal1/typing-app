@@ -46,6 +46,33 @@ const parseTextWithTranslations = (text: string): TextWithTranslation[] => {
   return parts;
 };
 
+// Add this at the top of the file, after the imports
+const typingAnimation = `
+@keyframes typing {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+}
+
+.animate-typing {
+  animation: typing 0.3s ease-in-out;
+}
+`;
+
+// Add this right after the typingAnimation constant
+const style = document.createElement('style');
+style.textContent = typingAnimation;
+document.head.appendChild(style);
+
 export default function TypingTest({
   text,
   eclipsedTime,
@@ -71,6 +98,7 @@ export default function TypingTest({
   const [hasMistake, setHasMistake] = useState(false);
   const [showMistakeAlert, setShowMistakeAlert] = useState(false);
   const [lastCorrectPosition, setLastCorrectPosition] = useState<number>(-1);
+  const [lastTypedPosition, setLastTypedPosition] = useState<number>(-1);
 
   // Check if user is on mobile
   useEffect(() => {
@@ -169,6 +197,7 @@ export default function TypingTest({
       setHasMistake(false);
       setShowMistakeAlert(false);
       setLastCorrectPosition(-1);
+      setLastTypedPosition(-1);
       return;
     }
 
@@ -250,7 +279,6 @@ export default function TypingTest({
     if (event.key === "Backspace") {
       setUserInput((prevKeys) => {
         const newInput = prevKeys.slice(0, -1);
-        // If we're backspacing the mistake, reset the mistake state
         if (hasMistake && newInput.length === userInput.length - 1) {
           setHasMistake(false);
           setShowMistakeAlert(false);
@@ -258,19 +286,18 @@ export default function TypingTest({
         return newInput;
       });
     } else if (event.key === " ") {
-      event.preventDefault(); // Prevent the default action of space
+      event.preventDefault();
       setUserInput((prevKeys) => {
         const newInput = prevKeys + event.key;
-        // Check if the space is correct
         if (expectedChar !== event.key) {
           setMistakes(prev => prev + 1);
           setHasMistake(true);
           setShowMistakeAlert(true);
-          // Hide alert after 2 seconds
           setTimeout(() => setShowMistakeAlert(false), 2000);
         } else {
-          // Update last correct position when typing correctly
           setLastCorrectPosition(newInput.length - 1);
+          setLastTypedPosition(newInput.length - 1);
+          setTimeout(() => setLastTypedPosition(-1), 300);
         }
         setTotalKeystrokes(prev => prev + 1);
         return newInput;
@@ -278,16 +305,15 @@ export default function TypingTest({
     } else {
       setUserInput((prevKeys) => {
         const newInput = prevKeys + event.key;
-        // Check if the character is correct
         if (expectedChar !== event.key) {
           setMistakes(prev => prev + 1);
           setHasMistake(true);
           setShowMistakeAlert(true);
-          // Hide alert after 2 seconds
           setTimeout(() => setShowMistakeAlert(false), 2000);
         } else {
-          // Update last correct position when typing correctly
           setLastCorrectPosition(newInput.length - 1);
+          setLastTypedPosition(newInput.length - 1);
+          setTimeout(() => setLastTypedPosition(-1), 300);
         }
         setTotalKeystrokes(prev => prev + 1);
         return newInput;
@@ -591,13 +617,14 @@ export default function TypingTest({
                       className={`
                         mx-[0.5px] 
                         border-b 
-                        ${isCurrent ? 'border-b-success border-b-2 animate-pulse' : 'border-b-base-300 dark:border-gray-600'} 
+                        ${isCurrent ? 'border-b-success border-b-2' : 'border-b-base-300 dark:border-gray-600'} 
                         ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
                         p-[1px] rounded w-[27px] text-center 
                         ${isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
                           isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : 
                           isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""
                         }
+                        ${charIndex === lastTypedPosition ? 'animate-typing' : ''}
                         ${isCurrent ? 'relative' : ''}
                       `}
                       aria-current={isCurrent ? "true" : undefined}
