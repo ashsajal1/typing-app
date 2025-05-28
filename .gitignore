@@ -29,3 +29,8 @@ dist-ssr
 coverage
 *.lcov
 .nyc_output
+
+# Cypress
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
