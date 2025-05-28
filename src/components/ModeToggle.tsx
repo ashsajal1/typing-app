@@ -3,7 +3,9 @@ import useStore from '../store/themeStore';
 import { MoonIcon, SunIcon } from 'lucide-react';
 
 const ModeToggle = () => {
-  const { isDarkMode, toggleDarkMode } = useStore((state) => ({
+  // Use mock store in Storybook, real store otherwise
+  const store = (window as any).__MOCK_STORE__ || useStore;
+  const { isDarkMode, toggleDarkMode } = store((state: any) => ({
     isDarkMode: state.isDarkMode,
     toggleDarkMode: state.toggleTheme,
   }));
