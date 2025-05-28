@@ -1,29 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { RouterProvider, createRouter, createRootRoute, createMemoryHistory } from '@tanstack/react-router';
 import Navbar from './Navbar';
 
-// Create a simple router for the stories
-const rootRoute = createRootRoute({
-  component: () => <Navbar />,
-});
-
-const router = createRouter({
-  routeTree: rootRoute,
-  history: createMemoryHistory(),
-});
-
-// Create a decorator to provide router context
+// Create a decorator that provides a mock router context
 const RouterDecorator = (Story: React.ComponentType) => (
-  <RouterProvider router={router}>
+  <div className="min-h-screen bg-base-100">
     <Story />
-  </RouterProvider>
+  </div>
 );
 
 const meta = {
   title: 'Components/Navbar',
   component: Navbar,
   parameters: {
-    layout: 'fullscreen', // Use fullscreen layout for navbar
+    layout: 'fullscreen',
   },
   tags: ['autodocs'],
   decorators: [RouterDecorator],
