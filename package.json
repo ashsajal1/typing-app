@@ -18,7 +18,8 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cypress:component": "cypress run --component",
-    "cypress:e2e": "cypress run --e2e"
+    "cypress:e2e": "cypress run --e2e",
+    "cypress:coverage": "cypress run --env coverage=true"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -64,7 +65,9 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.18",
     "eslint-plugin-storybook": "^0.12.0",
+    "istanbul-lib-coverage": "^3.2.2",
     "jsdom": "^26.1.0",
+    "nyc": "^17.1.0",
     "playwright": "^1.52.0",
     "postcss": "^8.5.1",
     "storybook": "^8.6.14",

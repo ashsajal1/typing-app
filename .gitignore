@@ -24,3 +24,8 @@ dist-ssr
 *.sw?
 
 *storybook.log
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+.nyc_output
