@@ -56,15 +56,31 @@ describe('Result', () => {
   // Test star rating
   describe('star rating', () => {
     it('displays correct number of stars for high performance', () => {
+      // accuracy + wpm = 95 + 65 = 160, 160/30 = 5.33, floor = 5
       render(<Result accuracy={95} wpm={65} wpmHistory={[]} />);
       const filledStars = document.querySelectorAll('.text-yellow-300');
       expect(filledStars.length).toBe(5);
     });
 
+    it('displays correct number of stars for medium performance', () => {
+      // accuracy + wpm = 80 + 40 = 120, 120/30 = 4
+      render(<Result accuracy={80} wpm={40} wpmHistory={[]} />);
+      const filledStars = document.querySelectorAll('.text-yellow-300');
+      expect(filledStars.length).toBe(4);
+    });
+
     it('displays correct number of stars for low performance', () => {
+      // accuracy + wpm = 60 + 30 = 90, 90/30 = 3
       render(<Result accuracy={60} wpm={30} wpmHistory={[]} />);
       const filledStars = document.querySelectorAll('.text-yellow-300');
       expect(filledStars.length).toBe(3);
+    });
+
+    it('displays minimum of 1 star', () => {
+      // accuracy + wpm = 20 + 10 = 30, 30/30 = 1
+      render(<Result accuracy={20} wpm={10} wpmHistory={[]} />);
+      const filledStars = document.querySelectorAll('.text-yellow-300');
+      expect(filledStars.length).toBe(1);
     });
   });
 
