@@ -1,11 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import ModeToggle from './ModeToggle';
 import useMockThemeStore from '../store/__mocks__/themeStore';
+import useStore from '../store/themeStore';
+
+type StoreType = typeof useStore;
+
+declare global {
+  interface Window {
+    __MOCK_STORE__: StoreType;
+  }
+}
 
 // Create a decorator to provide store context
 const StoreDecorator = (Story: React.ComponentType) => {
-  // Override the store import
-  (window as any).__MOCK_STORE__ = useMockThemeStore;
+  window.__MOCK_STORE__ = useMockThemeStore as StoreType;
   return <Story />;
 };
 
