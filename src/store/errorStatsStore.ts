@@ -11,6 +11,7 @@ interface ErrorStatsStore {
   errorStats: ErrorStats;
   addError: (key: string) => void;
   resetStats: () => void;
+  getHighErrorChars: () => string[];
 }
 
 const initialErrorStats: ErrorStats = {
@@ -21,7 +22,7 @@ const initialErrorStats: ErrorStats = {
 
 export const useErrorStatsStore = create<ErrorStatsStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       errorStats: initialErrorStats,
       addError: (key: string) =>
         set((state) => {
@@ -39,6 +40,18 @@ export const useErrorStatsStore = create<ErrorStatsStore>()(
         set({
           errorStats: initialErrorStats,
         }),
+      getHighErrorChars: () => {
+        const state = get();
+        const { errorMap, totalErrors } = state.errorStats;
+        
+        // Calculate error rate for each character
+        return Object.entries(errorMap)
+          .filter(([, count]) => {
+            const errorRate = (count / totalErrors) * 100;
+            return errorRate > 50;
+          })
+          .map(([char]) => char);
+      },
     }),
     {
       name: 'error-stats-storage',
