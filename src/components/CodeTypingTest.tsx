@@ -64,7 +64,7 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
       return
     }
 
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && !isStarted) {
       handleSubmit()
       return
     }
@@ -88,6 +88,26 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
       event.preventDefault()
       setUserInput(prev => prev + '    ') // Add 4 spaces for tab
       setCurrentColumn(prev => prev + 4)
+      return
+    }
+
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      setUserInput(prev => {
+        const newInput = prev + '\n'
+        if (expectedChar !== '\n') {
+          setMistakes(prev => prev + 1)
+          setHasMistake(true)
+          setShowMistakeAlert(true)
+          setTimeout(() => setShowMistakeAlert(false), 2000)
+        } else {
+          setLastCorrectPosition(newInput.length - 1)
+        }
+        setCurrentLine(prev => prev + 1)
+        setCurrentColumn(0)
+        setTotalKeystrokes(prev => prev + 1)
+        return newInput
+      })
       return
     }
 
@@ -118,8 +138,6 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
       // Handle special cases
       if (event.key === ' ') {
         charToType = ' '
-      } else if (event.key === 'Enter') {
-        charToType = '\n'
       } else if (event.key.length === 1) {
         // Only process single character keys
         charToType = event.key
@@ -139,14 +157,7 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
           setLastCorrectPosition(newInput.length - 1)
         }
 
-        // Update line and column for new input
-        if (charToType === '\n') {
-          setCurrentLine(prev => prev + 1)
-          setCurrentColumn(0)
-        } else {
-          setCurrentColumn(prev => prev + 1)
-        }
-
+        setCurrentColumn(prev => prev + 1)
         setTotalKeystrokes(prev => prev + 1)
         return newInput
       })
