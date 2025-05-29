@@ -26,7 +26,7 @@ export const useErrorStatsStore = create<ErrorStatsStore>()(
   persist(
     (set, get) => ({
       errorStats: initialErrorStats,
-      showHighErrorChars: true,
+      showHighErrorChars: false,
       addError: (key: string) =>
         set((state) => {
           const newErrorMap = { ...state.errorStats.errorMap };
