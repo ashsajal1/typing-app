@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Result from "./Result";
+import { useErrorStatsStore } from '../store/errorStatsStore';
+import ErrorAnalysis from './ErrorAnalysis';
 
 import { ignoredKeys } from "../lib/utils";
 
@@ -99,6 +101,8 @@ export default function TypingTest({
   const [showMistakeAlert, setShowMistakeAlert] = useState(false);
   const [lastCorrectPosition, setLastCorrectPosition] = useState<number>(-1);
   const [lastTypedPosition, setLastTypedPosition] = useState<number>(-1);
+  const [currentErrorMap, setCurrentErrorMap] = useState<Map<string, number>>(new Map());
+  const { addError } = useErrorStatsStore();
 
   // Check if user is on mobile
   useEffect(() => {
@@ -294,6 +298,14 @@ export default function TypingTest({
           setHasMistake(true);
           setShowMistakeAlert(true);
           setTimeout(() => setShowMistakeAlert(false), 2000);
+          
+          // Update error maps
+          setCurrentErrorMap(prev => {
+            const newMap = new Map(prev);
+            newMap.set(event.key, (newMap.get(event.key) || 0) + 1);
+            return newMap;
+          });
+          addError(event.key);
         } else {
           setLastCorrectPosition(newInput.length - 1);
           setLastTypedPosition(newInput.length - 1);
@@ -310,6 +322,14 @@ export default function TypingTest({
           setHasMistake(true);
           setShowMistakeAlert(true);
           setTimeout(() => setShowMistakeAlert(false), 2000);
+          
+          // Update error maps
+          setCurrentErrorMap(prev => {
+            const newMap = new Map(prev);
+            newMap.set(event.key, (newMap.get(event.key) || 0) + 1);
+            return newMap;
+          });
+          addError(event.key);
         } else {
           setLastCorrectPosition(newInput.length - 1);
           setLastTypedPosition(newInput.length - 1);
@@ -319,7 +339,7 @@ export default function TypingTest({
         return newInput;
       });
     }
-  }, [handleSubmit, isMobile, isStarted, showCommandPalette, text, parsedText, hasMistake, userInput.length, lastCorrectPosition]);
+  }, [handleSubmit, isMobile, isStarted, showCommandPalette, text, parsedText, hasMistake, userInput.length, lastCorrectPosition, addError]);
 
   useEffect(() => {
     // Only attach keyboard event listener for non-mobile devices
@@ -381,7 +401,12 @@ export default function TypingTest({
   }, [eclipsedTime, handleSubmit, timer]);
 
   if (isSubmitted) {
-    return <Result wpm={wpm} accuracy={accuracy} wpmHistory={wpmHistory} />;
+    return (
+      <div className="space-y-4">
+        <Result wpm={wpm} accuracy={accuracy} wpmHistory={wpmHistory} />
+        <ErrorAnalysis currentErrorMap={currentErrorMap} currentTotalErrors={mistakes} />
+      </div>
+    );
   }
 
   return (
