@@ -81,8 +81,15 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
     }
 
     const expectedChar = text[userInput.length]
-    const isNewLine = event.key === 'Enter'
     const isBackspace = event.key === 'Backspace'
+
+    // Handle special keys
+    if (event.key === 'Tab') {
+      event.preventDefault()
+      setUserInput(prev => prev + '    ') // Add 4 spaces for tab
+      setCurrentColumn(prev => prev + 4)
+      return
+    }
 
     if (isBackspace) {
       setUserInput(prev => {
@@ -105,9 +112,25 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
         return newInput
       })
     } else {
+      // Get the actual character to type
+      let charToType = event.key
+      
+      // Handle special cases
+      if (event.key === ' ') {
+        charToType = ' '
+      } else if (event.key === 'Enter') {
+        charToType = '\n'
+      } else if (event.key.length === 1) {
+        // Only process single character keys
+        charToType = event.key
+      } else {
+        // Skip other special keys
+        return
+      }
+
       setUserInput(prev => {
-        const newInput = prev + event.key
-        if (expectedChar !== event.key) {
+        const newInput = prev + charToType
+        if (expectedChar !== charToType) {
           setMistakes(prev => prev + 1)
           setHasMistake(true)
           setShowMistakeAlert(true)
@@ -117,7 +140,7 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
         }
 
         // Update line and column for new input
-        if (isNewLine) {
+        if (charToType === '\n') {
           setCurrentLine(prev => prev + 1)
           setCurrentColumn(0)
         } else {
