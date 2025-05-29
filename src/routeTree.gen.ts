@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as StatsImport } from './routes/stats'
 import { Route as SavedTextImport } from './routes/saved-text'
 import { Route as PracticeImport } from './routes/practice'
 import { Route as GuideImport } from './routes/guide'
@@ -19,6 +20,12 @@ import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const StatsRoute = StatsImport.update({
+  id: '/stats',
+  path: '/stats',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const SavedTextRoute = SavedTextImport.update({
   id: '/saved-text',
@@ -102,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SavedTextImport
       parentRoute: typeof rootRoute
     }
+    '/stats': {
+      id: '/stats'
+      path: '/stats'
+      fullPath: '/stats'
+      preLoaderRoute: typeof StatsImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -114,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/guide': typeof GuideRoute
   '/practice': typeof PracticeRoute
   '/saved-text': typeof SavedTextRoute
+  '/stats': typeof StatsRoute
 }
 
 export interface FileRoutesByTo {
@@ -123,6 +138,7 @@ export interface FileRoutesByTo {
   '/guide': typeof GuideRoute
   '/practice': typeof PracticeRoute
   '/saved-text': typeof SavedTextRoute
+  '/stats': typeof StatsRoute
 }
 
 export interface FileRoutesById {
@@ -133,6 +149,7 @@ export interface FileRoutesById {
   '/guide': typeof GuideRoute
   '/practice': typeof PracticeRoute
   '/saved-text': typeof SavedTextRoute
+  '/stats': typeof StatsRoute
 }
 
 export interface FileRouteTypes {
@@ -144,8 +161,16 @@ export interface FileRouteTypes {
     | '/guide'
     | '/practice'
     | '/saved-text'
+    | '/stats'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/custom-text' | '/guide' | '/practice' | '/saved-text'
+  to:
+    | '/'
+    | '/about'
+    | '/custom-text'
+    | '/guide'
+    | '/practice'
+    | '/saved-text'
+    | '/stats'
   id:
     | '__root__'
     | '/'
@@ -154,6 +179,7 @@ export interface FileRouteTypes {
     | '/guide'
     | '/practice'
     | '/saved-text'
+    | '/stats'
   fileRoutesById: FileRoutesById
 }
 
@@ -164,6 +190,7 @@ export interface RootRouteChildren {
   GuideRoute: typeof GuideRoute
   PracticeRoute: typeof PracticeRoute
   SavedTextRoute: typeof SavedTextRoute
+  StatsRoute: typeof StatsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -173,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   GuideRoute: GuideRoute,
   PracticeRoute: PracticeRoute,
   SavedTextRoute: SavedTextRoute,
+  StatsRoute: StatsRoute,
 }
 
 export const routeTree = rootRoute
@@ -190,7 +218,8 @@ export const routeTree = rootRoute
         "/custom-text",
         "/guide",
         "/practice",
-        "/saved-text"
+        "/saved-text",
+        "/stats"
       ]
     },
     "/": {
@@ -210,6 +239,9 @@ export const routeTree = rootRoute
     },
     "/saved-text": {
       "filePath": "saved-text.tsx"
+    },
+    "/stats": {
+      "filePath": "stats.tsx"
     }
   }
 }
