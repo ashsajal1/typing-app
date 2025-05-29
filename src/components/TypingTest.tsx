@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Result from "./Result";
 import { useErrorStatsStore } from '../store/errorStatsStore';
-import ErrorAnalysis from './ErrorAnalysis';
 
 import { ignoredKeys } from "../lib/utils";
 
