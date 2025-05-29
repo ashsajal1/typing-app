@@ -16,6 +16,7 @@ import { Route as SavedTextImport } from './routes/saved-text'
 import { Route as PracticeImport } from './routes/practice'
 import { Route as GuideImport } from './routes/guide'
 import { Route as CustomTextImport } from './routes/custom-text'
+import { Route as CodeImport } from './routes/code'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 
@@ -51,6 +52,12 @@ const CustomTextRoute = CustomTextImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const CodeRoute = CodeImport.update({
+  id: '/code',
+  path: '/code',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AboutRoute = AboutImport.update({
   id: '/about',
   path: '/about',
@@ -79,6 +86,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutImport
+      parentRoute: typeof rootRoute
+    }
+    '/code': {
+      id: '/code'
+      path: '/code'
+      fullPath: '/code'
+      preLoaderRoute: typeof CodeImport
       parentRoute: typeof rootRoute
     }
     '/custom-text': {
@@ -124,6 +138,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/code': typeof CodeRoute
   '/custom-text': typeof CustomTextRoute
   '/guide': typeof GuideRoute
   '/practice': typeof PracticeRoute
@@ -134,6 +149,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/code': typeof CodeRoute
   '/custom-text': typeof CustomTextRoute
   '/guide': typeof GuideRoute
   '/practice': typeof PracticeRoute
@@ -145,6 +161,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/code': typeof CodeRoute
   '/custom-text': typeof CustomTextRoute
   '/guide': typeof GuideRoute
   '/practice': typeof PracticeRoute
@@ -157,6 +174,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/code'
     | '/custom-text'
     | '/guide'
     | '/practice'
@@ -166,6 +184,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/code'
     | '/custom-text'
     | '/guide'
     | '/practice'
@@ -175,6 +194,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/code'
     | '/custom-text'
     | '/guide'
     | '/practice'
@@ -186,6 +206,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  CodeRoute: typeof CodeRoute
   CustomTextRoute: typeof CustomTextRoute
   GuideRoute: typeof GuideRoute
   PracticeRoute: typeof PracticeRoute
@@ -196,6 +217,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  CodeRoute: CodeRoute,
   CustomTextRoute: CustomTextRoute,
   GuideRoute: GuideRoute,
   PracticeRoute: PracticeRoute,
@@ -215,6 +237,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
+        "/code",
         "/custom-text",
         "/guide",
         "/practice",
@@ -227,6 +250,9 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.tsx"
+    },
+    "/code": {
+      "filePath": "code.tsx"
     },
     "/custom-text": {
       "filePath": "custom-text.tsx"

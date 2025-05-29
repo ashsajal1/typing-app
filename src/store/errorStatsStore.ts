@@ -9,8 +9,11 @@ interface ErrorStats {
 
 interface ErrorStatsStore {
   errorStats: ErrorStats;
+  showHighErrorChars: boolean;
   addError: (key: string) => void;
   resetStats: () => void;
+  getHighErrorChars: () => string[];
+  toggleHighErrorChars: () => void;
 }
 
 const initialErrorStats: ErrorStats = {
@@ -21,8 +24,9 @@ const initialErrorStats: ErrorStats = {
 
 export const useErrorStatsStore = create<ErrorStatsStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       errorStats: initialErrorStats,
+      showHighErrorChars: false,
       addError: (key: string) =>
         set((state) => {
           const newErrorMap = { ...state.errorStats.errorMap };
@@ -39,6 +43,22 @@ export const useErrorStatsStore = create<ErrorStatsStore>()(
         set({
           errorStats: initialErrorStats,
         }),
+      getHighErrorChars: () => {
+        const state = get();
+        const { errorMap, totalErrors } = state.errorStats;
+        
+        // Calculate error rate for each character
+        return Object.entries(errorMap)
+          .filter(([, count]) => {
+            const errorRate = (count / totalErrors) * 100;
+            return errorRate > 20;
+          })
+          .map(([char]) => char);
+      },
+      toggleHighErrorChars: () => 
+        set((state) => ({
+          showHighErrorChars: !state.showHighErrorChars
+        })),
     }),
     {
       name: 'error-stats-storage',
