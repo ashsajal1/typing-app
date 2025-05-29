@@ -101,7 +101,8 @@ export default function TypingTest({
   const [lastCorrectPosition, setLastCorrectPosition] = useState<number>(-1);
   const [lastTypedPosition, setLastTypedPosition] = useState<number>(-1);
   const [currentErrorMap, setCurrentErrorMap] = useState<Map<string, number>>(new Map());
-  const { addError } = useErrorStatsStore();
+  const { addError, getHighErrorChars } = useErrorStatsStore();
+  const highErrorChars = getHighErrorChars();
 
   // Check if user is on mobile
   useEffect(() => {
@@ -639,6 +640,8 @@ export default function TypingTest({
                   const isIncorrect = userChar && !isCorrect;
                   const isCurrent = charIndex === currentIndex;
                   const isCurrentWord = charIndex >= currentWordStart && charIndex <= currentWordEnd;
+                  const isHighErrorChar = highErrorChars.includes(char);
+                  const isTyped = charIndex < userInput.length;
                   
                   const element = (
                     <span
@@ -649,10 +652,13 @@ export default function TypingTest({
                         ${isCurrent ? 'border-b-success border-b-2' : 'border-b-base-300 dark:border-gray-600'} 
                         ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
                         p-[1px] rounded w-[27px] text-center 
-                        ${isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
-                          isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : 
-                          isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""
-                        }
+                        ${isTyped ? (
+                          isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
+                          isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : ""
+                        ) : (
+                          isHighErrorChar ? "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300" : ""
+                        )}
+                        ${isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""}
                         ${charIndex === lastTypedPosition ? 'animate-typing' : ''}
                         ${isCurrent ? 'relative' : ''}
                       `}
