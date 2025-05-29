@@ -255,6 +255,7 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
               const isIncorrect = userChar && !isCorrect
               const isCurrent = index === userInput.length
               const isTyped = index < userInput.length
+              const isWhitespace = char === ' ' || char === '\t' || char === '\n'
 
               return (
                 <span
@@ -262,9 +263,12 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
                   className={`
                     ${isTyped ? (
                       isCorrect ? "text-green-500" : 
-                      isIncorrect ? "text-red-500" : ""
+                      isIncorrect ? (
+                        isWhitespace ? "bg-red-500/30" : "text-red-500"
+                      ) : ""
                     ) : "text-gray-500"}
                     ${isCurrent ? "bg-blue-500/20" : ""}
+                    ${isWhitespace ? "whitespace-pre" : ""}
                   `}
                 >
                   {char}
