@@ -403,8 +403,13 @@ export default function TypingTest({
   if (isSubmitted) {
     return (
       <div className="space-y-4">
-        <Result wpm={wpm} accuracy={accuracy} wpmHistory={wpmHistory} />
-        <ErrorAnalysis currentErrorMap={currentErrorMap} currentTotalErrors={mistakes} />
+        <Result 
+          wpm={wpm} 
+          accuracy={accuracy} 
+          wpmHistory={wpmHistory} 
+          currentErrorMap={currentErrorMap}
+          currentTotalErrors={mistakes}
+        />
       </div>
     );
   }

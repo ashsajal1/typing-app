@@ -1,5 +1,5 @@
 import { RepeatIcon, Target, Zap, Clock, TrendingUp } from "lucide-react";
-import { Line } from "react-chartjs-2";
+import { Line, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,7 +8,8 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ArcElement
 } from 'chart.js';
 
 ChartJS.register(
@@ -18,10 +19,17 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ArcElement
 );
 
-export default function Result({ accuracy, wpm, wpmHistory = [] }: { accuracy: number, wpm: number, wpmHistory?: number[] }) {
+export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap, currentTotalErrors }: { 
+    accuracy: number, 
+    wpm: number, 
+    wpmHistory?: number[],
+    currentErrorMap: Map<string, number>,
+    currentTotalErrors: number 
+}) {
     let status: string;
     let emoji: string;
     let backgroundColor: string;
@@ -240,6 +248,88 @@ export default function Result({ accuracy, wpm, wpmHistory = [] }: { accuracy: n
                                     </li>
                                 ))}
                             </ul>
+                        </div>
+
+                        {/* Error Analysis */}
+                        <div className="bg-white/10 rounded-lg p-4">
+                            <h3 className="text-lg font-semibold mb-3">Mistakes Analysis</h3>
+                            {currentTotalErrors > 0 ? (
+                                <div className="space-y-3">
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span>Total Mistakes:</span>
+                                        <span className="font-medium">{currentTotalErrors}</span>
+                                    </div>
+                                    
+                                    {/* Pie Chart */}
+                                    <div className="h-48">
+                                        <Pie
+                                            data={{
+                                                labels: Array.from(currentErrorMap.keys()),
+                                                datasets: [{
+                                                    data: Array.from(currentErrorMap.values()),
+                                                    backgroundColor: [
+                                                        'rgba(255, 99, 132, 0.8)',
+                                                        'rgba(54, 162, 235, 0.8)',
+                                                        'rgba(255, 206, 86, 0.8)',
+                                                        'rgba(75, 192, 192, 0.8)',
+                                                        'rgba(153, 102, 255, 0.8)',
+                                                        'rgba(255, 159, 64, 0.8)',
+                                                    ],
+                                                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                                                    borderWidth: 1,
+                                                }]
+                                            }}
+                                            options={{
+                                                responsive: true,
+                                                maintainAspectRatio: false,
+                                                plugins: {
+                                                    legend: {
+                                                        position: 'bottom',
+                                                        labels: {
+                                                            color: 'rgba(255, 255, 255, 0.8)',
+                                                            font: {
+                                                                size: 11
+                                                            }
+                                                        }
+                                                    },
+                                                    tooltip: {
+                                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                                        titleColor: 'white',
+                                                        bodyColor: 'white',
+                                                        callbacks: {
+                                                            label: (context) => {
+                                                                const value = context.raw as number;
+                                                                const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+                                                                const percentage = Math.round((value / total) * 100);
+                                                                return `${context.label}: ${value} (${percentage}%)`;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <div className="text-sm opacity-80">Most Common Mistakes:</div>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {Array.from(currentErrorMap.entries())
+                                                .sort((a, b) => b[1] - a[1])
+                                                .slice(0, 4)
+                                                .map(([char, count]) => (
+                                                    <div key={char} className="bg-white/20 rounded p-2 flex items-center justify-between">
+                                                        <span className="font-mono">{char}</span>
+                                                        <span className="text-yellow-300">{count}x</span>
+                                                    </div>
+                                                ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="text-center py-2 text-green-300">
+                                    Perfect! No mistakes made.
+                                </div>
+                            )}
                         </div>
 
                         {/* Action Buttons */}
