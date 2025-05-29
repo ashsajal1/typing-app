@@ -19,7 +19,6 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
   const [totalKeystrokes, setTotalKeystrokes] = useState(0)
   const [hasMistake, setHasMistake] = useState(false)
   const [showMistakeAlert, setShowMistakeAlert] = useState(false)
-  const [lastCorrectPosition, setLastCorrectPosition] = useState(-1)
   const [currentLine, setCurrentLine] = useState(1)
   const [currentColumn, setCurrentColumn] = useState(0)
 
@@ -58,7 +57,6 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
       setTotalKeystrokes(0)
       setHasMistake(false)
       setShowMistakeAlert(false)
-      setLastCorrectPosition(-1)
       setCurrentLine(1)
       setCurrentColumn(0)
       return
@@ -100,8 +98,6 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
           setHasMistake(true)
           setShowMistakeAlert(true)
           setTimeout(() => setShowMistakeAlert(false), 2000)
-        } else {
-          setLastCorrectPosition(newInput.length - 1)
         }
         setCurrentLine(prev => prev + 1)
         setCurrentColumn(0)
@@ -153,8 +149,6 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
           setHasMistake(true)
           setShowMistakeAlert(true)
           setTimeout(() => setShowMistakeAlert(false), 2000)
-        } else {
-          setLastCorrectPosition(newInput.length - 1)
         }
 
         setCurrentColumn(prev => prev + 1)
@@ -162,7 +156,7 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
         return newInput
       })
     }
-  }, [handleSubmit, isStarted, text, userInput.length, hasMistake, lastCorrectPosition])
+  }, [handleSubmit, isStarted, text, userInput.length, hasMistake])
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown)
