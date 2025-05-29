@@ -52,9 +52,15 @@ export default function GlobalStats() {
       {
         label: 'Error Frequency',
         data: sortedValues,
-        backgroundColor: 'rgba(239, 68, 68, 0.8)',
-        borderColor: 'rgba(239, 68, 68, 1)',
+        backgroundColor: 'rgba(220, 38, 38, 0.7)',
+        borderColor: 'rgb(220, 38, 38)',
         borderWidth: 1,
+        borderRadius: 4,
+        barThickness: 20,
+        maxBarThickness: 30,
+        minBarLength: 5,
+        hoverBackgroundColor: 'rgba(185, 28, 28, 0.8)',
+        hoverBorderColor: 'rgb(185, 28, 28)',
       },
     ],
   };
@@ -62,21 +68,34 @@ export default function GlobalStats() {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      duration: 1000,
+      easing: 'easeInOutQuart' as const,
+    },
     plugins: {
       legend: {
         display: true,
         position: 'top' as const,
         labels: {
-          color: 'rgb(156, 163, 175)',
+          color: 'rgb(220, 38, 38)',
           font: {
-            size: 12
-          }
+            size: 12,
+            family: 'system-ui'
+          },
+          usePointStyle: true,
+          pointStyle: 'circle'
         }
       },
       tooltip: {
-        backgroundColor: 'rgba(17, 24, 39, 0.9)',
+        backgroundColor: 'rgba(220, 38, 38, 0.9)',
         titleColor: 'rgb(255, 255, 255)',
         bodyColor: 'rgb(255, 255, 255)',
+        borderColor: 'rgb(185, 28, 28)',
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 8,
+        displayColors: true,
+        usePointStyle: true,
         callbacks: {
           label: (context: { dataIndex: number }) => {
             const index = context.dataIndex;
@@ -84,6 +103,11 @@ export default function GlobalStats() {
               `Count: ${sortedValues[index]}`,
               `Percentage: ${percentages[index]}%`
             ];
+          },
+          title: (items: { dataIndex: number }[]) => {
+            if (!items.length) return '';
+            const index = items[0].dataIndex;
+            return `Character: ${sortedKeys[index]}`;
           }
         }
       }
@@ -92,35 +116,61 @@ export default function GlobalStats() {
       y: {
         beginAtZero: true,
         grid: {
-          color: 'rgba(156, 163, 175, 0.1)'
+          color: 'hsl(var(--b3))',
+          drawBorder: false,
+          lineWidth: 1
         },
         ticks: {
-          color: 'rgb(156, 163, 175)'
+          color: 'hsl(var(--bc))',
+          font: {
+            size: 11
+          },
+          padding: 8
         },
         title: {
           display: true,
           text: 'Number of Errors',
-          color: 'rgb(156, 163, 175)',
+          color: 'hsl(var(--bc))',
           font: {
-            size: 12
-          }
+            size: 12,
+            weight: 'normal' as const
+          },
+          padding: { top: 10, bottom: 10 }
         }
       },
       x: {
         grid: {
-          color: 'rgba(156, 163, 175, 0.1)'
+          display: false
         },
         ticks: {
-          color: 'rgb(156, 163, 175)'
+          color: 'hsl(var(--bc))',
+          font: {
+            size: 11
+          },
+          padding: 8
         },
         title: {
           display: true,
           text: 'Characters',
-          color: 'rgb(156, 163, 175)',
+          color: 'hsl(var(--bc))',
           font: {
-            size: 12
-          }
+            size: 12,
+            weight: 'normal' as const
+          },
+          padding: { top: 10, bottom: 10 }
         }
+      }
+    },
+    interaction: {
+      mode: 'index' as const,
+      intersect: false
+    },
+    layout: {
+      padding: {
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 20
       }
     }
   };
@@ -156,144 +206,168 @@ export default function GlobalStats() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-base-100 dark:bg-gray-800 rounded-lg shadow-lg p-4 border border-success/20"
+        className="card bg-base-100 shadow-xl"
       >
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center gap-2">
-            <AlertTriangle className="w-5 h-5 text-error" />
-            <h2 className="text-xl font-semibold text-base-content">
-              Global Error Statistics
-            </h2>
+        <div className="card-body">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-error" />
+              <h2 className="card-title">
+                Global Error Statistics
+              </h2>
+            </div>
+            <button
+              onClick={handleReset}
+              className="btn btn-ghost btn-sm gap-2 hover:bg-error/10 hover:text-error transition-all duration-300"
+              title="Reset global error statistics"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Reset Stats
+            </button>
           </div>
-          <button
-            onClick={handleReset}
-            className="btn btn-ghost btn-sm gap-2 hover:bg-error/10 hover:text-error transition-all duration-300"
-            title="Reset global error statistics"
-          >
-            <RefreshCw className="w-4 h-4" />
-            Reset Stats
-          </button>
-        </div>
 
-        {isLoading ? (
-          <LoadingState />
-        ) : errorStats.totalErrors === 0 ? (
-          <EmptyState />
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <motion.div 
-                whileHover={{ scale: 1.02 }}
-                className="bg-base-200 dark:bg-gray-700 p-4 rounded-lg border border-base-300 dark:border-gray-600 transition-all duration-300 hover:shadow-md"
-              >
-                <h3 className="text-lg font-medium text-base-content mb-3 flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-info" />
-                  Overall Statistics
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-base-content/70">Total Errors:</span>
-                    <span className="font-medium text-error">{errorStats.totalErrors}</span>
+          {isLoading ? (
+            <LoadingState />
+          ) : errorStats.totalErrors === 0 ? (
+            <EmptyState />
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <motion.div 
+                  whileHover={{ scale: 1.02 }}
+                  className="card bg-base-200"
+                >
+                  <div className="card-body">
+                    <h3 className="card-title text-lg">
+                      <TrendingUp className="w-4 h-4 text-primary" />
+                      Overall Statistics
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-base-content/70">Total Errors:</span>
+                        <span className="font-medium text-error">{errorStats.totalErrors}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-base-content/70">Unique Errors:</span>
+                        <span className="font-medium text-error">{errorKeys.length}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-base-content/70">Last Updated:</span>
+                        <span className="font-medium text-base-content/70 flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {new Date(errorStats.lastUpdated).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-base-content/70">Unique Errors:</span>
-                    <span className="font-medium text-error">{errorKeys.length}</span>
+                </motion.div>
+
+                <motion.div 
+                  whileHover={{ scale: 1.02 }}
+                  className="card bg-base-200"
+                >
+                  <div className="card-body">
+                    <h3 className="card-title text-lg">
+                      <Target className="w-4 h-4 text-primary" />
+                      Error Distribution
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-base-content/70">Most Common Error:</span>
+                        <span className="font-medium text-error">{sortedKeys[0] || 'N/A'}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-base-content/70">Occurrences:</span>
+                        <span className="font-medium text-error">{sortedValues[0] || 0}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-base-content/70">Percentage:</span>
+                        <span className="font-medium text-error">{percentages[0] || '0'}%</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-base-content/70">Last Updated:</span>
-                    <span className="font-medium text-base-content/70 flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {new Date(errorStats.lastUpdated).toLocaleDateString()}
-                    </span>
+                </motion.div>
+              </div>
+
+              <div className="card bg-base-200">
+                <div className="card-body">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="card-title text-lg">
+                      <TrendingUp className="w-4 h-4 text-primary" />
+                      Error Distribution Chart
+                    </h3>
+                    <div className="text-sm text-base-content/70">
+                      Hover over bars for details
+                    </div>
+                  </div>
+                  <div className="h-[400px]">
+                    <Bar data={chartData} options={options} />
                   </div>
                 </div>
-              </motion.div>
+              </div>
 
-              <motion.div 
-                whileHover={{ scale: 1.02 }}
-                className="bg-base-200 dark:bg-gray-700 p-4 rounded-lg border border-base-300 dark:border-gray-600 transition-all duration-300 hover:shadow-md"
-              >
-                <h3 className="text-lg font-medium text-base-content mb-3 flex items-center gap-2">
-                  <Target className="w-4 h-4 text-info" />
-                  Error Distribution
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-base-content/70">Most Common Error:</span>
-                    <span className="font-medium text-error">{sortedKeys[0] || 'N/A'}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-base-content/70">Occurrences:</span>
-                    <span className="font-medium text-error">{sortedValues[0] || 0}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-base-content/70">Percentage:</span>
-                    <span className="font-medium text-error">{percentages[0] || '0'}%</span>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-
-            <div className="h-64 mb-4 bg-base-200 dark:bg-gray-700 p-4 rounded-lg border border-base-300 dark:border-gray-600">
-              <Bar data={chartData} options={options} />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <h3 className="text-lg font-medium text-base-content mb-3 flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-error" />
-                  Top Errors
-                </h3>
-                <div className="space-y-2">
-                  <AnimatePresence>
-                    {sortedKeys.slice(0, 6).map((key, index) => (
-                      <motion.div
-                        key={key}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 20 }}
-                        transition={{ duration: 0.2, delay: index * 0.1 }}
-                        className="bg-base-200 dark:bg-gray-700 p-3 rounded-lg border border-base-300 dark:border-gray-600 flex justify-between items-center transition-all duration-300 hover:shadow-md hover:scale-[1.02]"
-                      >
-                        <span className="font-mono text-lg text-base-content">{key}</span>
-                        <div className="text-right">
-                          <div className="text-error font-medium">{sortedValues[index]}</div>
-                          <div className="text-sm text-base-content/70">
-                            {percentages[index]}%
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="card-title text-lg mb-3">
+                    <AlertTriangle className="w-4 h-4 text-error" />
+                    Top Errors
+                  </h3>
+                  <div className="space-y-2">
+                    <AnimatePresence>
+                      {sortedKeys.slice(0, 6).map((key, index) => (
+                        <motion.div
+                          key={key}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 20 }}
+                          transition={{ duration: 0.2, delay: index * 0.1 }}
+                          className="card bg-base-100 hover:shadow-md transition-all duration-300"
+                        >
+                          <div className="card-body p-3 flex-row justify-between items-center">
+                            <span className="font-mono text-lg">{key}</span>
+                            <div className="text-right">
+                              <div className="text-error font-medium">{sortedValues[index]}</div>
+                              <div className="text-sm text-base-content/70">
+                                {percentages[index]}%
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <h3 className="text-lg font-medium text-base-content mb-3 flex items-center gap-2">
-                  <Info className="w-4 h-4 text-info" />
-                  Error Analysis
-                </h3>
-                <div className="bg-base-200 dark:bg-gray-700 p-4 rounded-lg border border-base-300 dark:border-gray-600 space-y-3">
-                  <p className="text-base-content/70">
-                    This data shows your most common typing errors across all practice sessions.
-                    Focus on improving accuracy for the most frequent errors to enhance your overall typing performance.
-                  </p>
-                  <div className="pt-2">
-                    <h4 className="font-medium text-base-content mb-2">
-                      Tips for Improvement:
-                    </h4>
-                    <ul className="list-disc list-inside text-base-content/70 space-y-1">
-                      <li>Practice the most common error characters more frequently</li>
-                      <li>Pay special attention to the top 3 error characters</li>
-                      <li>Use targeted practice sessions focusing on problem areas</li>
-                      <li>Monitor your progress by checking this page regularly</li>
-                    </ul>
+                <div>
+                  <h3 className="card-title text-lg mb-3">
+                    <Info className="w-4 h-4 text-info" />
+                    Error Analysis
+                  </h3>
+                  <div className="card bg-base-200">
+                    <div className="card-body">
+                      <p className="text-base-content/70">
+                        This data shows your most common typing errors across all practice sessions.
+                        Focus on improving accuracy for the most frequent errors to enhance your overall typing performance.
+                      </p>
+                      <div className="divider"></div>
+                      <div>
+                        <h4 className="font-medium mb-2">
+                          Tips for Improvement:
+                        </h4>
+                        <ul className="list-disc list-inside text-base-content/70 space-y-1">
+                          <li>Practice the most common error characters more frequently</li>
+                          <li>Pay special attention to the top 3 error characters</li>
+                          <li>Use targeted practice sessions focusing on problem areas</li>
+                          <li>Monitor your progress by checking this page regularly</li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </div>
       </motion.div>
 
       <dialog id="reset_confirm_modal" className={`modal ${showConfirmModal ? 'modal-open' : ''}`}>
