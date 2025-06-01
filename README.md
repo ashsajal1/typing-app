@@ -1,6 +1,17 @@
 # Typing Practice App
 
+![Typing Test Preview](./public/preview.gif)
+
 The Typing Practice App is a web application built with React.js that allows users to practice and improve their typing skills. This app provides a simple and intuitive interface for users to test their typing speed and accuracy.
+
+## Features
+
+- Real-time typing feedback
+- Error tracking and statistics
+- Multiple test modes
+- Responsive design for all devices
+- Dark mode support
+- Keyboard shortcuts for better workflow
 
 ## Getting Started
 
