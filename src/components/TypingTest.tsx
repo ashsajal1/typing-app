@@ -680,7 +680,6 @@ export default function TypingTest({
               {(() => {
                 const currentIndex = userInput.length;
                 let charIndex = 0;
-                let lineIndex = 0;
                 
                 // Find word boundaries
                 const wordBoundaries: number[] = [];
@@ -723,7 +722,6 @@ export default function TypingTest({
                     
                     // Handle new lines
                     if (isNewline) {
-                      lineIndex++;
                       const element = <br key={`${partIndex}-${charInPartIndex}-br`} />;
                       charIndex++;
                       return element;
