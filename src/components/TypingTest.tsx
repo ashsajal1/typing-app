@@ -244,16 +244,50 @@ export default function TypingTest({
     }
 
     if (event.key === "Enter") {
-      // Only handle Shift+Enter for new line
-      if (event.shiftKey) {
-        event.preventDefault();
-        setUserInput(prev => {
-          const newInput = prev + "\n";
-          setTotalKeystrokes(prev => prev + 1);
-          return newInput;
-        });
+      event.preventDefault();
+      
+      // Get the expected character at current position
+      let expectedChar = '';
+      let currentIndex = 0;
+      for (const part of parsedText) {
+        if (currentIndex + part.text.length > userInput.length) {
+          expectedChar = part.text[userInput.length - currentIndex];
+          break;
+        }
+        currentIndex += part.text.length;
       }
-      // Don't prevent default for regular Enter to allow form submission if needed
+      
+      // Check if Enter is expected at this position
+      const isExpectedNewline = expectedChar === '\n';
+      
+      setUserInput(prev => {
+        const newInput = prev + (isExpectedNewline ? '\n' : '');
+        
+        if (isExpectedNewline) {
+          // Handle correct newline
+          setLastCorrectPosition(newInput.length - 1);
+          setLastTypedPosition(newInput.length - 1);
+          setTimeout(() => setLastTypedPosition(-1), 300);
+        } else {
+          // Handle incorrect newline (treat as a mistake)
+          setMistakes(prev => prev + 1);
+          setHasMistake(true);
+          setShowMistakeAlert(true);
+          setTimeout(() => setShowMistakeAlert(false), 2000);
+          
+          // Update error maps
+          setCurrentErrorMap(prev => {
+            const newMap = new Map(prev);
+            newMap.set('\n', (newMap.get('\n') || 0) + 1);
+            return newMap;
+          });
+          addError('\n');
+        }
+        
+        setTotalKeystrokes(prev => prev + 1);
+        return newInput;
+      });
+      
       return;
     }
 
