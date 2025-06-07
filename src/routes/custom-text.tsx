@@ -37,15 +37,6 @@ function RouteComponent() {
   const [isPasting, setIsPasting] = useState(false);
   const navigate = useNavigate();
 
-  // Function to process text and add <Enter> markers
-  const processText = (text: string): string => {
-    // Split by newlines and add <Enter> to each line except the last one
-    const lines = text.split('\n');
-    return lines.map((line, index) => 
-      index < lines.length - 1 ? `${line} <Enter>` : line
-    ).join('\n');
-  };
-
   // Handle form submission
   const onSubmit = (data: FormData) => {
     // Retrieve existing data from localStorage
@@ -169,7 +160,6 @@ function RouteComponent() {
             e.preventDefault();
             setIsPasting(true);
             const pastedText = e.clipboardData.getData('text/plain');
-            const processedText = processText(pastedText);
             
             const textarea = e.target as HTMLTextAreaElement;
             const start = textarea.selectionStart;
@@ -177,12 +167,12 @@ function RouteComponent() {
             const beforeText = textValue.substring(0, start);
             const afterText = textValue.substring(end);
             
-            const newText = beforeText + processedText + afterText;
+            const newText = beforeText + pastedText + afterText;
             setValue("text", newText);
             
             // Set cursor position after pasted text
             setTimeout(() => {
-              const newPosition = start + processedText.length;
+              const newPosition = start + pastedText.length;
               textarea.selectionStart = textarea.selectionEnd = newPosition;
               setIsPasting(false);
             }, 0);
@@ -193,14 +183,12 @@ function RouteComponent() {
               const textarea = e.target as HTMLTextAreaElement;
               const start = textarea.selectionStart;
               const end = textarea.selectionEnd;
-              const newValue = textValue.substring(0, start) + 
-                            (e.shiftKey ? '\n' : ' <Enter>\n') + 
-                            textValue.substring(end);
+              const newValue = textValue.substring(0, start) + '\n' + textValue.substring(end);
               setValue("text", newValue);
               
               // Move cursor to after the new line
               setTimeout(() => {
-                const newPosition = start + (e.shiftKey ? 1 : 9);
+                const newPosition = start + 1;
                 textarea.selectionStart = textarea.selectionEnd = newPosition;
               }, 0);
             }
