@@ -101,6 +101,7 @@ export default function TypingTest({
   const [lastCorrectPosition, setLastCorrectPosition] = useState<number>(-1);
   const [lastTypedPosition, setLastTypedPosition] = useState<number>(-1);
   const [currentErrorMap, setCurrentErrorMap] = useState<Map<string, number>>(new Map());
+  const [incorrectNewlinePosition, setIncorrectNewlinePosition] = useState<number>(-1);
   const { addError, getHighErrorChars, showHighErrorChars, toggleHighErrorChars } = useErrorStatsStore();
   const highErrorChars = getHighErrorChars();
 
@@ -179,6 +180,23 @@ export default function TypingTest({
     // Only handle keyboard events for non-mobile devices
     if (isMobile) return;
 
+    // If there's an incorrect newline and user presses backspace
+    if (incorrectNewlinePosition !== -1) {
+      if (event.key === 'Backspace') {
+        event.preventDefault();
+        setUserInput(prev => prev.slice(0, -1));
+        setIncorrectNewlinePosition(-1);
+        setHasMistake(false);
+        setShowMistakeAlert(false);
+        return;
+      }
+      // Prevent any other key presses when there's an incorrect newline
+      event.preventDefault();
+      setShowMistakeAlert(true);
+      setTimeout(() => setShowMistakeAlert(false), 2000);
+      return;
+    }
+
     // Handle Escape key first
     if (event.key === "Escape") {
       event.preventDefault();
@@ -202,6 +220,7 @@ export default function TypingTest({
       setShowMistakeAlert(false);
       setLastCorrectPosition(-1);
       setLastTypedPosition(-1);
+      setIncorrectNewlinePosition(-1);
       return;
     }
 
@@ -260,33 +279,33 @@ export default function TypingTest({
       // Check if Enter is expected at this position
       const isExpectedNewline = expectedChar === '\n';
       
-      setUserInput(prev => {
-        const newInput = prev + (isExpectedNewline ? '\n' : '');
-        
-        if (isExpectedNewline) {
-          // Handle correct newline
-          setLastCorrectPosition(newInput.length - 1);
-          setLastTypedPosition(newInput.length - 1);
-          setTimeout(() => setLastTypedPosition(-1), 300);
-        } else {
-          // Handle incorrect newline (treat as a mistake)
-          setMistakes(prev => prev + 1);
-          setHasMistake(true);
-          setShowMistakeAlert(true);
-          setTimeout(() => setShowMistakeAlert(false), 2000);
-          
-          // Update error maps
-          setCurrentErrorMap(prev => {
-            const newMap = new Map(prev);
-            newMap.set('\n', (newMap.get('\n') || 0) + 1);
-            return newMap;
-          });
-          addError('\n');
-        }
-        
+      if (isExpectedNewline) {
+        // Handle correct newline
+        const newInput = userInput + '\n';
+        setUserInput(newInput);
+        setLastCorrectPosition(newInput.length - 1);
+        setLastTypedPosition(newInput.length - 1);
         setTotalKeystrokes(prev => prev + 1);
-        return newInput;
-      });
+        setTimeout(() => setLastTypedPosition(-1), 300);
+      } else {
+        // Handle incorrect newline (treat as a mistake)
+        setMistakes(prev => prev + 1);
+        setHasMistake(true);
+        setShowMistakeAlert(true);
+        setIncorrectNewlinePosition(userInput.length);
+        
+        // Add the newline to show it in the UI
+        setUserInput(prev => prev + '\n');
+        
+        // Update error maps
+        setCurrentErrorMap(prev => {
+          const newMap = new Map(prev);
+          newMap.set('\n', (newMap.get('\n') || 0) + 1);
+          return newMap;
+        });
+        addError('\n');
+        setTotalKeystrokes(prev => prev + 1);
+      }
       
       return;
     }
@@ -294,9 +313,12 @@ export default function TypingTest({
     // If there's a mistake and user tries to type more, show alert
     if (hasMistake && event.key !== "Backspace") {
       event.preventDefault();
-      setShowMistakeAlert(true);
-      // Hide alert after 2 seconds
-      setTimeout(() => setShowMistakeAlert(false), 2000);
+      // Don't show the alert for incorrect newlines as we already show it
+      if (incorrectNewlinePosition === -1) {
+        setShowMistakeAlert(true);
+        // Hide alert after 2 seconds
+        setTimeout(() => setShowMistakeAlert(false), 2000);
+      }
       return;
     }
 
@@ -317,10 +339,18 @@ export default function TypingTest({
       return;
     }
 
-    // Prevent backspacing over correct letters
-    if (event.key === "Backspace" && userInput.length <= lastCorrectPosition + 1) {
-      event.preventDefault();
-      return;
+    // Handle backspace
+    if (event.key === "Backspace") {
+      // If we're at the incorrect newline position, handle it in the keydown handler
+      if (incorrectNewlinePosition === userInput.length - 1) {
+        return; // Let the keydown handler handle this
+      }
+      
+      // Prevent backspacing over correct letters
+      if (userInput.length <= lastCorrectPosition + 1) {
+        event.preventDefault();
+        return;
+      }
     }
 
     if (event.key === "Backspace") {
@@ -382,7 +412,7 @@ export default function TypingTest({
         return newInput;
       });
     }
-  }, [handleSubmit, isMobile, isStarted, showCommandPalette, text, parsedText, hasMistake, userInput.length, lastCorrectPosition, addError]);
+  }, [handleSubmit, isMobile, isStarted, showCommandPalette, text, parsedText, hasMistake, userInput, lastCorrectPosition, addError, incorrectNewlinePosition]);
 
   useEffect(() => {
     // Only attach keyboard event listener for non-mobile devices
@@ -463,7 +493,9 @@ export default function TypingTest({
         {/* Mistake Alert */}
         {showMistakeAlert && (
           <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-bounce">
-            Fix the mistake before continuing!
+            {incorrectNewlinePosition !== -1 
+              ? "Press Backspace to remove the incorrect newline" 
+              : "Fix the mistake before continuing!"}
           </div>
         )}
 
@@ -736,6 +768,9 @@ export default function TypingTest({
                           </span>
                         )}
                         {isSpace ? "\u00A0" : char}
+                        {charIndex === incorrectNewlinePosition && (
+                          <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-red-500"></div>
+                        )}
                       </span>
                     );
                     
