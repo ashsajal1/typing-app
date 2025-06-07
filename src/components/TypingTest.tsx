@@ -796,6 +796,7 @@ export default function TypingTest({
                         pl-2
                         rounded-r
                         ${lineIndex > 0 ? 'mt-1' : ''}
+                        ${isCurrentLine ? 'ring-1 ring-success/20' : ''}
                       `}
                     >
                       {chars.map(({ char, partIndex, charInPartIndex, globalIndex }) => {
@@ -810,21 +811,53 @@ export default function TypingTest({
                         const isTyped = globalIndex < userInput.length;
                         
                         if (isNewline) {
+                          // Find the index of the first newline
+                          let firstNewlineIndex = -1;
+                          let currentIndex = 0;
+                          for (const part of parsedText) {
+                            const newlineIndex = part.text.indexOf('\n');
+                            if (newlineIndex !== -1) {
+                              firstNewlineIndex = currentIndex + newlineIndex;
+                              break;
+                            }
+                            currentIndex += part.text.length;
+                          }
+                          
                           return (
                             <div 
                               key={`${partIndex}-${charInPartIndex}`} 
-                              className={`relative w-full h-8 flex items-center justify-center group ${isCurrent ? 'bg-base-200/30 dark:bg-gray-700/30' : ''}`}
+                              className={`
+                                relative w-full h-8 flex items-center justify-center group
+                                ${isCurrent ? 'bg-base-200/30 dark:bg-gray-700/30' : ''}
+                                ${isTyped ? (isCorrect ? 'bg-green-100/30 dark:bg-green-900/30' : 'bg-red-100/30 dark:bg-red-900/30') : ''}
+                                transition-colors duration-200
+                              `}
                             >
                               <div className="absolute inset-0 flex items-center justify-center">
-                                <div className={`w-1 h-1 rounded-full ${isCurrent ? 'bg-success' : 'bg-base-300 dark:bg-gray-600'}`} />
+                                <div className={`
+                                  w-1 h-1 rounded-full 
+                                  ${isCurrent ? 'bg-success animate-pulse' : 
+                                    isTyped ? (isCorrect ? 'bg-green-500' : 'bg-red-500') : 
+                                    'bg-base-300 dark:bg-gray-600'}
+                                `} />
                               </div>
                               {isCurrent && (
-                                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs bg-success text-white px-2 py-1 rounded whitespace-nowrap">
+                                <div className={`
+                                  absolute 
+                                  ${globalIndex === firstNewlineIndex ? '-right-20' : '-top-6 left-1/2 transform -translate-x-1/2'} 
+                                  text-xs bg-success text-white px-2 py-1 rounded whitespace-nowrap
+                                  animate-bounce
+                                `}>
                                   Press Enter
                                 </div>
                               )}
                               {globalIndex === incorrectNewlinePosition && (
-                                <div className="absolute inset-0 border-2 border-red-500 rounded pointer-events-none" />
+                                <div className="absolute inset-0 border-2 border-red-500 rounded pointer-events-none animate-pulse" />
+                              )}
+                              {isTyped && !isCorrect && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <span className="text-red-500 text-xs">✕</span>
+                                </div>
                               )}
                             </div>
                           );
