@@ -243,8 +243,18 @@ export default function TypingTest({
       setIsStarted(true);
     }
 
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
       handleSubmit();
+      return;
+    } else if (event.key === "Enter" && event.shiftKey) {
+      // Handle Shift+Enter for new line
+      event.preventDefault();
+      setUserInput(prev => {
+        const newInput = prev + "\n";
+        setTotalKeystrokes(prev => prev + 1);
+        return newInput;
+      });
       return;
     }
 
@@ -600,96 +610,108 @@ export default function TypingTest({
               </div>
             )}
             
-            {/* Calculate current word index */}
-            {(() => {
-              const currentIndex = userInput.length;
-              let charIndex = 0;
-              
-              // Find word boundaries
-              const wordBoundaries: number[] = [];
-              let tempCharIndex = 0;
-              parsedText.forEach(part => {
-                const chars = part.text.split("");
-                chars.forEach((char) => {
-                  if (char === " " || tempCharIndex === 0) {
-                    wordBoundaries.push(tempCharIndex === 0 ? 0 : tempCharIndex + 1);
+            {/* Calculate current word index and render text */}
+            <div className="whitespace-pre-wrap break-words">
+              {(() => {
+                const currentIndex = userInput.length;
+                let charIndex = 0;
+                let lineIndex = 0;
+                
+                // Find word boundaries
+                const wordBoundaries: number[] = [];
+                let tempCharIndex = 0;
+                parsedText.forEach(part => {
+                  const chars = part.text.split("");
+                  chars.forEach((char) => {
+                    if (char === " " || char === "\n" || tempCharIndex === 0) {
+                      wordBoundaries.push(tempCharIndex === 0 ? 0 : tempCharIndex + 1);
+                    }
+                    tempCharIndex++;
+                  });
+                });
+                
+                // Determine current word
+                let currentWordStart = 0;
+                let currentWordEnd = charIndex - 1;
+                
+                for (let i = 0; i < wordBoundaries.length; i++) {
+                  if (currentIndex >= wordBoundaries[i]) {
+                    currentWordStart = wordBoundaries[i];
+                    currentWordEnd = i < wordBoundaries.length - 1 ? 
+                      wordBoundaries[i + 1] - 2 : // -2 to account for space and indexing
+                      tempCharIndex - 1;
                   }
-                  tempCharIndex++;
-                });
-              });
-              
-              // Determine current word
-              let currentWordStart = 0;
-              let currentWordEnd = charIndex - 1;
-              
-              for (let i = 0; i < wordBoundaries.length; i++) {
-                if (currentIndex >= wordBoundaries[i]) {
-                  currentWordStart = wordBoundaries[i];
-                  currentWordEnd = i < wordBoundaries.length - 1 ? 
-                    wordBoundaries[i + 1] - 2 : // -2 to account for space and indexing
-                    tempCharIndex - 1;
                 }
-              }
-              
-              return parsedText.map((part, partIndex) => {
-                const chars = part.text.split("");
-                return chars.map((char, charInPartIndex) => {
-                  const isSpace = char === " ";
-                  const userChar = userInput[charIndex];
-                  const isCorrect = userChar === char;
-                  const isIncorrect = userChar && !isCorrect;
-                  const isCurrent = charIndex === currentIndex;
-                  const isCurrentWord = charIndex >= currentWordStart && charIndex <= currentWordEnd;
-                  const isHighErrorChar = showHighErrorChars && highErrorChars.includes(char);
-                  const isTyped = charIndex < userInput.length;
-                  
-                  const element = (
-                    <span
-                      key={`${partIndex}-${charInPartIndex}`}
-                      className={`
-                        mx-[0.5px] 
-                        border-b 
-                        ${isCurrent ? 'border-b-success border-b-2' : 'border-b-base-300 dark:border-gray-600'} 
-                        ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
-                        p-[1px] rounded w-[27px] text-center 
-                        ${isTyped ? (
-                          isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
-                          isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : ""
-                        ) : (
-                          isHighErrorChar ? "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300" : ""
+                
+                return parsedText.map((part, partIndex) => {
+                  const chars = part.text.split("");
+                  return chars.map((char, charInPartIndex) => {
+                    const isSpace = char === " ";
+                    const isNewline = char === "\n";
+                    const userChar = userInput[charIndex];
+                    const isCorrect = userChar === char;
+                    const isIncorrect = userChar && !isCorrect;
+                    const isCurrent = charIndex === currentIndex;
+                    const isCurrentWord = charIndex >= currentWordStart && charIndex <= currentWordEnd;
+                    const isHighErrorChar = showHighErrorChars && highErrorChars.includes(char);
+                    const isTyped = charIndex < userInput.length;
+                    
+                    // Handle new lines
+                    if (isNewline) {
+                      lineIndex++;
+                      const element = <br key={`${partIndex}-${charInPartIndex}-br`} />;
+                      charIndex++;
+                      return element;
+                    }
+                    
+                    const element = (
+                      <span
+                        key={`${partIndex}-${charInPartIndex}`}
+                        className={`
+                          mx-[0.5px] 
+                          border-b 
+                          ${isCurrent ? 'border-b-success border-b-2' : 'border-b-base-300 dark:border-gray-600'} 
+                          ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
+                          p-[1px] rounded min-w-[10px] inline-flex items-center justify-center 
+                          ${isTyped ? (
+                            isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
+                            isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : ""
+                          ) : (
+                            isHighErrorChar ? "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300" : ""
+                          )}
+                          ${isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""}
+                          ${charIndex === lastTypedPosition ? 'animate-typing' : ''}
+                          ${isCurrent ? 'relative' : ''}
+                        `}
+                        aria-current={isCurrent ? "true" : undefined}
+                        ref={(el) => {
+                          if (isCurrent && el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          }
+                        }}
+                      >
+                        {/* Current character indicator */}
+                        {isCurrent && (
+                          <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-xs bg-success text-white px-2 py-1 rounded">
+                            Type
+                          </span>
                         )}
-                        ${isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""}
-                        ${charIndex === lastTypedPosition ? 'animate-typing' : ''}
-                        ${isCurrent ? 'relative' : ''}
-                      `}
-                      aria-current={isCurrent ? "true" : undefined}
-                      ref={(el) => {
-                        if (isCurrent && el) {
-                          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                      }}
-                    >
-                      {/* Current character indicator */}
-                      {isCurrent && (
-                        <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-xs bg-success text-white px-2 py-1 rounded">
-                          Type
-                        </span>
-                      )}
-                      {/* Translation tooltip */}
-                      {part.translation && isCurrentWord && (
-                        <span className="absolute -bottom-7 left-1/2 transform -translate-x-1/2 text-xs bg-blue-500 text-white px-2 py-1 rounded whitespace-nowrap">
-                          {part.translation}
-                        </span>
-                      )}
-                      {isSpace ? "\u00A0" : char}
-                    </span>
-                  );
-                  
-                  charIndex++;
-                  return element;
+                        {/* Translation tooltip */}
+                        {part.translation && isCurrentWord && (
+                          <span className="absolute -bottom-7 left-1/2 transform -translate-x-1/2 text-xs bg-blue-500 text-white px-2 py-1 rounded whitespace-nowrap">
+                            {part.translation}
+                          </span>
+                        )}
+                        {isSpace ? "\u00A0" : char}
+                      </span>
+                    );
+                    
+                    charIndex++;
+                    return element;
+                  });
                 });
-              });
-            })()}
+              })()}
+            </div>
           </div>
         </div>
 
