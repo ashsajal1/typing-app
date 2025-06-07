@@ -102,6 +102,8 @@ export default function TypingTest({
   const [lastTypedPosition, setLastTypedPosition] = useState<number>(-1);
   const [currentErrorMap, setCurrentErrorMap] = useState<Map<string, number>>(new Map());
   const [incorrectNewlinePosition, setIncorrectNewlinePosition] = useState<number>(-1);
+  // Empty lines highlighting state (currently not used)
+  // const [emptyLines, setEmptyLines] = useState<Set<number>>(new Set());
   const { addError, getHighErrorChars, showHighErrorChars, toggleHighErrorChars } = useErrorStatsStore();
   const highErrorChars = getHighErrorChars();
 
@@ -116,7 +118,22 @@ export default function TypingTest({
   }, []);
 
   useEffect(() => {
-    setParsedText(parseTextWithTranslations(textToPractice));
+    const parsed = parseTextWithTranslations(textToPractice);
+    setParsedText(parsed);
+    
+    // Empty lines highlighting logic (currently not used)
+    // const emptyLineIndices = new Set<number>();
+    // let currentPosition = 0;
+    // parsed.forEach(part => {
+    //   const lines = part.text.split('\n');
+    //   lines.forEach((line, i) => {
+    //     if (i > 0 || currentPosition === 0) {
+    //       emptyLineIndices.add(currentPosition);
+    //     }
+    //     currentPosition += line.length + 1; // +1 for the newline character
+    //   });
+    // });
+    // setEmptyLines(emptyLineIndices);
   }, [textToPractice]);
 
   const handleSubmit = useCallback(() => {
@@ -641,8 +658,8 @@ export default function TypingTest({
           </div>
         )}
 
-        <div className="h-[300px] overflow-y-auto relative border dark:border-gray-700 rounded" style={{ 
-          scrollbarWidth: 'none', 
+        <div className="h-[300px] overflow-y-auto relative border dark:border-gray-700 rounded" style={{
+          scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           WebkitOverflowScrolling: 'touch',
           transform: 'translateZ(0)',
@@ -679,7 +696,7 @@ export default function TypingTest({
             <div className="whitespace-pre-wrap break-words">
               {(() => {
                 const currentIndex = userInput.length;
-                let charIndex = 0;
+                const charIndex = 0;
                 
                 // Find word boundaries
                 const wordBoundaries: number[] = [];
@@ -707,74 +724,137 @@ export default function TypingTest({
                   }
                 }
                 
-                return parsedText.map((part, partIndex) => {
+                // Process each character in the text
+                type CharElement = {
+                  char: string;
+                  partIndex: number;
+                  charInPartIndex: number;
+                  globalIndex: number;
+                };
+                
+                type LineData = {
+                  chars: CharElement[];
+                  partIndex: number;
+                  isEmpty: boolean;
+                };
+                
+                const currentLine: CharElement[] = [];
+                const lines: LineData[] = [];
+                let charCount = 0;
+                
+                // First pass: Split text into lines
+                parsedText.forEach((part, partIndex) => {
                   const chars = part.text.split("");
-                  return chars.map((char, charInPartIndex) => {
-                    const isSpace = char === " ";
-                    const isNewline = char === "\n";
-                    const userChar = userInput[charIndex];
-                    const isCorrect = userChar === char;
-                    const isIncorrect = userChar && !isCorrect;
-                    const isCurrent = charIndex === currentIndex;
-                    const isCurrentWord = charIndex >= currentWordStart && charIndex <= currentWordEnd;
-                    const isHighErrorChar = showHighErrorChars && highErrorChars.includes(char);
-                    const isTyped = charIndex < userInput.length;
+                  chars.forEach((char, charInPartIndex) => {
+                    currentLine.push({
+                      char,
+                      partIndex,
+                      charInPartIndex,
+                      globalIndex: charCount
+                    });
                     
-                    // Handle new lines
-                    if (isNewline) {
-                      const element = <br key={`${partIndex}-${charInPartIndex}-br`} />;
-                      charIndex++;
-                      return element;
+                    if (char === '\n') {
+                      const newLine: LineData = {
+                        chars: [...currentLine],
+                        partIndex,
+                        isEmpty: currentLine.length === 1 && currentLine[0].char === '\n'
+                      };
+                      lines.push(newLine);
+                      currentLine.length = 0; // Clear the array while keeping the reference
                     }
                     
-                    const element = (
-                      <span
-                        key={`${partIndex}-${charInPartIndex}`}
-                        className={`
-                          mx-[0.5px] 
-                          border-b 
-                          ${isCurrent ? 'border-b-success border-b-2' : 'border-b-base-300 dark:border-gray-600'} 
-                          ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
-                          p-[1px] rounded w-[27px] inline-flex items-center justify-center 
-                          ${isTyped ? (
-                            isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
-                            isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : ""
-                          ) : (
-                            isHighErrorChar ? "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300" : ""
-                          )}
-                          ${isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""}
-                          ${charIndex === lastTypedPosition ? 'animate-typing' : ''}
-                          ${isCurrent ? 'relative' : ''}
-                        `}
-                        aria-current={isCurrent ? "true" : undefined}
-                        ref={(el) => {
-                          if (isCurrent && el) {
-                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                          }
-                        }}
-                      >
-                        {/* Current character indicator */}
-                        {isCurrent && (
-                          <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-xs bg-success text-white px-2 py-1 rounded">
-                            Type
-                          </span>
-                        )}
-                        {/* Translation tooltip */}
-                        {part.translation && isCurrentWord && (
-                          <span className="absolute -bottom-7 left-1/2 transform -translate-x-1/2 text-xs bg-blue-500 text-white px-2 py-1 rounded whitespace-nowrap">
-                            {part.translation}
-                          </span>
-                        )}
-                        {isSpace ? "\u00A0" : char}
-                        {charIndex === incorrectNewlinePosition && (
-                          <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-red-500"></div>
-                        )}
-                      </span>
-                    );
-                    
-                    charIndex++;
-                    return element;
+                    charCount++;
                   });
+                });
+                
+                // Add the last line if it's not empty
+                if (currentLine.length > 0) {
+                  lines.push({
+                    chars: currentLine,
+                    partIndex: parsedText.length - 1,
+                    isEmpty: false
+                  });
+                }
+                
+                // Render each line
+                return lines.map((line, lineIndex) => {
+                  const { chars, isEmpty } = line;
+                  const lineStartIndex = chars[0]?.globalIndex ?? 0;
+                  const lineEndIndex = chars[chars.length - 1]?.globalIndex ?? 0;
+                  const isCurrentLine = currentIndex >= lineStartIndex && currentIndex <= lineEndIndex + 1;
+                  
+                  return (
+                    <div 
+                      key={`line-${lineIndex}`}
+                      className={`relative ${isEmpty ? 'h-6' : ''} ${isCurrentLine ? 'bg-base-200/20 dark:bg-gray-700/20' : ''}`}
+                    >
+                      {chars.map(({ char, partIndex, charInPartIndex, globalIndex }) => {
+                        const userChar = userInput[globalIndex];
+                        const isSpace = char === ' ';
+                        const isNewline = char === '\n';
+                        const isCorrect = userChar === char;
+                        const isIncorrect = userChar && !isCorrect;
+                        const isCurrent = globalIndex === currentIndex;
+                        const isCurrentWord = globalIndex >= currentWordStart && globalIndex <= currentWordEnd;
+                        const isHighErrorChar = showHighErrorChars && highErrorChars.includes(char);
+                        const isTyped = globalIndex < userInput.length;
+                        
+                        if (isNewline) {
+                          return (
+                            <div key={`${partIndex}-${charInPartIndex}`} className="w-full">
+                              {isEmpty && (
+                                <div className="absolute left-0 right-0 h-6 bg-base-200/30 dark:bg-gray-700/30 rounded -z-10" />
+                              )}
+                              <br />
+                            </div>
+                          );
+                        }
+                        
+                        return (
+                          <span
+                            key={`${partIndex}-${charInPartIndex}`}
+                            className={`
+                              mx-[0.5px] 
+                              border-b 
+                              ${isCurrent ? 'border-b-success border-b-2' : 'border-b-base-300 dark:border-gray-600'} 
+                              ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
+                              p-[1px] rounded w-[27px] inline-flex items-center justify-center 
+                              ${isTyped ? (
+                                isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
+                                isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : ""
+                              ) : (
+                                isHighErrorChar ? "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300" : ""
+                              )}
+                              ${isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""}
+                              ${globalIndex === lastTypedPosition ? 'animate-typing' : ''}
+                              ${isCurrent ? 'relative' : ''}
+                            `}
+                            aria-current={isCurrent ? "true" : undefined}
+                            ref={(el) => {
+                              if (isCurrent && el) {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                              }
+                            }}
+                          >
+                            {isCurrent && (
+                              <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-xs bg-success text-white px-2 py-1 rounded">
+                                Type
+                              </span>
+                            )}
+                            {parsedText[partIndex]?.translation && isCurrentWord && (
+                              <span className="absolute -bottom-7 left-1/2 transform -translate-x-1/2 text-xs bg-blue-500 text-white px-2 py-1 rounded whitespace-nowrap">
+                                {parsedText[partIndex].translation}
+                              </span>
+                            )}
+                            {isSpace ? "\u00A0" : char}
+                            {globalIndex === incorrectNewlinePosition && (
+                              <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-red-500" />
+                            )}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  );
                 });
               })()}
             </div>
