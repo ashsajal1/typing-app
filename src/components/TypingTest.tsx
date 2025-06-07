@@ -243,18 +243,17 @@ export default function TypingTest({
       setIsStarted(true);
     }
 
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      handleSubmit();
-      return;
-    } else if (event.key === "Enter" && event.shiftKey) {
-      // Handle Shift+Enter for new line
-      event.preventDefault();
-      setUserInput(prev => {
-        const newInput = prev + "\n";
-        setTotalKeystrokes(prev => prev + 1);
-        return newInput;
-      });
+    if (event.key === "Enter") {
+      // Only handle Shift+Enter for new line
+      if (event.shiftKey) {
+        event.preventDefault();
+        setUserInput(prev => {
+          const newInput = prev + "\n";
+          setTotalKeystrokes(prev => prev + 1);
+          return newInput;
+        });
+      }
+      // Don't prevent default for regular Enter to allow form submission if needed
       return;
     }
 
