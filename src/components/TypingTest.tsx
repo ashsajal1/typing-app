@@ -797,6 +797,7 @@ export default function TypingTest({
                         rounded-r
                         ${lineIndex > 0 ? 'mt-1' : ''}
                         ${isCurrentLine ? 'ring-1 ring-success/20' : ''}
+                        ${isCurrentLine ? 'after:absolute after:inset-0 after:bg-success after:opacity-5 after:rounded-r' : ''}
                       `}
                     >
                       {chars.map(({ char, partIndex, charInPartIndex, globalIndex }) => {
@@ -831,15 +832,22 @@ export default function TypingTest({
                                 ${isCurrent ? 'bg-base-200/30 dark:bg-gray-700/30' : ''}
                                 ${isTyped ? (isCorrect ? 'bg-green-100/30 dark:bg-green-900/30' : 'bg-red-100/30 dark:bg-red-900/30') : ''}
                                 transition-colors duration-200
+                                before:absolute before:inset-0 before:border-t before:border-dashed
+                                ${isCurrent ? 'before:border-success before:opacity-50' : 
+                                  isTyped ? (isCorrect ? 'before:border-green-500 before:opacity-30' : 'before:border-red-500 before:opacity-30') : 
+                                  'before:border-base-300 dark:before:border-gray-600 before:opacity-20'}
                               `}
                             >
                               <div className="absolute inset-0 flex items-center justify-center">
-                                <div className={`
-                                  w-1 h-1 rounded-full 
-                                  ${isCurrent ? 'bg-success animate-pulse' : 
-                                    isTyped ? (isCorrect ? 'bg-green-500' : 'bg-red-500') : 
-                                    'bg-base-300 dark:bg-gray-600'}
-                                `} />
+                                <span className={`
+                                  text-xs font-mono
+                                  ${isCurrent ? 'text-success animate-pulse' : 
+                                    isTyped ? (isCorrect ? 'text-green-500' : 'text-red-500') : 
+                                    'text-base-300 dark:text-gray-600'}
+                                  transition-colors duration-200
+                                `}>
+                                  ¶
+                                </span>
                               </div>
                               {isCurrent && (
                                 <div className={`
@@ -847,6 +855,8 @@ export default function TypingTest({
                                   ${globalIndex === firstNewlineIndex ? '-right-20' : '-top-6 left-1/2 transform -translate-x-1/2'} 
                                   text-xs bg-success text-white px-2 py-1 rounded whitespace-nowrap
                                   animate-bounce
+                                  after:absolute after:inset-0 after:rounded after:bg-success after:opacity-20 after:blur-sm
+                                  after:-z-10
                                 `}>
                                   Press Enter
                                 </div>
