@@ -24,13 +24,27 @@ function RouteComponent() {
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
+  
+  const textValue = watch("text", "");
   const [isAdded, setIsAdded] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
+  const [isPasting, setIsPasting] = useState(false);
   const navigate = useNavigate();
+
+  // Function to process text and add <Enter> markers
+  const processText = (text: string): string => {
+    // Split by newlines and add <Enter> to each line except the last one
+    const lines = text.split('\n');
+    return lines.map((line, index) => 
+      index < lines.length - 1 ? `${line} <Enter>` : line
+    ).join('\n');
+  };
 
   // Handle form submission
   const onSubmit = (data: FormData) => {
@@ -142,11 +156,57 @@ function RouteComponent() {
         <h3 className="label label-text">Enter your custom text</h3>
         <textarea
           placeholder="Enter your custom text eg, Climate change is caused by..."
-          className="textarea textarea-bordered w-full"
+          className="textarea textarea-bordered w-full font-mono text-base"
           rows={12}
           cols={50}
-          {...register("text")}
-        ></textarea>
+          value={textValue}
+          onChange={(e) => {
+            if (!isPasting) {
+              setValue("text", e.target.value);
+            }
+          }}
+          onPaste={(e) => {
+            e.preventDefault();
+            setIsPasting(true);
+            const pastedText = e.clipboardData.getData('text/plain');
+            const processedText = processText(pastedText);
+            
+            const textarea = e.target as HTMLTextAreaElement;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const beforeText = textValue.substring(0, start);
+            const afterText = textValue.substring(end);
+            
+            const newText = beforeText + processedText + afterText;
+            setValue("text", newText);
+            
+            // Set cursor position after pasted text
+            setTimeout(() => {
+              const newPosition = start + processedText.length;
+              textarea.selectionStart = textarea.selectionEnd = newPosition;
+              setIsPasting(false);
+            }, 0);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              const textarea = e.target as HTMLTextAreaElement;
+              const start = textarea.selectionStart;
+              const end = textarea.selectionEnd;
+              const newValue = textValue.substring(0, start) + 
+                            (e.shiftKey ? '\n' : ' <Enter>\n') + 
+                            textValue.substring(end);
+              setValue("text", newValue);
+              
+              // Move cursor to after the new line
+              setTimeout(() => {
+                const newPosition = start + (e.shiftKey ? 1 : 9);
+                textarea.selectionStart = textarea.selectionEnd = newPosition;
+              }, 0);
+            }
+          }}
+          style={{ whiteSpace: 'pre-wrap' }} // Preserve whitespace and newlines
+        />
         {errors.text && <p className="text-red-500">{errors.text.message}</p>}
 
         <button className="btn btn-success w-full mt-2" type="submit">
