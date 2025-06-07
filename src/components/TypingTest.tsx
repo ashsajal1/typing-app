@@ -786,7 +786,17 @@ export default function TypingTest({
                   return (
                     <div 
                       key={`line-${lineIndex}`}
-                      className={`relative ${isEmpty ? 'h-6' : ''} ${isCurrentLine ? 'bg-base-200/20 dark:bg-gray-700/20' : ''}`}
+                      className={`
+                        relative 
+                        ${isEmpty ? 'h-8' : 'min-h-6 py-1'} 
+                        ${isCurrentLine ? 'bg-base-200/20 dark:bg-gray-700/20' : ''}
+                        transition-colors duration-200
+                        border-l-2
+                        ${isCurrentLine ? 'border-l-success' : 'border-l-transparent'}
+                        pl-2
+                        rounded-r
+                        ${lineIndex > 0 ? 'mt-1' : ''}
+                      `}
                     >
                       {chars.map(({ char, partIndex, charInPartIndex, globalIndex }) => {
                         const userChar = userInput[globalIndex];
@@ -801,11 +811,21 @@ export default function TypingTest({
                         
                         if (isNewline) {
                           return (
-                            <div key={`${partIndex}-${charInPartIndex}`} className="w-full">
-                              {isEmpty && (
-                                <div className="absolute left-0 right-0 h-6 bg-base-200/30 dark:bg-gray-700/30 rounded -z-10" />
+                            <div 
+                              key={`${partIndex}-${charInPartIndex}`} 
+                              className={`relative w-full h-8 flex items-center justify-center group ${isCurrent ? 'bg-base-200/30 dark:bg-gray-700/30' : ''}`}
+                            >
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className={`w-1 h-1 rounded-full ${isCurrent ? 'bg-success' : 'bg-base-300 dark:bg-gray-600'}`} />
+                              </div>
+                              {isCurrent && (
+                                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs bg-success text-white px-2 py-1 rounded whitespace-nowrap">
+                                  Press Enter
+                                </div>
                               )}
-                              <br />
+                              {globalIndex === incorrectNewlinePosition && (
+                                <div className="absolute inset-0 border-2 border-red-500 rounded pointer-events-none" />
+                              )}
                             </div>
                           );
                         }
@@ -819,6 +839,7 @@ export default function TypingTest({
                               ${isCurrent ? 'border-b-success border-b-2' : 'border-b-base-300 dark:border-gray-600'} 
                               ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
                               p-[1px] rounded w-[27px] inline-flex items-center justify-center 
+                              transition-colors duration-100
                               ${isTyped ? (
                                 isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
                                 isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : ""
