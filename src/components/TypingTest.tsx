@@ -797,7 +797,7 @@ export default function TypingTest({
                         rounded-r
                         ${lineIndex > 0 ? 'mt-1' : ''}
                         ${isCurrentLine ? 'ring-1 ring-success/20' : ''}
-                        ${isCurrentLine ? 'after:absolute after:inset-0 after:bg-success after:opacity-5 after:rounded-r' : ''}
+                        ${isCurrentLine ? 'after:absolute after:inset-0  after:opacity-5 after:rounded-r' : ''}
                       `}
                     >
                       {chars.map(({ char, partIndex, charInPartIndex, globalIndex }) => {
@@ -855,7 +855,7 @@ export default function TypingTest({
                                   ${globalIndex === firstNewlineIndex ? '-right-20' : '-top-6 left-1/2 transform -translate-x-1/2'} 
                                   text-xs bg-success text-white px-2 py-1 rounded whitespace-nowrap
                                   animate-bounce
-                                  after:absolute after:inset-0 after:rounded after:bg-success after:opacity-20 after:blur-sm
+                                  after:absolute after:inset-0 after:rounded after:opacity-20 after:blur-sm
                                   after:-z-10
                                 `}>
                                   Press Enter
