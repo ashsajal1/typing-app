@@ -65,111 +65,116 @@ export default function App() {
           </div>
         </div>
 
-        <div className="w-full max-w-2xl px-6 relative z-10 overflow-x-hidden">
+        <div className="w-full max-w-6xl px-6 relative z-10 overflow-x-hidden">
           <div className="text-center mb-6">
             <h1 className="text-3xl font-bold text-base-content mb-2">{t('common.practice')}</h1>
             <p className="text-base-content/70">{t('common.improveTyping')}</p>
           </div>
 
-          <div className="bg-base-200 rounded-xl shadow-lg p-6 space-y-6">
-            {/* Topic Selection */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-base-content flex items-center gap-2">
-                <BookOpen className="w-4 h-4" />
-                {t('common.selectTopic')}
-              </label>
-              <select 
-                value={selectedTopic} 
-                onChange={handleSelectChange} 
-                className="select select-bordered w-full bg-base-100"
-              >
-                <option value="" disabled>{t('common.chooseTopic')}</option>
-                {topics.map(topic => (
-                  <option key={topic} value={topic} className="flex items-center gap-2">
-                    {getTopicIcon(topic)} {topic} ({sentences.filter(sen => sen.topic === topic).length})
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Time Selection */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-base-content flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                {t('common.practiceDuration')}
-              </label>
-              <select 
-                value={eclipsedTime} 
-                onChange={handleEclipsedChange} 
-                className="select select-bordered w-full bg-base-100"
-              >
-                <option value="" disabled>{t('common.selectDuration')}</option>
-                <option value={30}>30 {t('common.seconds')}</option>
-                <option value={60}>1 {t('common.minute')}</option>
-                <option value={120}>2 {t('common.minutes')}</option>
-                <option value={0}>{t('common.noTimeLimit')}</option>
-              </select>
-            </div>
-
-            {/* Start Practice Button */}
-            <Link 
-              className="w-full" 
-              to='/practice' 
-              search={{ topic: selectedTopic, eclipsedTime: eclipsedTime }}
-            >
-              <button className="btn btn-primary w-full mt-2 gap-2 hover:scale-[1.02] transition-transform">
-                <PlayCircle className="w-5 h-5" />
-                {t('common.startPractice')}
-              </button>
-            </Link>
-
-            {/* Recent Saved Texts */}
-            {recentSavedTexts.length > 0 && (
-              <div className="space-y-2 pt-4 border-t border-base-300">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Left Column - Practice Options */}
+            <div className="bg-base-200 rounded-xl shadow-lg p-8 space-y-8">
+              {/* Topic Selection */}
+              <div className="space-y-2">
                 <label className="text-sm font-medium text-base-content flex items-center gap-2">
-                  <Bookmark className="w-4 h-4" />
-                  Recent Saved Texts
+                  <BookOpen className="w-4 h-4" />
+                  {t('common.selectTopic')}
                 </label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {recentSavedTexts.map((text) => (
-                    <Link
-                      key={text.id}
-                      to="/practice"
-                      search={{ 
-                        savedTextId: parseInt(text.id),
-                        eclipsedTime: 60,
-                        topic: text.type || 'paragraph'
-                      }}
-                      className="block"
-                    >
-                      <div className="bg-base-100 rounded-lg p-3 hover:bg-base-300 transition-colors h-full">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium truncate">{text.label}</span>
-                          <span className="badge badge-sm">{text.type || 'paragraph'}</span>
-                        </div>
-                        <p className="text-sm text-base-content/70 truncate mt-1">{text.text}</p>
-                      </div>
-                    </Link>
+                <select 
+                  value={selectedTopic} 
+                  onChange={handleSelectChange} 
+                  className="select select-bordered w-full bg-base-100"
+                >
+                  <option value="" disabled>{t('common.chooseTopic')}</option>
+                  {topics.map(topic => (
+                    <option key={topic} value={topic} className="flex items-center gap-2">
+                      {getTopicIcon(topic)} {topic} ({sentences.filter(sen => sen.topic === topic).length})
+                    </option>
                   ))}
+                </select>
+              </div>
+
+              {/* Time Selection */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-base-content flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  {t('common.practiceDuration')}
+                </label>
+                <select 
+                  value={eclipsedTime} 
+                  onChange={handleEclipsedChange} 
+                  className="select select-bordered w-full bg-base-100"
+                >
+                  <option value="" disabled>{t('common.selectDuration')}</option>
+                  <option value={30}>30 {t('common.seconds')}</option>
+                  <option value={60}>1 {t('common.minute')}</option>
+                  <option value={120}>2 {t('common.minutes')}</option>
+                  <option value={0}>{t('common.noTimeLimit')}</option>
+                </select>
+              </div>
+
+              {/* Start Practice Button */}
+              <Link 
+                className="w-full" 
+                to='/practice' 
+                search={{ topic: selectedTopic, eclipsedTime: eclipsedTime }}
+              >
+                <button className="btn btn-primary w-full mt-2 gap-2 hover:scale-[1.02] transition-transform">
+                  <PlayCircle className="w-5 h-5" />
+                  {t('common.startPractice')}
+                </button>
+              </Link>
+
+              {/* Additional Options */}
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-base-300">
+                <Link className="w-full" to='/saved-text'>
+                  <button className="btn btn-outline w-full gap-2 hover:bg-base-300">
+                    <Save className="w-4 h-4" />
+                    {t('common.savedText')}
+                  </button>
+                </Link>
+                <Link className="w-full" to='/custom-text'>
+                  <button className="btn btn-outline w-full gap-2 hover:bg-base-300">
+                    <PlusCircle className="w-4 h-4" />
+                    {t('common.createCustomText')}
+                  </button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Column - Recent Saved Texts */}
+            {recentSavedTexts.length > 0 && (
+              <div className="bg-base-200 rounded-xl shadow-lg p-8 space-y-8">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-base-content flex items-center gap-2">
+                    <Bookmark className="w-4 h-4" />
+                    Recent Saved Texts
+                  </label>
+                  <div className="space-y-2">
+                    {recentSavedTexts.map((text) => (
+                      <Link
+                        key={text.id}
+                        to="/practice"
+                        search={{ 
+                          savedTextId: parseInt(text.id),
+                          eclipsedTime: 60,
+                          topic: text.type || 'paragraph'
+                        }}
+                        className="block"
+                      >
+                        <div className="bg-base-100 rounded-lg p-3 hover:bg-base-300 transition-colors">
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium truncate">{text.label}</span>
+                            <span className="badge badge-sm">{text.type || 'paragraph'}</span>
+                          </div>
+                          <p className="text-sm text-base-content/70 truncate mt-1">{text.text}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
-
-            {/* Additional Options */}
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-base-300">
-              <Link className="w-full" to='/saved-text'>
-                <button className="btn btn-outline w-full gap-2 hover:bg-base-300">
-                  <Save className="w-4 h-4" />
-                  {t('common.savedText')}
-                </button>
-              </Link>
-              <Link className="w-full" to='/custom-text'>
-                <button className="btn btn-outline w-full gap-2 hover:bg-base-300">
-                  <PlusCircle className="w-4 h-4" />
-                  {t('common.createCustomText')}
-                </button>
-              </Link>
-            </div>
           </div>
 
           {/* Quick Tips */}
