@@ -5,11 +5,11 @@ import Footer from '../components/Footer'
 
 export const Route = createRootRoute({
   component: () => (
-    <>
+    <div className="overflow-x-hidden">
       <Navbar />
       <Outlet />
       <Footer />
       {/* <TanStackRouterDevtools /> */}
-    </>
+    </div>
   ),
 })
