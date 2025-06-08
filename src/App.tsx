@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from "react";
 import { useSentenceStore } from "./store/sentenceStore";
 import { Link } from "@tanstack/react-router";
 import { Clock, BookOpen, PlusCircle, PlayCircle, Save } from "lucide-react";
+import { TOPIC_ICONS, KEYBOARD_ELEMENTS } from "./lib/constants";
 
 export default function App() {
   const [selectedTopic, setSelectedTopic] = useState('physics')
@@ -22,31 +23,8 @@ export default function App() {
   const { sentences } = useSentenceStore();
 
   const getTopicIcon = (topic: string) => {
-    switch (topic.toLowerCase()) {
-      case 'physics':
-        return '⚛️';
-      case 'programming':
-        return '💻';
-      case 'literature':
-        return '📚';
-      case 'history':
-        return '📜';
-      case 'science':
-        return '🔬';
-      default:
-        return '📝';
-    }
+    return TOPIC_ICONS[topic.toLowerCase()] || TOPIC_ICONS.default;
   };
-
-  // Keyboard keys and symbols for the background
-  const keyboardElements = [
-    '⌨️', '⌘', '⌥', '⇧', '⌃', '↵', '⌫', '⇥',
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-    '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-    '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
-    '←', '→', '↑', '↓'
-  ];
 
   return (
     <div className="min-h-screen w-screen overflow-hidden bg-base-100 flex items-start justify-center pt-8 relative">
@@ -68,7 +46,7 @@ export default function App() {
                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
               }}
             >
-              {keyboardElements[Math.floor(Math.random() * keyboardElements.length)]}
+              {KEYBOARD_ELEMENTS[Math.floor(Math.random() * KEYBOARD_ELEMENTS.length)]}
             </div>
           ))}
         </div>
