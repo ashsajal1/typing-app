@@ -103,9 +103,23 @@ function RouteComponent() {
             className="flex flex-col justify-between items-center w-full shadow p-3 gap-2 border border-base-200 rounded"
             key={data.id}
           >
-            <div>
+            <div className="w-full">
               <div className="flex items-center justify-between py-4">
-                <p className="card-title">{data.label.slice(0, 50)}...</p>
+                <div className="flex flex-col gap-1">
+                  <p className="card-title">{data.label.slice(0, 50)}...</p>
+                  <span className={`badge ${
+                    !data.type || data.type === 'paragraph' ? 'badge-primary' :
+                    data.type === 'composition' ? 'badge-secondary' :
+                    data.type === 'formal-letter' ? 'badge-accent' :
+                    data.type === 'informal-letter' ? 'badge-info' :
+                    'badge-ghost'
+                  }`}>
+                    {!data.type ? 'Others' :
+                     data.type === 'formal-letter' ? 'Formal Letter' :
+                     data.type === 'informal-letter' ? 'Informal Letter' :
+                     data.type.charAt(0).toUpperCase() + data.type.slice(1)}
+                  </span>
+                </div>
 
                 <div className="flex items-center gap-2">
                   <label
