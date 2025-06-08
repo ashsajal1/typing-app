@@ -69,16 +69,16 @@ function RouteComponent() {
 
   return (
     <div className="p-2">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
         <div className="flex items-center gap-3">
           <h1 className="text-3xl font-bold">Custom Text</h1>
           <Link to="/custom-text">
             <button className="btn btn-sm btn-success">Create</button>
           </Link>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
           <select 
-            className="select select-bordered w-full max-w-xs"
+            className="select select-bordered w-full sm:w-48"
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value as TextType)}
           >
@@ -89,8 +89,8 @@ function RouteComponent() {
             <option value="informal-letter">Informal Letter</option>
             <option value="others">Others</option>
           </select>
-          <Link to="/guide">
-            <button className="btn btn-outline btn-success gap-2">
+          <Link to="/guide" className="w-full sm:w-auto">
+            <button className="btn btn-outline btn-success gap-2 w-full">
               <BookOpen className="w-4 h-4" />
               View Guide
             </button>
