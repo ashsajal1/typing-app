@@ -19,7 +19,6 @@ import { Route as PracticeImport } from './routes/practice'
 import { Route as GuideImport } from './routes/guide'
 import { Route as CustomTextImport } from './routes/custom-text'
 import { Route as CodeImport } from './routes/code'
-import { Route as BnpracticeImport } from './routes/bnpractice'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 
@@ -73,12 +72,6 @@ const CodeRoute = CodeImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const BnpracticeRoute = BnpracticeImport.update({
-  id: '/bnpractice',
-  path: '/bnpractice',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const AboutRoute = AboutImport.update({
   id: '/about',
   path: '/about',
@@ -107,13 +100,6 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutImport
-      parentRoute: typeof rootRoute
-    }
-    '/bnpractice': {
-      id: '/bnpractice'
-      path: '/bnpractice'
-      fullPath: '/bnpractice'
-      preLoaderRoute: typeof BnpracticeImport
       parentRoute: typeof rootRoute
     }
     '/code': {
@@ -180,7 +166,6 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/bnpractice': typeof BnpracticeRoute
   '/code': typeof CodeRoute
   '/custom-text': typeof CustomTextRoute
   '/guide': typeof GuideRoute
@@ -194,7 +179,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/bnpractice': typeof BnpracticeRoute
   '/code': typeof CodeRoute
   '/custom-text': typeof CustomTextRoute
   '/guide': typeof GuideRoute
@@ -209,7 +193,6 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/bnpractice': typeof BnpracticeRoute
   '/code': typeof CodeRoute
   '/custom-text': typeof CustomTextRoute
   '/guide': typeof GuideRoute
@@ -225,7 +208,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
-    | '/bnpractice'
     | '/code'
     | '/custom-text'
     | '/guide'
@@ -238,7 +220,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
-    | '/bnpractice'
     | '/code'
     | '/custom-text'
     | '/guide'
@@ -251,7 +232,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
-    | '/bnpractice'
     | '/code'
     | '/custom-text'
     | '/guide'
@@ -266,7 +246,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  BnpracticeRoute: typeof BnpracticeRoute
   CodeRoute: typeof CodeRoute
   CustomTextRoute: typeof CustomTextRoute
   GuideRoute: typeof GuideRoute
@@ -280,7 +259,6 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  BnpracticeRoute: BnpracticeRoute,
   CodeRoute: CodeRoute,
   CustomTextRoute: CustomTextRoute,
   GuideRoute: GuideRoute,
@@ -303,7 +281,6 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
-        "/bnpractice",
         "/code",
         "/custom-text",
         "/guide",
@@ -319,9 +296,6 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.tsx"
-    },
-    "/bnpractice": {
-      "filePath": "bnpractice.tsx"
     },
     "/code": {
       "filePath": "code.tsx"
