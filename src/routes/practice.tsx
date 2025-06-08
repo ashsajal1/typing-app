@@ -95,7 +95,7 @@ function PracticeComponent() {
         keywords={['typing practice', 'speed test', 'accuracy', 'typing session', 'practice mode']}
       />
       {isBengali ? (
-        <BengaliTyping />
+        <BengaliTyping text={textToType} />
       ) : (
         <TypingTest
           eclipsedTime={eclipsedTime || 60}

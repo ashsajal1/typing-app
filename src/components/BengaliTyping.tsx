@@ -2,7 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 import StatsDisplay from './StatsDisplay';
 import ControlsDisplay from './ControlsDisplay';
 
-export default function BengaliTyping() {
+interface BengaliTypingProps {
+  text: string;
+}
+
+const BengaliTyping: React.FC<BengaliTypingProps> = ({ text }) => {
   const [userInput, setUserInput] = useState('');
   const [isStarted, setIsStarted] = useState(false);
   const [timer, setTimer] = useState(0);
@@ -16,8 +20,8 @@ export default function BengaliTyping() {
   const textRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout>();
 
-  // Sample Bengali paragraph split into words
-  const bengaliWords = `বাংলা ভাষা একটি ইন্দো-আর্য ভাষা যা দক্ষিণ এশিয়ার বঙ্গ অঞ্চলের মানুষের ভাষা। এটি বাংলাদেশের রাষ্ট্রভাষা এবং ভারতের পশ্চিমবঙ্গ, ত্রিপুরা ও আসামের বরাক উপত্যকার সরকারি ভাষা। বাংলা ভাষা বিশ্বের ষষ্ঠ সর্বাধিক কথিত ভাষা। বাংলা সাহিত্যের ইতিহাস হাজার বছরের পুরনো। রবীন্দ্রনাথ ঠাকুর, কাজী নজরুল ইসলাম, বঙ্কিমচন্দ্র চট্টোপাধ্যায় প্রমুখ বাংলা সাহিত্যের উজ্জ্বল নক্ষত্র।`.split(' ');
+  // Use 'text' prop instead of hardcoded sample text
+  const words = text.split(" ");
 
   // Timer effect
   useEffect(() => {
@@ -70,7 +74,7 @@ export default function BengaliTyping() {
   };
 
   const checkWord = (wordToCheck: string) => {
-    const currentWord = bengaliWords[currentWordIndex];
+    const currentWord = words[currentWordIndex];
     const isCorrect = wordToCheck === currentWord;
     
     // Update word status
@@ -100,7 +104,7 @@ export default function BengaliTyping() {
     }
 
     // Check if test is complete
-    if (currentWordIndex + 1 >= bengaliWords.length) {
+    if (currentWordIndex + 1 >= words.length) {
       setIsSubmitted(true);
       if (timerRef.current) {
         clearInterval(timerRef.current);
@@ -136,7 +140,7 @@ export default function BengaliTyping() {
           <div className="stat">
             <div className="stat-title">Words Completed</div>
             <div className="stat-value">{currentWordIndex}</div>
-            <div className="stat-desc">Out of {bengaliWords.length} words</div>
+            <div className="stat-desc">Out of {words.length} words</div>
           </div>
           
           <div className="stat">
@@ -158,14 +162,14 @@ export default function BengaliTyping() {
       <progress
         className="progress progress-success w-full"
         value={currentWordIndex}
-        max={bengaliWords.length}
+        max={words.length}
       ></progress>
 
       <div 
         ref={textRef}
         className="text-xl leading-relaxed p-4 border rounded-lg h-48 overflow-y-auto"
       >
-        {bengaliWords.map((word, index) => (
+        {words.map((word, index) => (
           <span 
             key={index} 
             className={`${getWordClass(index)} mx-1`}
@@ -203,3 +207,5 @@ export default function BengaliTyping() {
     </section>
   );
 }
+
+export default BengaliTyping;
