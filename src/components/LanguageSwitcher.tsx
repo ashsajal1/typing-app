@@ -11,7 +11,8 @@ const languages = [
   { code: 'ko', name: '한국어' },
   { code: 'ru', name: 'Русский' },
   { code: 'ar', name: 'العربية' },
-  { code: 'hi', name: 'हिन्दी' }
+  { code: 'hi', name: 'हिन्दी' },
+  { code: 'bn', name: 'বাংলা' }
 ];
 
 const LanguageSwitcher = () => {

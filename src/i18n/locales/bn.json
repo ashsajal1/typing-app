@@ -1,0 +1,49 @@
+{
+  "common": {
+    "start": "শুরু করুন",
+    "stop": "বন্ধ করুন",
+    "reset": "রিসেট করুন",
+    "settings": "সেটিংস",
+    "statistics": "পরিসংখ্যান",
+    "practice": "টাইপিং অনুশীলন",
+    "improveTyping": "আপনার টাইপিং গতি এবং নির্ভুলতা উন্নত করুন",
+    "wpm": "শব্দ প্রতি মিনিট",
+    "accuracy": "নির্ভুলতা",
+    "time": "সময়",
+    "characters": "অক্ষর",
+    "errors": "ত্রুটি",
+    "selectTopic": "বিষয় নির্বাচন করুন",
+    "chooseTopic": "অনুশীলনের জন্য একটি বিষয় নির্বাচন করুন",
+    "practiceDuration": "অনুশীলনের সময়কাল",
+    "selectDuration": "অনুশীলনের সময়কাল নির্বাচন করুন",
+    "seconds": "সেকেন্ড",
+    "minute": "মিনিট",
+    "minutes": "মিনিট",
+    "noTimeLimit": "সময় সীমা নেই",
+    "startPractice": "অনুশীলন শুরু করুন",
+    "savedText": "সংরক্ষিত টেক্সট",
+    "createCustomText": "কাস্টম টেক্সট তৈরি করুন",
+    "tip": "পরামর্শ: ছোট সময়কাল দিয়ে শুরু করুন এবং আপনার উন্নতির সাথে সাথে ধীরে ধীরে বাড়ান"
+  },
+  "settings": {
+    "theme": "থিম",
+    "language": "ভাষা",
+    "sound": "সাউন্ড",
+    "difficulty": "কঠিনতা",
+    "timeLimit": "সময় সীমা",
+    "customText": "কাস্টম টেক্সট"
+  },
+  "difficulty": {
+    "easy": "সহজ",
+    "medium": "মাঝারি",
+    "hard": "কঠিন",
+    "custom": "কাস্টম"
+  },
+  "statistics": {
+    "bestWpm": "সেরা WPM",
+    "averageWpm": "গড় WPM",
+    "totalPracticeTime": "মোট অনুশীলনের সময়",
+    "totalCharacters": "মোট অক্ষর",
+    "totalErrors": "মোট ত্রুটি"
+  }
+} 

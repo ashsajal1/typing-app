@@ -13,6 +13,7 @@ import koTranslation from './locales/ko.json';
 import ruTranslation from './locales/ru.json';
 import arTranslation from './locales/ar.json';
 import hiTranslation from './locales/hi.json';
+import bnTranslation from './locales/bn.json';
 
 i18n
   .use(LanguageDetector)
@@ -48,6 +49,9 @@ i18n
       },
       hi: {
         translation: hiTranslation,
+      },
+      bn: {
+        translation: bnTranslation,
       },
     },
     fallbackLng: 'en',
