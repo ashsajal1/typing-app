@@ -85,7 +85,7 @@ function PracticeComponent() {
   const textToType = savedSentence ? savedSentence.text : sentences;
   // Use franc to detect language
   const lang = franc(textToType || '');
-  const isBengali = lang === 'ben';
+  const isBengali = lang !== 'eng';
 
   return (
     <>
