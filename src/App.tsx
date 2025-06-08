@@ -74,7 +74,7 @@ export default function App() {
         </div>
       </div>
 
-      <div className="w-full max-w-2xl px-6 relative z-10">
+      <div className="w-full max-w-2xl px-6 relative z-10 overflow-x-hidden">
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-base-content mb-2">Typing Practice</h1>
           <p className="text-base-content/70">Improve your typing speed and accuracy</p>
