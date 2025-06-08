@@ -49,14 +49,14 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen w-screen overflow-hidden bg-gray-50 dark:bg-gray-900 flex items-start justify-center pt-8 relative">
+    <div className="min-h-screen w-screen overflow-hidden bg-base-100 flex items-start justify-center pt-8 relative">
       {/* Keyboard-inspired background pattern */}
       <div className="absolute inset-0 flex justify-center select-none">
         <div className="relative w-full max-w-2xl">
           {Array.from({ length: 30 }).map((_, i) => (
             <div 
               key={i} 
-              className="absolute rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 animate-float"
+              className="absolute rounded-lg bg-base-200/5 backdrop-blur-sm border border-base-300/10 animate-float"
               style={{
                 padding: '8px 12px',
                 fontSize: `${Math.random() * 12 + 12}px`,
@@ -76,21 +76,21 @@ export default function App() {
 
       <div className="w-full max-w-2xl px-6 relative z-10">
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Typing Practice</h1>
-          <p className="text-gray-600 dark:text-gray-300">Improve your typing speed and accuracy</p>
+          <h1 className="text-3xl font-bold text-base-content mb-2">Typing Practice</h1>
+          <p className="text-base-content/70">Improve your typing speed and accuracy</p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-6">
+        <div className="bg-base-200 rounded-xl shadow-lg p-6 space-y-6">
           {/* Topic Selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+            <label className="text-sm font-medium text-base-content flex items-center gap-2">
               <BookOpen className="w-4 h-4" />
               Select Topic
             </label>
             <select 
               value={selectedTopic} 
               onChange={handleSelectChange} 
-              className="select select-bordered w-full bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600"
+              className="select select-bordered w-full bg-base-100"
             >
               <option value="" disabled>Choose a topic to practice</option>
               {topics.map(topic => (
@@ -103,14 +103,14 @@ export default function App() {
 
           {/* Time Selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+            <label className="text-sm font-medium text-base-content flex items-center gap-2">
               <Clock className="w-4 h-4" />
               Practice Duration
             </label>
             <select 
               value={eclipsedTime} 
               onChange={handleEclipsedChange} 
-              className="select select-bordered w-full bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600"
+              className="select select-bordered w-full bg-base-100"
             >
               <option value="" disabled>Select practice duration</option>
               <option value={30}>30 seconds</option>
@@ -126,22 +126,22 @@ export default function App() {
             to='/practice' 
             search={{ topic: selectedTopic, eclipsedTime: eclipsedTime }}
           >
-            <button className="btn btn-success w-full mt-2 gap-2 hover:scale-[1.02] transition-transform">
+            <button className="btn btn-primary w-full mt-2 gap-2 hover:scale-[1.02] transition-transform">
               <PlayCircle className="w-5 h-5" />
               Start Practice
             </button>
           </Link>
 
           {/* Additional Options */}
-          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-base-300">
             <Link className="w-full" to='/saved-text'>
-              <button className="btn btn-outline w-full gap-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+              <button className="btn btn-outline w-full gap-2 hover:bg-base-300">
                 <Save className="w-4 h-4" />
                 Saved Text
               </button>
             </Link>
             <Link className="w-full" to='/custom-text'>
-              <button className="btn btn-outline w-full gap-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+              <button className="btn btn-outline w-full gap-2 hover:bg-base-300">
                 <PlusCircle className="w-4 h-4" />
                 Create Custom Text
               </button>
@@ -150,7 +150,7 @@ export default function App() {
         </div>
 
         {/* Quick Tips */}
-        <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+        <div className="mt-6 text-center text-sm text-base-content/60">
           <p>💡 Tip: Start with shorter durations and gradually increase as you improve</p>
         </div>
       </div>
