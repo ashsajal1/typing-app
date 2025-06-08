@@ -1,7 +1,7 @@
 {
   "name": "typing-test",
   "private": true,
-  "version": "1.5.3",
+  "version": "1.6.3",
   "type": "module",
   "description": "A modern typing practice application to improve typing speed and accuracy with various topics and customizable settings",
   "keywords": [
