@@ -15,6 +15,7 @@ function RouteComponent() {
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [itemToEdit, setItemToEdit] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
+  const [editType, setEditType] = useState<TextType>("paragraph");
   const [selectedType, setSelectedType] = useState<TextType>("all");
 
   useEffect(() => {
@@ -50,7 +51,7 @@ function RouteComponent() {
     if (itemToEdit) {
       console.log("Editing data with id:", itemToEdit);
       const dataAfterEdit = existingData.map((data) =>
-        data.id === itemToEdit ? { ...data, text: editText } : data
+        data.id === itemToEdit ? { ...data, text: editText, type: editType } : data
       );
       console.log(dataAfterEdit);
 
@@ -58,6 +59,7 @@ function RouteComponent() {
       setExistingData(dataAfterEdit);
       setItemToEdit(null);
       setEditText("");
+      setEditType("paragraph");
     }
   };
 
@@ -150,6 +152,7 @@ function RouteComponent() {
                     onClick={() => {
                       setItemToEdit(data.id);
                       setEditText(data.text);
+                      setEditType(data.type);
                     }}
                   >
                     <Pencil className="w-4 h-4" />
@@ -177,11 +180,30 @@ function RouteComponent() {
         <div className="modal" role="dialog">
           <div className="modal-box">
             <h3 className="text-lg font-bold">Edit Text</h3>
-            <textarea
-              className="textarea h-96 textarea-bordered w-full"
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-            />
+            <div className="flex flex-col gap-4">
+              <div>
+                <h4 className="label">Text Type</h4>
+                <select 
+                  className="select select-bordered w-full"
+                  value={editType}
+                  onChange={(e) => setEditType(e.target.value as TextType)}
+                >
+                  <option value="paragraph">Paragraph</option>
+                  <option value="composition">Composition</option>
+                  <option value="formal-letter">Formal Letter</option>
+                  <option value="informal-letter">Informal Letter</option>
+                  <option value="others">Others</option>
+                </select>
+              </div>
+              <div>
+                <h4 className="label">Text Content</h4>
+                <textarea
+                  className="textarea h-96 textarea-bordered w-full"
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                />
+              </div>
+            </div>
             <div className="modal-action">
               <button className="btn" onClick={() => setItemToEdit(null)}>
                 Cancel
