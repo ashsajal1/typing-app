@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import StatsDisplay from './StatsDisplay';
 import ControlsDisplay from './ControlsDisplay';
+import { franc } from 'franc';
 
-interface BengaliTypingProps {
+interface NonEnTypingProps {
   text: string;
 }
 
-const BengaliTyping: React.FC<BengaliTypingProps> = ({ text }) => {
+const NonEnTyping: React.FC<NonEnTypingProps> = ({ text }) => {
   const [userInput, setUserInput] = useState('');
   const [isStarted, setIsStarted] = useState(false);
   const [timer, setTimer] = useState(0);
@@ -20,8 +21,9 @@ const BengaliTyping: React.FC<BengaliTypingProps> = ({ text }) => {
   const textRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout>();
 
-  // Use 'text' prop instead of hardcoded sample text
-  const words = text.split(" ");
+  // Detect language and form words accordingly
+  const lang = franc(text || '');
+  const words = lang === 'ben' ? text.split(" ") : text.split("");
 
   // Timer effect
   useEffect(() => {
@@ -208,4 +210,4 @@ const BengaliTyping: React.FC<BengaliTypingProps> = ({ text }) => {
   );
 }
 
-export default BengaliTyping;
+export default NonEnTyping;
