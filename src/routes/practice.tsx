@@ -2,9 +2,11 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { useSentenceStore } from "../store/sentenceStore";
 import TypingTest from "../components/TypingTest";
+import BengaliTyping from "../components/BengaliTyping";
 import { ArrowLeft, HomeIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SEO } from '../components/SEO'
+import { franc } from 'franc';
 
 const topicsSearchSchema = z.object({
   topic: z.string(),
@@ -80,6 +82,11 @@ function PracticeComponent() {
     );
   }
 
+  const textToType = savedSentence ? savedSentence.text : sentences;
+  // Use franc to detect language
+  const lang = franc(textToType || '');
+  const isBengali = lang === 'ben';
+
   return (
     <>
       <SEO 
@@ -87,12 +94,12 @@ function PracticeComponent() {
         description="Start your typing practice session. Choose from various topics and customize your practice duration. Track your typing speed and accuracy in real-time."
         keywords={['typing practice', 'speed test', 'accuracy', 'typing session', 'practice mode']}
       />
-      {savedSentence ? (
-        <TypingTest eclipsedTime={Infinity} text={savedSentence.text} />
+      {isBengali ? (
+        <BengaliTyping />
       ) : (
         <TypingTest
           eclipsedTime={eclipsedTime || 60}
-          text={sentences}
+          text={textToType}
         />
       )}
     </>
