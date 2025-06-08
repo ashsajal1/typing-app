@@ -11,8 +11,10 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as TermsImport } from './routes/terms'
 import { Route as StatsImport } from './routes/stats'
 import { Route as SavedTextImport } from './routes/saved-text'
+import { Route as PrivacyImport } from './routes/privacy'
 import { Route as PracticeImport } from './routes/practice'
 import { Route as GuideImport } from './routes/guide'
 import { Route as CustomTextImport } from './routes/custom-text'
@@ -21,6 +23,12 @@ import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const TermsRoute = TermsImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const StatsRoute = StatsImport.update({
   id: '/stats',
@@ -31,6 +39,12 @@ const StatsRoute = StatsImport.update({
 const SavedTextRoute = SavedTextImport.update({
   id: '/saved-text',
   path: '/saved-text',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PrivacyRoute = PrivacyImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -116,6 +130,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PracticeImport
       parentRoute: typeof rootRoute
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyImport
+      parentRoute: typeof rootRoute
+    }
     '/saved-text': {
       id: '/saved-text'
       path: '/saved-text'
@@ -130,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StatsImport
       parentRoute: typeof rootRoute
     }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -142,8 +170,10 @@ export interface FileRoutesByFullPath {
   '/custom-text': typeof CustomTextRoute
   '/guide': typeof GuideRoute
   '/practice': typeof PracticeRoute
+  '/privacy': typeof PrivacyRoute
   '/saved-text': typeof SavedTextRoute
   '/stats': typeof StatsRoute
+  '/terms': typeof TermsRoute
 }
 
 export interface FileRoutesByTo {
@@ -153,8 +183,10 @@ export interface FileRoutesByTo {
   '/custom-text': typeof CustomTextRoute
   '/guide': typeof GuideRoute
   '/practice': typeof PracticeRoute
+  '/privacy': typeof PrivacyRoute
   '/saved-text': typeof SavedTextRoute
   '/stats': typeof StatsRoute
+  '/terms': typeof TermsRoute
 }
 
 export interface FileRoutesById {
@@ -165,8 +197,10 @@ export interface FileRoutesById {
   '/custom-text': typeof CustomTextRoute
   '/guide': typeof GuideRoute
   '/practice': typeof PracticeRoute
+  '/privacy': typeof PrivacyRoute
   '/saved-text': typeof SavedTextRoute
   '/stats': typeof StatsRoute
+  '/terms': typeof TermsRoute
 }
 
 export interface FileRouteTypes {
@@ -178,8 +212,10 @@ export interface FileRouteTypes {
     | '/custom-text'
     | '/guide'
     | '/practice'
+    | '/privacy'
     | '/saved-text'
     | '/stats'
+    | '/terms'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -188,8 +224,10 @@ export interface FileRouteTypes {
     | '/custom-text'
     | '/guide'
     | '/practice'
+    | '/privacy'
     | '/saved-text'
     | '/stats'
+    | '/terms'
   id:
     | '__root__'
     | '/'
@@ -198,8 +236,10 @@ export interface FileRouteTypes {
     | '/custom-text'
     | '/guide'
     | '/practice'
+    | '/privacy'
     | '/saved-text'
     | '/stats'
+    | '/terms'
   fileRoutesById: FileRoutesById
 }
 
@@ -210,8 +250,10 @@ export interface RootRouteChildren {
   CustomTextRoute: typeof CustomTextRoute
   GuideRoute: typeof GuideRoute
   PracticeRoute: typeof PracticeRoute
+  PrivacyRoute: typeof PrivacyRoute
   SavedTextRoute: typeof SavedTextRoute
   StatsRoute: typeof StatsRoute
+  TermsRoute: typeof TermsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -221,8 +263,10 @@ const rootRouteChildren: RootRouteChildren = {
   CustomTextRoute: CustomTextRoute,
   GuideRoute: GuideRoute,
   PracticeRoute: PracticeRoute,
+  PrivacyRoute: PrivacyRoute,
   SavedTextRoute: SavedTextRoute,
   StatsRoute: StatsRoute,
+  TermsRoute: TermsRoute,
 }
 
 export const routeTree = rootRoute
@@ -241,8 +285,10 @@ export const routeTree = rootRoute
         "/custom-text",
         "/guide",
         "/practice",
+        "/privacy",
         "/saved-text",
-        "/stats"
+        "/stats",
+        "/terms"
       ]
     },
     "/": {
@@ -263,11 +309,17 @@ export const routeTree = rootRoute
     "/practice": {
       "filePath": "practice.tsx"
     },
+    "/privacy": {
+      "filePath": "privacy.tsx"
+    },
     "/saved-text": {
       "filePath": "saved-text.tsx"
     },
     "/stats": {
       "filePath": "stats.tsx"
+    },
+    "/terms": {
+      "filePath": "terms.tsx"
     }
   }
 }
