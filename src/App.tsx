@@ -1,7 +1,7 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import { useSentenceStore } from "./store/sentenceStore";
 import { Link } from "@tanstack/react-router";
-import { Clock, BookOpen, PlusCircle, PlayCircle, Save } from "lucide-react";
+import { Clock, BookOpen, PlusCircle, PlayCircle, Save, Bookmark } from "lucide-react";
 import { TOPIC_ICONS, KEYBOARD_ELEMENTS } from "./lib/constants";
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +9,16 @@ export default function App() {
   const { t } = useTranslation();
   const [selectedTopic, setSelectedTopic] = useState('physics')
   const [eclipsedTime, setEclipsedTime] = useState(60)
+  const [recentSavedTexts, setRecentSavedTexts] = useState<Array<{ id: string; label: string; text: string; type: string }>>([]);
+
+  useEffect(() => {
+    // Load recent saved texts
+    const savedTexts = localStorage.getItem("customTextData");
+    if (savedTexts) {
+      const texts = JSON.parse(savedTexts);
+      setRecentSavedTexts(texts.slice(-3).reverse()); // Get last 3 texts
+    }
+  }, []);
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
@@ -112,6 +122,38 @@ export default function App() {
                 {t('common.startPractice')}
               </button>
             </Link>
+
+            {/* Recent Saved Texts */}
+            {recentSavedTexts.length > 0 && (
+              <div className="space-y-2 pt-4 border-t border-base-300">
+                <label className="text-sm font-medium text-base-content flex items-center gap-2">
+                  <Bookmark className="w-4 h-4" />
+                  Recent Saved Texts
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {recentSavedTexts.map((text) => (
+                    <Link
+                      key={text.id}
+                      to="/practice"
+                      search={{ 
+                        savedTextId: parseInt(text.id),
+                        eclipsedTime: 60,
+                        topic: text.type || 'paragraph'
+                      }}
+                      className="block"
+                    >
+                      <div className="bg-base-100 rounded-lg p-3 hover:bg-base-300 transition-colors h-full">
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium truncate">{text.label}</span>
+                          <span className="badge badge-sm">{text.type || 'paragraph'}</span>
+                        </div>
+                        <p className="text-sm text-base-content/70 truncate mt-1">{text.text}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Additional Options */}
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-base-300">
