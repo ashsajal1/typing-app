@@ -1,0 +1,49 @@
+{
+  "common": {
+    "start": "ابدأ",
+    "stop": "إيقاف",
+    "reset": "إعادة تعيين",
+    "settings": "الإعدادات",
+    "statistics": "الإحصائيات",
+    "practice": "ممارسة الكتابة",
+    "improveTyping": "حسّن سرعة ودقة كتابتك",
+    "wpm": "كلمة في الدقيقة",
+    "accuracy": "الدقة",
+    "time": "الوقت",
+    "characters": "الحروف",
+    "errors": "الأخطاء",
+    "selectTopic": "اختر الموضوع",
+    "chooseTopic": "اختر موضوعًا للتدرب عليه",
+    "practiceDuration": "مدة التدريب",
+    "selectDuration": "اختر مدة التدريب",
+    "seconds": "ثانية",
+    "minute": "دقيقة",
+    "minutes": "دقائق",
+    "noTimeLimit": "لا يوجد حد زمني",
+    "startPractice": "ابدأ التدريب",
+    "savedText": "النص المحفوظ",
+    "createCustomText": "إنشاء نص مخصص",
+    "tip": "نصيحة: ابدأ بمدد أقصر وزدها تدريجياً مع تحسنك"
+  },
+  "settings": {
+    "theme": "السمة",
+    "language": "اللغة",
+    "sound": "الصوت",
+    "difficulty": "الصعوبة",
+    "timeLimit": "الحد الزمني",
+    "customText": "نص مخصص"
+  },
+  "difficulty": {
+    "easy": "سهل",
+    "medium": "متوسط",
+    "hard": "صعب",
+    "custom": "مخصص"
+  },
+  "statistics": {
+    "bestWpm": "أفضل كلمة في الدقيقة",
+    "averageWpm": "متوسط كلمة في الدقيقة",
+    "totalPracticeTime": "إجمالي وقت التدريب",
+    "totalCharacters": "إجمالي الحروف",
+    "totalErrors": "إجمالي الأخطاء"
+  }
+} 

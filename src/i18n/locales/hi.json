@@ -1,0 +1,49 @@
+{
+  "common": {
+    "start": "शुरू करें",
+    "stop": "रोकें",
+    "reset": "रीसेट करें",
+    "settings": "सेटिंग्स",
+    "statistics": "आँकड़े",
+    "practice": "टाइपिंग अभ्यास",
+    "improveTyping": "अपनी टाइपिंग गति और सटीकता में सुधार करें",
+    "wpm": "शब्द प्रति मिनट",
+    "accuracy": "शुद्धता",
+    "time": "समय",
+    "characters": "वर्ण",
+    "errors": "त्रुटियां",
+    "selectTopic": "विषय चुनें",
+    "chooseTopic": "अभ्यास करने के लिए एक विषय चुनें",
+    "practiceDuration": "अभ्यास की अवधि",
+    "selectDuration": "अभ्यास की अवधि चुनें",
+    "seconds": "सेकंड",
+    "minute": "मिनट",
+    "minutes": "मिनट",
+    "noTimeLimit": "कोई समय सीमा नहीं",
+    "startPractice": "अभ्यास शुरू करें",
+    "savedText": "सहेजा गया पाठ",
+    "createCustomText": "कस्टम पाठ बनाएँ",
+    "tip": "टिप: छोटी अवधि से शुरू करें और जैसे-जैसे आप सुधार करते हैं, धीरे-धीरे बढ़ाएँ"
+  },
+  "settings": {
+    "theme": "थीम",
+    "language": "भाषा",
+    "sound": "ध्वनि",
+    "difficulty": "कठिनाई",
+    "timeLimit": "समय सीमा",
+    "customText": "कस्टम पाठ"
+  },
+  "difficulty": {
+    "easy": "आसान",
+    "medium": "मध्यम",
+    "hard": "कठिन",
+    "custom": "कस्टम"
+  },
+  "statistics": {
+    "bestWpm": "सर्वश्रेष्ठ WPM",
+    "averageWpm": "औसत WPM",
+    "totalPracticeTime": "कुल अभ्यास समय",
+    "totalCharacters": "कुल वर्ण",
+    "totalErrors": "कुल त्रुटियां"
+  }
+} 

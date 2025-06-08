@@ -1,0 +1,49 @@
+{
+  "common": {
+    "start": "Начать",
+    "stop": "Остановить",
+    "reset": "Сброс",
+    "settings": "Настройки",
+    "statistics": "Статистика",
+    "practice": "Практика печати",
+    "improveTyping": "Улучшите свою скорость и точность печати",
+    "wpm": "Символов в минуту",
+    "accuracy": "Точность",
+    "time": "Время",
+    "characters": "Символы",
+    "errors": "Ошибки",
+    "selectTopic": "Выбрать тему",
+    "chooseTopic": "Выберите тему для практики",
+    "practiceDuration": "Длительность практики",
+    "selectDuration": "Выберите длительность практики",
+    "seconds": "секунд",
+    "minute": "минута",
+    "minutes": "минуты",
+    "noTimeLimit": "Без ограничения по времени",
+    "startPractice": "Начать практику",
+    "savedText": "Сохраненный текст",
+    "createCustomText": "Создать собственный текст",
+    "tip": "Совет: Начните с более коротких продолжительностей и постепенно увеличивайте по мере улучшения"
+  },
+  "settings": {
+    "theme": "Тема",
+    "language": "Язык",
+    "sound": "Звук",
+    "difficulty": "Сложность",
+    "timeLimit": "Лимит времени",
+    "customText": "Пользовательский текст"
+  },
+  "difficulty": {
+    "easy": "Легко",
+    "medium": "Средне",
+    "hard": "Сложно",
+    "custom": "Пользовательский"
+  },
+  "statistics": {
+    "bestWpm": "Лучший WPM",
+    "averageWpm": "Средний WPM",
+    "totalPracticeTime": "Общее время практики",
+    "totalCharacters": "Всего символов",
+    "totalErrors": "Всего ошибок"
+  }
+} 

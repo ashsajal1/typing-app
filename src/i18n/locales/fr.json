@@ -1,0 +1,49 @@
+{
+  "common": {
+    "start": "Démarrer",
+    "stop": "Arrêter",
+    "reset": "Réinitialiser",
+    "settings": "Paramètres",
+    "statistics": "Statistiques",
+    "practice": "Pratique de dactylographie",
+    "improveTyping": "Améliorez votre vitesse et votre précision de frappe",
+    "wpm": "Mots par minute",
+    "accuracy": "Précision",
+    "time": "Temps",
+    "characters": "Caractères",
+    "errors": "Erreurs",
+    "selectTopic": "Sélectionner un sujet",
+    "chooseTopic": "Choisissez un sujet à pratiquer",
+    "practiceDuration": "Durée de la pratique",
+    "selectDuration": "Sélectionnez la durée de la pratique",
+    "seconds": "secondes",
+    "minute": "minute",
+    "minutes": "minutes",
+    "noTimeLimit": "Pas de limite de temps",
+    "startPractice": "Commencer la pratique",
+    "savedText": "Texte enregistré",
+    "createCustomText": "Créer un texte personnalisé",
+    "tip": "Astuce : Commencez par des durées plus courtes et augmentez progressivement à mesure que vous vous améliorez"
+  },
+  "settings": {
+    "theme": "Thème",
+    "language": "Langue",
+    "sound": "Son",
+    "difficulty": "Difficulté",
+    "timeLimit": "Limite de temps",
+    "customText": "Texte personnalisé"
+  },
+  "difficulty": {
+    "easy": "Facile",
+    "medium": "Moyen",
+    "hard": "Difficile",
+    "custom": "Personnalisé"
+  },
+  "statistics": {
+    "bestWpm": "Meilleur WPM",
+    "averageWpm": "WPM moyen",
+    "totalPracticeTime": "Temps total de pratique",
+    "totalCharacters": "Total de caractères",
+    "totalErrors": "Total d'erreurs"
+  }
+} 

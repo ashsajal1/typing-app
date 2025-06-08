@@ -1,0 +1,49 @@
+{
+  "common": {
+    "start": "开始",
+    "stop": "停止",
+    "reset": "重置",
+    "settings": "设置",
+    "statistics": "统计",
+    "practice": "打字练习",
+    "improveTyping": "提高您的打字速度和准确性",
+    "wpm": "WPM",
+    "accuracy": "准确率",
+    "time": "时间",
+    "characters": "字符",
+    "errors": "错误",
+    "selectTopic": "选择主题",
+    "chooseTopic": "选择一个主题进行练习",
+    "practiceDuration": "练习时长",
+    "selectDuration": "选择练习时长",
+    "seconds": "秒",
+    "minute": "分钟",
+    "minutes": "分钟",
+    "noTimeLimit": "无时间限制",
+    "startPractice": "开始练习",
+    "savedText": "已保存的文本",
+    "createCustomText": "创建自定义文本",
+    "tip": "提示：从较短的时长开始，随着进步逐渐增加"
+  },
+  "settings": {
+    "theme": "主题",
+    "language": "语言",
+    "sound": "声音",
+    "difficulty": "难度",
+    "timeLimit": "时间限制",
+    "customText": "自定义文本"
+  },
+  "difficulty": {
+    "easy": "简单",
+    "medium": "中等",
+    "hard": "困难",
+    "custom": "自定义"
+  },
+  "statistics": {
+    "bestWpm": "最佳WPM",
+    "averageWpm": "平均WPM",
+    "totalPracticeTime": "总练习时间",
+    "totalCharacters": "总字符数",
+    "totalErrors": "总错误数"
+  }
+} 

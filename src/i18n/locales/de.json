@@ -1,0 +1,49 @@
+{
+  "common": {
+    "start": "Starten",
+    "stop": "Stoppen",
+    "reset": "Zurücksetzen",
+    "settings": "Einstellungen",
+    "statistics": "Statistiken",
+    "practice": "Tipp-Übung",
+    "improveTyping": "Verbessern Sie Ihre Tippgeschwindigkeit und -genauigkeit",
+    "wpm": "WPM",
+    "accuracy": "Genauigkeit",
+    "time": "Zeit",
+    "characters": "Zeichen",
+    "errors": "Fehler",
+    "selectTopic": "Thema auswählen",
+    "chooseTopic": "Wählen Sie ein Thema zum Üben",
+    "practiceDuration": "Übungsdauer",
+    "selectDuration": "Übungsdauer auswählen",
+    "seconds": "Sekunden",
+    "minute": "Minute",
+    "minutes": "Minuten",
+    "noTimeLimit": "Keine Zeitbegrenzung",
+    "startPractice": "Übung starten",
+    "savedText": "Gespeicherter Text",
+    "createCustomText": "Benutzerdefinierten Text erstellen",
+    "tip": "Tipp: Beginnen Sie mit kürzeren Dauern und erhöhen Sie diese schrittweise, wenn Sie sich verbessern"
+  },
+  "settings": {
+    "theme": "Thema",
+    "language": "Sprache",
+    "sound": "Ton",
+    "difficulty": "Schwierigkeitsgrad",
+    "timeLimit": "Zeitlimit",
+    "customText": "Benutzerdefinierter Text"
+  },
+  "difficulty": {
+    "easy": "Leicht",
+    "medium": "Mittel",
+    "hard": "Schwer",
+    "custom": "Benutzerdefiniert"
+  },
+  "statistics": {
+    "bestWpm": "Beste WPM",
+    "averageWpm": "Durchschnittliche WPM",
+    "totalPracticeTime": "Gesamte Übungszeit",
+    "totalCharacters": "Gesamtzeichen",
+    "totalErrors": "Gesamtfehler"
+  }
+} 

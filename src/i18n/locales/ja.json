@@ -1,0 +1,49 @@
+{
+  "common": {
+    "start": "開始",
+    "stop": "停止",
+    "reset": "リセット",
+    "settings": "設定",
+    "statistics": "統計",
+    "practice": "タイピング練習",
+    "improveTyping": "タイピングの速度と精度を向上させる",
+    "wpm": "WPM",
+    "accuracy": "正確性",
+    "time": "時間",
+    "characters": "文字",
+    "errors": "エラー",
+    "selectTopic": "トピックを選択",
+    "chooseTopic": "練習するトピックを選択してください",
+    "practiceDuration": "練習時間",
+    "selectDuration": "練習時間を選択",
+    "seconds": "秒",
+    "minute": "分",
+    "minutes": "分",
+    "noTimeLimit": "時間制限なし",
+    "startPractice": "練習を開始",
+    "savedText": "保存されたテキスト",
+    "createCustomText": "カスタムテキストを作成",
+    "tip": "ヒント：短い時間から始めて、上達するにつれて徐々に増やしてください"
+  },
+  "settings": {
+    "theme": "テーマ",
+    "language": "言語",
+    "sound": "サウンド",
+    "difficulty": "難易度",
+    "timeLimit": "時間制限",
+    "customText": "カスタムテキスト"
+  },
+  "difficulty": {
+    "easy": "簡単",
+    "medium": "中",
+    "hard": "難しい",
+    "custom": "カスタム"
+  },
+  "statistics": {
+    "bestWpm": "最高WPM",
+    "averageWpm": "平均WPM",
+    "totalPracticeTime": "総練習時間",
+    "totalCharacters": "総文字数",
+    "totalErrors": "総エラー数"
+  }
+} 
