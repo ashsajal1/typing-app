@@ -46,20 +46,32 @@ export default function BengaliTyping() {
     if (!isStarted) {
       setIsStarted(true);
     }
-    setUserInput(e.target.value);
-  };
+    const newInput = e.target.value;
+    setUserInput(newInput);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === ' ' && userInput.trim()) {
-      e.preventDefault();
-      checkWord();
+    // Check if input ends with a space
+    if (newInput.endsWith(' ')) {
+      const wordToCheck = newInput.trim();
+      if (wordToCheck) {
+        checkWord(wordToCheck);
+      }
     }
   };
 
-  const checkWord = () => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Prevent default space behavior
+    if (e.key === ' ') {
+      e.preventDefault();
+      const wordToCheck = userInput.trim();
+      if (wordToCheck) {
+        checkWord(wordToCheck);
+      }
+    }
+  };
+
+  const checkWord = (wordToCheck: string) => {
     const currentWord = bengaliWords[currentWordIndex];
-    const userWord = userInput.trim();
-    const isCorrect = userWord === currentWord;
+    const isCorrect = wordToCheck === currentWord;
     
     // Update word status
     setWordStatus(prev => ({
