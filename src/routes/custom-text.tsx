@@ -5,9 +5,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { BookOpen } from "lucide-react";
 
+type TextType = "paragraph" | "composition" | "formal-letter" | "informal-letter" | "others";
+
 interface FormData {
   label: string;
   text: string;
+  type: TextType;
 }
 
 export const Route = createFileRoute("/custom-text")({
@@ -17,6 +20,7 @@ export const Route = createFileRoute("/custom-text")({
 const formSchema = z.object({
   label: z.string().min(5, "Label must be at least 5 characters long"),
   text: z.string().min(20, "Text must be at least 20 characters long"),
+  type: z.enum(["paragraph", "composition", "formal-letter", "informal-letter", "others"]),
 });
 
 function RouteComponent() {
@@ -29,6 +33,9 @@ function RouteComponent() {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      type: "paragraph"
+    }
   });
   
   const textValue = watch("text", "");
@@ -134,72 +141,93 @@ function RouteComponent() {
         </div>
       )}
 
-      <h1 className="label">Enter text label</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input
-          type="text"
-          className="input input-bordered mb-2 w-full"
-          placeholder="Enter label, eg. Paragraph about Climate Change etc.."
-          {...register("label")}
-        />
-        {errors.label && <p className="text-red-500">{errors.label.message}</p>}
+        <div className="flex flex-col gap-4">
+          <div>
+            <h1 className="label">Enter text label</h1>
+            <input
+              type="text"
+              className="input input-bordered mb-2 w-full"
+              placeholder="Enter label, eg. Paragraph about Climate Change etc.."
+              {...register("label")}
+            />
+            {errors.label && <p className="text-red-500">{errors.label.message}</p>}
+          </div>
 
-        <h3 className="label label-text">Enter your custom text</h3>
-        <textarea
-          placeholder="Enter your custom text eg, Climate change is caused by..."
-          className="textarea textarea-bordered w-full font-mono text-base"
-          rows={12}
-          cols={50}
-          value={textValue}
-          onChange={(e) => {
-            if (!isPasting) {
-              setValue("text", e.target.value);
-            }
-          }}
-          onPaste={(e) => {
-            e.preventDefault();
-            setIsPasting(true);
-            const pastedText = e.clipboardData.getData('text/plain');
-            
-            const textarea = e.target as HTMLTextAreaElement;
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const beforeText = textValue.substring(0, start);
-            const afterText = textValue.substring(end);
-            
-            const newText = beforeText + pastedText + afterText;
-            setValue("text", newText);
-            
-            // Set cursor position after pasted text
-            setTimeout(() => {
-              const newPosition = start + pastedText.length;
-              textarea.selectionStart = textarea.selectionEnd = newPosition;
-              setIsPasting(false);
-            }, 0);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              const textarea = e.target as HTMLTextAreaElement;
-              const start = textarea.selectionStart;
-              const end = textarea.selectionEnd;
-              const newValue = textValue.substring(0, start) + '\n' + textValue.substring(end);
-              setValue("text", newValue);
-              
-              // Move cursor to after the new line
-              setTimeout(() => {
-                const newPosition = start + 1;
-                textarea.selectionStart = textarea.selectionEnd = newPosition;
-              }, 0);
-            }
-          }}
-          style={{ whiteSpace: 'pre-wrap' }} // Preserve whitespace and newlines
-        />
-        {errors.text && <p className="text-red-500">{errors.text.message}</p>}
+          <div>
+            <h1 className="label">Select text type</h1>
+            <select 
+              className="select select-bordered w-full"
+              {...register("type")}
+            >
+              <option value="paragraph">Paragraph</option>
+              <option value="composition">Composition</option>
+              <option value="formal-letter">Formal Letter</option>
+              <option value="informal-letter">Informal Letter</option>
+              <option value="others">Others</option>
+            </select>
+            {errors.type && <p className="text-red-500">{errors.type.message}</p>}
+          </div>
 
-        <button className="btn btn-success w-full mt-2" type="submit">
-          Submit
-        </button>
+          <div>
+            <h3 className="label label-text">Enter your custom text</h3>
+            <textarea
+              placeholder="Enter your custom text eg, Climate change is caused by..."
+              className="textarea textarea-bordered w-full font-mono text-base"
+              rows={12}
+              cols={50}
+              value={textValue}
+              onChange={(e) => {
+                if (!isPasting) {
+                  setValue("text", e.target.value);
+                }
+              }}
+              onPaste={(e) => {
+                e.preventDefault();
+                setIsPasting(true);
+                const pastedText = e.clipboardData.getData('text/plain');
+                
+                const textarea = e.target as HTMLTextAreaElement;
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const beforeText = textValue.substring(0, start);
+                const afterText = textValue.substring(end);
+                
+                const newText = beforeText + pastedText + afterText;
+                setValue("text", newText);
+                
+                // Set cursor position after pasted text
+                setTimeout(() => {
+                  const newPosition = start + pastedText.length;
+                  textarea.selectionStart = textarea.selectionEnd = newPosition;
+                  setIsPasting(false);
+                }, 0);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  const textarea = e.target as HTMLTextAreaElement;
+                  const start = textarea.selectionStart;
+                  const end = textarea.selectionEnd;
+                  const newValue = textValue.substring(0, start) + '\n' + textValue.substring(end);
+                  setValue("text", newValue);
+                  
+                  // Move cursor to after the new line
+                  setTimeout(() => {
+                    const newPosition = start + 1;
+                    textarea.selectionStart = textarea.selectionEnd = newPosition;
+                  }, 0);
+                }
+              }}
+              style={{ whiteSpace: 'pre-wrap' }} // Preserve whitespace and newlines
+            />
+            {errors.text && <p className="text-red-500">{errors.text.message}</p>}
+          </div>
+
+          <button className="btn btn-success w-full mt-2" type="submit">
+            Submit
+          </button>
+        </div>
       </form>
     </div>
   );

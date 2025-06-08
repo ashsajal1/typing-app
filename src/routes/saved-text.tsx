@@ -2,17 +2,20 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Pencil, Trash2, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 
+type TextType = "all" | "paragraph" | "composition" | "formal-letter" | "informal-letter" | "others";
+
 export const Route = createFileRoute("/saved-text")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const [existingData, setExistingData] = useState<
-    { id: string; label: string; text: string }[]
+    { id: string; label: string; text: string; type: TextType }[]
   >([]);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [itemToEdit, setItemToEdit] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
+  const [selectedType, setSelectedType] = useState<TextType>("all");
 
   useEffect(() => {
     // Retrieve existing data from localStorage
@@ -23,6 +26,7 @@ function RouteComponent() {
         label: string;
         text: string;
         time: typeof Date;
+        type: TextType;
       }[] = JSON.parse(existingData);
       setExistingData(data);
     }
@@ -57,6 +61,10 @@ function RouteComponent() {
     }
   };
 
+  const filteredData = existingData.filter(
+    (data) => selectedType === "all" || data.type === selectedType
+  );
+
   return (
     <div className="p-2">
       <div className="flex items-center justify-between mb-4">
@@ -66,15 +74,29 @@ function RouteComponent() {
             <button className="btn btn-sm btn-success">Create</button>
           </Link>
         </div>
-        <Link to="/guide">
-          <button className="btn btn-outline btn-success gap-2">
-            <BookOpen className="w-4 h-4" />
-            View Guide
-          </button>
-        </Link>
+        <div className="flex items-center gap-4">
+          <select 
+            className="select select-bordered w-full max-w-xs"
+            value={selectedType}
+            onChange={(e) => setSelectedType(e.target.value as TextType)}
+          >
+            <option value="all">All Types</option>
+            <option value="paragraph">Paragraph</option>
+            <option value="composition">Composition</option>
+            <option value="formal-letter">Formal Letter</option>
+            <option value="informal-letter">Informal Letter</option>
+            <option value="others">Others</option>
+          </select>
+          <Link to="/guide">
+            <button className="btn btn-outline btn-success gap-2">
+              <BookOpen className="w-4 h-4" />
+              View Guide
+            </button>
+          </Link>
+        </div>
       </div>
       <div className="grid gird-cols-1 md:grid-cols-2 gap-4 w-full">
-        {existingData.map((data) => (
+        {filteredData.map((data) => (
           <div
             className="flex flex-col justify-between items-center w-full shadow p-3 gap-2 border border-base-200 rounded"
             key={data.id}
