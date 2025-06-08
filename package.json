@@ -3,6 +3,32 @@
   "private": true,
   "version": "1.4.2",
   "type": "module",
+  "description": "A modern typing practice application to improve typing speed and accuracy with various topics and customizable settings",
+  "keywords": [
+    "typing",
+    "practice",
+    "speed-test",
+    "keyboard",
+    "react",
+    "typescript",
+    "pwa"
+  ],
+  "author": {
+    "name": "Sajal",
+    "url": "https://github.com/ashsajal1"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ashsajal1/typing-app"
+  },
+  "bugs": {
+    "url": "https://github.com/ashsajal1/typing-app/issues"
+  },
+  "homepage": "https://github.com/ashsajal1/typing-app#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
