@@ -1,0 +1,34 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Commit Message Rules
+
+## Format
+- Use emoji at the start of commit message
+- Keep commit message short (3-5 words)
+- Use conventional commit types
+
+## Structure
+```
+<emoji> type: brief description
+```
+
+## Commit Types
+- feat: New feature
+- fix: Bug fix
+- docs: Documentation changes
+- style: Code style changes (formatting, etc)
+- refactor: Code refactoring
+- test: Adding or modifying tests
+- chore: Maintenance tasks
+
+## Examples
+- ✨ feat: add user authentication
+- 🐞 fix: resolve login error
+- 📚 docs: update readme
+- 🎨 style: format code
+- 🔨 refactor: optimize database queries
+- 🧪 test: add unit tests
+- ⚙️ chore: update dependencies
