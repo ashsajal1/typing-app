@@ -293,7 +293,7 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                                                             color: 'rgba(255, 255, 255, 0.9)',
                                                             font: {
                                                                 size: 11,
-                                                                weight: '500'
+                                                                weight: 'bold'
                                                             },
                                                             padding: 20
                                                         }
