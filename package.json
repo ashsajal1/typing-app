@@ -45,7 +45,10 @@
     "cypress:run": "cypress run",
     "cypress:component": "cypress run --component",
     "cypress:e2e": "cypress run --e2e",
-    "cypress:coverage": "cypress run --env coverage=true"
+    "cypress:coverage": "cypress run --env coverage=true",
+    "release:prepare": "npm run test && npm run lint && npm run build",
+    "release:version": "npm version",
+    "release:deploy": "npm run build && npm run generate-pwa-assets"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
