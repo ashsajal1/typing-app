@@ -40,7 +40,7 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
     if (accuracy >= 90 && wpm >= 60) {
         status = "Excellent!";
         emoji = "🎉";
-        backgroundColor = "bg-gradient-to-br from-green-500 to-green-700";
+        backgroundColor = "bg-success";
         description = "You're a typing master!";
         tips = [
             "Try increasing your speed while maintaining accuracy",
@@ -50,7 +50,7 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
     } else if (accuracy >= 80 && wpm >= 50) {
         status = "Great Job!";
         emoji = "👍";
-        backgroundColor = "bg-gradient-to-br from-green-500 to-emerald-700";
+        backgroundColor = "bg-success/90";
         description = "You're getting really good at this!";
         tips = [
             "Focus on maintaining consistent speed",
@@ -60,7 +60,7 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
     } else if (accuracy >= 70 && wpm >= 40) {
         status = "Good Effort!";
         emoji = "😊";
-        backgroundColor = "bg-gradient-to-br from-green-500 to-teal-700";
+        backgroundColor = "bg-success/80";
         description = "Nice work, keep practicing!";
         tips = [
             "Focus on accuracy before speed",
@@ -70,7 +70,7 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
     } else {
         status = "Keep Practicing!";
         emoji = "💪";
-        backgroundColor = "bg-gradient-to-br from-green-500 to-cyan-700";
+        backgroundColor = "bg-success/70";
         description = "You'll improve with more practice!";
         tips = [
             "Start with shorter texts",
@@ -87,15 +87,15 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
     const wordsPerError = errorRate > 0 ? (wpm / errorRate).toFixed(1) : "∞";
 
     return (
-        <div className="min-h-screen w-full overflow-x-hidden bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
-            <section className={`p-4 sm:p-6 w-full max-w-4xl mx-auto my-4 rounded-lg shadow-2xl ${backgroundColor} text-white relative overflow-hidden`}>
+        <div className="min-h-screen w-full overflow-x-hidden bg-base-100 flex items-center justify-center p-4">
+            <section className={`p-4 sm:p-6 w-full max-w-4xl mx-auto my-4 rounded-lg shadow-2xl ${backgroundColor} text-base-content relative overflow-hidden`}>
                 {/* Background pattern */}
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute top-0 left-0 w-full h-full">
                         {Array.from({ length: 20 }).map((_, i) => (
                             <div 
                                 key={i} 
-                                className="absolute rounded-full bg-white animate-pulse" 
+                                className="absolute rounded-full bg-base-content animate-pulse" 
                                 style={{
                                     width: `${Math.random() * 30 + 10}px`,
                                     height: `${Math.random() * 30 + 10}px`,
@@ -118,7 +118,7 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                             <div className="text-4xl animate-bounce">{emoji}</div>
                             <div>
                                 <h1 className="text-2xl font-bold animate-fade-in">{status}</h1>
-                                <p className="text-white/80 text-sm">{description}</p>
+                                <p className="text-base-content/80 text-sm">{description}</p>
                             </div>
                         </div>
 
@@ -127,7 +127,7 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                             {Array.from({ length: 5 }).map((_, i) => (
                                 <span 
                                     key={i} 
-                                    className={`text-xl transition-all duration-300 ${i < stars ? 'text-yellow-300 scale-110' : 'text-white/30'}`}
+                                    className={`text-xl transition-all duration-300 ${i < stars ? 'text-warning scale-110' : 'text-base-content/30'}`}
                                     style={{ animationDelay: `${i * 0.1}s` }}
                                 >
                                     ★
@@ -137,28 +137,28 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
 
                         {/* Stats Grid */}
                         <div className="grid grid-cols-2 gap-2">
-                            <div className="bg-white/20 rounded-lg p-3 flex items-center gap-3">
+                            <div className="bg-base-content/20 rounded-lg p-3 flex items-center gap-3">
                                 <Target className="w-5 h-5" />
                                 <div>
                                     <div className="text-xs opacity-80">Accuracy</div>
                                     <div className="text-xl font-bold">{accuracy}%</div>
                                 </div>
                             </div>
-                            <div className="bg-white/20 rounded-lg p-3 flex items-center gap-3">
+                            <div className="bg-base-content/20 rounded-lg p-3 flex items-center gap-3">
                                 <Zap className="w-5 h-5" />
                                 <div>
                                     <div className="text-xs opacity-80">WPM</div>
                                     <div className="text-xl font-bold">{wpm}</div>
                                 </div>
                             </div>
-                            <div className="bg-white/20 rounded-lg p-3 flex items-center gap-3">
+                            <div className="bg-base-content/20 rounded-lg p-3 flex items-center gap-3">
                                 <TrendingUp className="w-5 h-5" />
                                 <div>
                                     <div className="text-xs opacity-80">Words/Error</div>
                                     <div className="text-xl font-bold">{wordsPerError}</div>
                                 </div>
                             </div>
-                            <div className="bg-white/20 rounded-lg p-3 flex items-center gap-3">
+                            <div className="bg-base-content/20 rounded-lg p-3 flex items-center gap-3">
                                 <Clock className="w-5 h-5" />
                                 <div>
                                     <div className="text-xs opacity-80">Error Rate</div>
@@ -168,7 +168,7 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                         </div>
 
                         {/* WPM Chart */}
-                        <div className="bg-white/20 rounded-lg p-3">
+                        <div className="bg-base-content/20 rounded-lg p-3">
                             <h3 className="text-sm font-semibold mb-2">WPM Progress</h3>
                             <div className="h-24">
                                 <Line
@@ -178,8 +178,8 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                                             {
                                                 label: 'WPM',
                                                 data: wpmHistory,
-                                                borderColor: 'rgba(255, 255, 255, 0.8)',
-                                                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                                borderColor: 'rgba(var(--bc) / 0.8)',
+                                                backgroundColor: 'rgba(var(--bc) / 0.2)',
                                                 tension: 0.4,
                                                 fill: true,
                                             },
@@ -195,9 +195,9 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                                             tooltip: {
                                                 mode: 'index',
                                                 intersect: false,
-                                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                                titleColor: 'white',
-                                                bodyColor: 'white',
+                                                backgroundColor: 'rgba(var(--bc) / 0.8)',
+                                                titleColor: 'rgba(var(--b1))',
+                                                bodyColor: 'rgba(var(--b1))',
                                                 callbacks: {
                                                     label: (context) => `WPM: ${context.parsed.y}`
                                                 }
@@ -207,19 +207,19 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                                             y: {
                                                 beginAtZero: true,
                                                 grid: {
-                                                    color: 'rgba(255, 255, 255, 0.1)',
+                                                    color: 'rgba(var(--bc) / 0.1)',
                                                 },
                                                 ticks: {
-                                                    color: 'rgba(255, 255, 255, 0.7)',
+                                                    color: 'rgba(var(--bc) / 0.7)',
                                                     maxTicksLimit: 4,
                                                 }
                                             },
                                             x: {
                                                 grid: {
-                                                    color: 'rgba(255, 255, 255, 0.1)',
+                                                    color: 'rgba(var(--bc) / 0.1)',
                                                 },
                                                 ticks: {
-                                                    color: 'rgba(255, 255, 255, 0.7)',
+                                                    color: 'rgba(var(--bc) / 0.7)',
                                                     maxTicksLimit: 5,
                                                 }
                                             },
@@ -238,12 +238,12 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                     {/* Right Column - Tips and Action Button */}
                     <div className="space-y-4">
                         {/* Tips section */}
-                        <div className="bg-white/10 rounded-lg p-4">
+                        <div className="bg-base-content/10 rounded-lg p-4">
                             <h3 className="text-lg font-semibold mb-3">Tips for Improvement</h3>
                             <ul className="space-y-2">
                                 {tips.map((tip, index) => (
                                     <li key={index} className="flex items-start gap-2">
-                                        <span className="text-yellow-300">•</span>
+                                        <span className="text-warning">•</span>
                                         <span className="text-sm">{tip}</span>
                                     </li>
                                 ))}
@@ -251,7 +251,7 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                         </div>
 
                         {/* Error Analysis */}
-                        <div className="bg-white/10 rounded-lg p-4">
+                        <div className="bg-base-content/10 rounded-lg p-4">
                             <h3 className="text-lg font-semibold mb-3">Mistakes Analysis</h3>
                             {currentTotalErrors > 0 ? (
                                 <div className="space-y-3">
@@ -268,12 +268,16 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                                                 datasets: [{
                                                     data: Array.from(currentErrorMap.values()),
                                                     backgroundColor: [
-                                                        'rgba(255, 99, 132, 0.8)',
-                                                        'rgba(54, 162, 235, 0.8)',
-                                                        'rgba(255, 206, 86, 0.8)',
-                                                        'rgba(75, 192, 192, 0.8)',
-                                                        'rgba(153, 102, 255, 0.8)',
-                                                        'rgba(255, 159, 64, 0.8)',
+                                                        '#FF6B6B', // Red
+                                                        '#4ECDC4', // Teal
+                                                        '#FFD93D', // Yellow
+                                                        '#95E1D3', // Mint
+                                                        '#FF8B94', // Pink
+                                                        '#6C5CE7', // Purple
+                                                        '#A8E6CF', // Light Green
+                                                        '#FFB6B9', // Light Pink
+                                                        '#B8F2E6', // Aqua
+                                                        '#AED9E0', // Sky Blue
                                                     ],
                                                     borderColor: 'rgba(255, 255, 255, 0.2)',
                                                     borderWidth: 1,
@@ -286,16 +290,19 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                                                     legend: {
                                                         position: 'bottom',
                                                         labels: {
-                                                            color: 'rgba(255, 255, 255, 0.8)',
+                                                            color: 'rgba(255, 255, 255, 0.9)',
                                                             font: {
-                                                                size: 11
-                                                            }
+                                                                size: 11,
+                                                                weight: '500'
+                                                            },
+                                                            padding: 20
                                                         }
                                                     },
                                                     tooltip: {
                                                         backgroundColor: 'rgba(0, 0, 0, 0.8)',
                                                         titleColor: 'white',
                                                         bodyColor: 'white',
+                                                        padding: 12,
                                                         callbacks: {
                                                             label: (context) => {
                                                                 const value = context.raw as number;
@@ -317,16 +324,16 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                                                 .sort((a, b) => b[1] - a[1])
                                                 .slice(0, 4)
                                                 .map(([char, count]) => (
-                                                    <div key={char} className="bg-white/20 rounded p-2 flex items-center justify-between">
+                                                    <div key={char} className="bg-base-content/20 rounded p-2 flex items-center justify-between">
                                                         <span className="font-mono">{char}</span>
-                                                        <span className="text-yellow-300">{count}x</span>
+                                                        <span className="text-warning">{count}x</span>
                                                     </div>
                                                 ))}
                                         </div>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="text-center py-2 text-green-300">
+                                <div className="text-center py-2 text-success">
                                     Perfect! No mistakes made.
                                 </div>
                             )}
@@ -336,14 +343,14 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                         <div className="flex flex-col gap-2">
                             <button 
                                 onClick={() => window.location.reload()} 
-                                className="w-full bg-white text-green-700 py-2 px-4 rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 active:translate-y-0"
+                                className="btn btn-primary w-full gap-2"
                             >
                                 <RepeatIcon className="w-4 h-4" />
                                 Try Again
                             </button>
                             <button 
                                 onClick={() => window.location.reload()} 
-                                className="w-full bg-white/20 text-white py-2 px-4 rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-white/30 transition-all duration-300"
+                                className="btn btn-outline w-full gap-2"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
