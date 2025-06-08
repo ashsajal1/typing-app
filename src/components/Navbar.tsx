@@ -16,11 +16,11 @@ export default function Navbar() {
       <div className="flex items-center gap-2">
         <Link to="/stats" className="btn btn-ghost gap-2 hover:bg-base-300">
           <BarChart2 size={20} strokeWidth={1.3} /> 
-          <span className="hidden sm:inline">Stats</span>
+          <span className="hidden sm:inline">{t('common.statistics')}</span>
         </Link>
         <Link to="/saved-text" className="btn btn-ghost gap-2 hover:bg-base-300">
           <Bookmark size={20} strokeWidth={1.3} /> 
-          <span className="hidden sm:inline">Saved Text</span>
+          <span className="hidden sm:inline">{t('common.savedText')}</span>
         </Link>
         <ModeToggle />
         <LanguageSwitcher />
