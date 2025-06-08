@@ -18,7 +18,7 @@ export default function TextDisplay({
   lastTypedPosition,
 }: TextDisplayProps) {
   return (
-    <div className="h-[300px] overflow-y-auto relative border dark:border-gray-700 rounded" style={{
+    <div className="h-[300px] overflow-y-auto relative border border-base-300 rounded-lg bg-base-100" style={{
       scrollbarWidth: 'none',
       msOverflowStyle: 'none',
       WebkitOverflowScrolling: 'touch',
@@ -26,25 +26,25 @@ export default function TextDisplay({
       backfaceVisibility: 'hidden',
       perspective: '1000px'
     }}>
-      <div className="p-2 md:text-2xl select-none flex flex-wrap gap-y-2 w-full relative [&::-webkit-scrollbar]:hidden">
+      <div className="p-4 md:text-2xl select-none flex flex-wrap gap-y-2 w-full relative [&::-webkit-scrollbar]:hidden">
         {/* Display a guidance message when not started */}
         {!isStarted && (
-          <div className="absolute top-0 left-0 right-0 bottom-0 flex items-start justify-center bg-base-100/60 dark:bg-gray-900/70 backdrop-blur-[1px] rounded z-10">
+          <div className="absolute top-0 left-0 right-0 bottom-0 flex items-start justify-center bg-base-200/60 backdrop-blur-[1px] rounded-lg z-10">
             <div className="text-center space-y-4 mt-12">
-              <p className="text-2xl text-success font-medium">
+              <p className="text-2xl text-primary font-medium">
                 Start typing to begin the test
               </p>
               <div className="flex items-center justify-center gap-2 text-base-content/70">
-                <kbd className="kbd kbd-sm">⌨️</kbd>
+                <kbd className="kbd kbd-sm bg-base-300 text-base-content">⌨️</kbd>
                 <span>Press any key to start</span>
               </div>
               <div className="flex items-center justify-center gap-4 text-sm text-base-content/60">
                 <div className="flex items-center gap-1">
-                  <kbd className="kbd kbd-xs">Esc</kbd>
+                  <kbd className="kbd kbd-xs bg-base-300 text-base-content">Esc</kbd>
                   <span>Reset</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <kbd className="kbd kbd-xs">Enter</kbd>
+                  <kbd className="kbd kbd-xs bg-base-300 text-base-content">Enter</kbd>
                   <span>Finish</span>
                 </div>
               </div>
@@ -149,15 +149,15 @@ export default function TextDisplay({
                   className={`
                     relative 
                     ${isEmpty ? 'h-8' : 'min-h-6 py-1'} 
-                    ${isCurrentLine ? 'bg-base-200/20 dark:bg-gray-700/20' : ''}
+                    ${isCurrentLine ? 'bg-base-200/20' : ''}
                     transition-colors duration-200
                     border-l-2
-                    ${isCurrentLine ? 'border-l-success' : 'border-l-transparent'}
+                    ${isCurrentLine ? 'border-l-primary' : 'border-l-transparent'}
                     pl-2
                     rounded-r
                     ${lineIndex > 0 ? 'mt-1' : ''}
-                    ${isCurrentLine ? 'ring-1 ring-success/20' : ''}
-                    ${isCurrentLine ? 'after:absolute after:inset-0  after:opacity-5 after:rounded-r' : ''}
+                    ${isCurrentLine ? 'ring-1 ring-primary/20' : ''}
+                    ${isCurrentLine ? 'after:absolute after:inset-0 after:opacity-5 after:rounded-r' : ''}
                   `}
                 >
                   {chars.map(({ char, partIndex, charInPartIndex, globalIndex }) => {
@@ -189,21 +189,21 @@ export default function TextDisplay({
                           key={`${partIndex}-${charInPartIndex}`} 
                           className={`
                             relative w-full h-8 flex items-center justify-center group
-                            ${isCurrent ? 'bg-base-200/30 dark:bg-gray-700/30' : ''}
-                            ${isTyped ? (isCorrect ? 'bg-green-100/30 dark:bg-green-900/30' : 'bg-red-100/30 dark:bg-red-900/30') : ''}
+                            ${isCurrent ? 'bg-base-200/30' : ''}
+                            ${isTyped ? (isCorrect ? 'bg-success/20' : 'bg-error/20') : ''}
                             transition-colors duration-200
                             before:absolute before:inset-0 before:border-t before:border-dashed
-                            ${isCurrent ? 'before:border-success before:opacity-50' : 
-                              isTyped ? (isCorrect ? 'before:border-green-500 before:opacity-30' : 'before:border-red-500 before:opacity-30') : 
-                              'before:border-base-300 dark:before:border-gray-600 before:opacity-20'}
+                            ${isCurrent ? 'before:border-primary before:opacity-50' : 
+                              isTyped ? (isCorrect ? 'before:border-success before:opacity-30' : 'before:border-error before:opacity-30') : 
+                              'before:border-base-300 before:opacity-20'}
                           `}
                         >
                           <div className="absolute inset-0 flex items-center justify-center">
                             <span className={`
                               text-xs font-mono
-                              ${isCurrent ? 'text-success animate-pulse' : 
-                                isTyped ? (isCorrect ? 'text-green-500' : 'text-red-500') : 
-                                'text-base-300 dark:text-gray-600'}
+                              ${isCurrent ? 'text-primary animate-pulse' : 
+                                isTyped ? (isCorrect ? 'text-success' : 'text-error') : 
+                                'text-base-content/40'}
                               transition-colors duration-200
                             `}>
                               ¶
@@ -213,7 +213,7 @@ export default function TextDisplay({
                             <div className={`
                               absolute 
                               ${globalIndex === firstNewlineIndex ? '-right-20' : '-top-6 left-1/2 transform -translate-x-1/2'} 
-                              text-xs bg-success text-white px-2 py-1 rounded whitespace-nowrap
+                              text-xs bg-primary text-primary-content px-2 py-1 rounded whitespace-nowrap
                               animate-bounce
                               after:absolute after:inset-0 after:rounded after:opacity-20 after:blur-sm
                               after:-z-10
@@ -222,11 +222,11 @@ export default function TextDisplay({
                             </div>
                           )}
                           {globalIndex === incorrectNewlinePosition && (
-                            <div className="absolute inset-0 border-2 border-red-500 rounded pointer-events-none animate-pulse" />
+                            <div className="absolute inset-0 border-2 border-error rounded pointer-events-none animate-pulse" />
                           )}
                           {isTyped && !isCorrect && (
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <span className="text-red-500 text-xs">✕</span>
+                              <span className="text-error text-xs">✕</span>
                             </div>
                           )}
                         </div>
@@ -239,17 +239,17 @@ export default function TextDisplay({
                         className={`
                           mx-[0.5px] 
                           border-b 
-                          ${isCurrent ? 'border-b-success border-b-2' : 'border-b-base-300 dark:border-gray-600'} 
-                          ${isCurrentWord ? 'bg-blue-100/50 dark:bg-blue-900/40 ring-1 ring-blue-300 dark:ring-blue-700' : ''}
+                          ${isCurrent ? 'border-b-primary border-b-2' : 'border-b-base-300'} 
+                          ${isCurrentWord ? 'bg-primary/10 ring-1 ring-primary/30' : ''}
                           p-[1px] rounded w-[27px] inline-flex items-center justify-center 
                           transition-colors duration-100
                           ${isTyped ? (
-                            isCorrect ? "text-green-500 bg-green-100 dark:bg-green-900/40 dark:text-green-300" : 
-                            isIncorrect ? "text-red-500 bg-red-100 dark:bg-red-900/40 dark:text-red-300" : ""
+                            isCorrect ? "text-success bg-success/20" : 
+                            isIncorrect ? "text-error bg-error/20" : ""
                           ) : (
-                            isHighErrorChar ? "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300" : ""
+                            isHighErrorChar ? "bg-warning/20 text-warning" : ""
                           )}
-                          ${isCurrent ? "bg-success/10 font-bold ring-1 ring-success ring-opacity-50" : ""}
+                          ${isCurrent ? "bg-primary/10 font-bold ring-1 ring-primary/50" : ""}
                           ${globalIndex === lastTypedPosition ? 'animate-typing' : ''}
                           ${isCurrent ? 'relative' : ''}
                         `}
@@ -261,18 +261,18 @@ export default function TextDisplay({
                         }}
                       >
                         {isCurrent && (
-                          <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-xs bg-success text-white px-2 py-1 rounded">
+                          <span className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-xs bg-primary text-primary-content px-2 py-1 rounded">
                             Type
                           </span>
                         )}
                         {parsedText[partIndex]?.translation && isCurrentWord && (
-                          <span className="absolute -bottom-7 left-1/2 transform -translate-x-1/2 text-xs bg-blue-500 text-white px-2 py-1 rounded whitespace-nowrap">
+                          <span className="absolute -bottom-7 left-1/2 transform -translate-x-1/2 text-xs bg-primary text-primary-content px-2 py-1 rounded whitespace-nowrap">
                             {parsedText[partIndex].translation}
                           </span>
                         )}
                         {isSpace ? "\u00A0" : char}
                         {globalIndex === incorrectNewlinePosition && (
-                          <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-red-500" />
+                          <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-error" />
                         )}
                       </span>
                     );
