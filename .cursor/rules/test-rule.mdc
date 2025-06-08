@@ -1,0 +1,113 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Test File Guidelines
+
+## File Structure
+- Test files should be co-located with the files they test
+- Use `.test.ts` or `.spec.ts` extension for test files
+- Group related tests using `describe` blocks
+- Use clear, descriptive test names that explain the behavior being tested
+
+## Test Organization
+```typescript
+describe('ComponentName', () => {
+  // Setup
+  beforeEach(() => {
+    // Common setup
+  });
+
+  // Happy path tests
+  describe('when operation succeeds', () => {
+    it('should do something specific', () => {
+      // Test implementation
+    });
+  });
+
+  // Error cases
+  describe('when operation fails', () => {
+    it('should handle error appropriately', () => {
+      // Test implementation
+    });
+  });
+});
+```
+
+## Best Practices
+1. **Test Isolation**
+   - Each test should be independent
+   - Use `beforeEach` instead of `beforeAll` when possible
+   - Clean up after each test using `afterEach`
+
+2. **Assertions**
+   - One assertion per test when possible
+   - Use descriptive assertion messages
+   - Prefer specific assertions over generic ones
+
+3. **Async Testing**
+   - Use async/await for asynchronous tests
+   - Handle promises properly
+   - Test both success and error cases
+
+4. **Mocking**
+   - Mock external dependencies
+   - Reset mocks between tests
+   - Use meaningful mock implementations
+
+5. **Test Coverage**
+   - Aim for high coverage of critical paths
+   - Test edge cases and error conditions
+   - Document any intentional coverage gaps
+
+## Anti-patterns to Avoid
+- ❌ Tests that depend on each other
+- ❌ Tests without clear assertions
+- ❌ Tests that are too long or complex
+- ❌ Tests that don't clean up after themselves
+- ❌ Tests that don't handle async operations properly
+
+## Example Good Test
+```typescript
+describe('UserService', () => {
+  let userService: UserService;
+  let mockApi: jest.Mocked<ApiClient>;
+
+  beforeEach(() => {
+    mockApi = {
+      getUser: jest.fn(),
+      updateUser: jest.fn()
+    };
+    userService = new UserService(mockApi);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('getUserProfile', () => {
+    it('should return user profile when API call succeeds', async () => {
+      // Arrange
+      const mockUser = { id: 1, name: 'Test User' };
+      mockApi.getUser.mockResolvedValue(mockUser);
+
+      // Act
+      const result = await userService.getUserProfile(1);
+
+      // Assert
+      expect(result).toEqual(mockUser);
+      expect(mockApi.getUser).toHaveBeenCalledWith(1);
+    });
+
+    it('should throw error when API call fails', async () => {
+      // Arrange
+      const error = new Error('API Error');
+      mockApi.getUser.mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(userService.getUserProfile(1)).rejects.toThrow('API Error');
+    });
+  });
+});
+```
