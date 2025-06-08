@@ -43,146 +43,144 @@ function RouteComponent() {
           </p>
         </div>
 
-        <div className="bg-base-200 rounded-xl shadow-lg p-6 space-y-6">
-          {/* Interactive Prompt Section */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-base-content">
-              Generate Your Prompt
-            </h2>
+        <div className="card bg-base-200 shadow-xl">
+          <div className="card-body space-y-6">
+            {/* Interactive Prompt Section */}
             <div className="space-y-4">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Enter your topic (e.g., photosynthesis)"
-                  className="input input-bordered flex-1 bg-base-100"
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                />
-                <button
-                  onClick={handleCopy}
-                  className="btn btn-success gap-2"
-                  disabled={!topic}
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-4 h-4" />
-                      Copied!
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4" />
-                      Copy
-                    </>
-                  )}
-                </button>
-              </div>
-              <div className="bg-base-100 p-4 rounded-lg">
-                <p className="text-base-content/80 font-mono text-sm whitespace-pre-wrap">
-                  {prompt}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Original Prompt Section */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-base-content">
-              The Original Prompt
-            </h2>
-            <div className="bg-base-100 p-4 rounded-lg">
-              <p className="text-base-content/80 font-mono text-sm">
-                Write a one-paragraph explanation about [topic] in simple
-                English. Add the meaning of most English words (except very
-                common words like a, an, the, this, that, etc.) in Bangla using
-                the format [word](বাংলা অর্থ). Make the paragraph suitable for
-                students learning English vocabulary.
-              </p>
-            </div>
-          </div>
-
-          {/* How to Use Section */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-base-content">
-              How to Use
-            </h2>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
-                  1
+              <h2 className="card-title text-base-content">
+                Generate Your Prompt
+              </h2>
+              <div className="space-y-4">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Enter your topic (e.g., photosynthesis)"
+                    className="input input-bordered flex-1 bg-base-100 focus:outline-none focus:border-primary"
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                  />
+                  <button
+                    onClick={handleCopy}
+                    className="btn btn-primary gap-2"
+                    disabled={!topic}
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-4 h-4" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4" />
+                        Copy
+                      </>
+                    )}
+                  </button>
                 </div>
-                <p className="text-base-content/80">
-                  Enter your topic in the input field above
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
-                  2
+                <div className="card bg-base-100">
+                  <div className="card-body p-4">
+                    <p className="text-base-content/80 font-mono text-sm whitespace-pre-wrap">
+                      {prompt}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-base-content/80">
-                  Click the "Copy" button to copy the generated prompt
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
-                  3
-                </div>
-                <p className="text-base-content/80">
-                  Paste the prompt into your AI tool of choice
-                </p>
               </div>
             </div>
-          </div>
 
-          {/* Example Section */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-base-content">
-              Example
-            </h2>
-            <div className="bg-base-100 p-4 rounded-lg">
-              <p className="text-base-content/80">
-                Input: "Write a one-paragraph explanation about photosynthesis
-                in simple English..."
-              </p>
-              <p className="text-base-content/80 mt-2">
-                Output: "Photosynthesis is the [process](প্রক্রিয়া) by which
-                plants [convert](রূপান্তর) light energy into chemical energy.
-                During this [amazing](অসাধারণ) [process](প্রক্রিয়া), plants use
-                [sunlight](সূর্যালোক), water, and carbon dioxide to
-                [create](তৈরি) [glucose](গ্লুকোজ) and [oxygen](অক্সিজেন)."
-              </p>
+            {/* Original Prompt Section */}
+            <div className="space-y-4">
+              <h2 className="card-title text-base-content">
+                The Original Prompt
+              </h2>
+              <div className="card bg-base-100">
+                <div className="card-body p-4">
+                  <p className="text-base-content/80 font-mono text-sm">
+                    Write a one-paragraph explanation about [topic] in simple
+                    English. Add the meaning of most English words (except very
+                    common words like a, an, the, this, that, etc.) in Bangla using
+                    the format [word](বাংলা অর্থ). Make the paragraph suitable for
+                    students learning English vocabulary.
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Tips Section */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-base-content">
-              Tips
-            </h2>
-            <ul className="list-disc list-inside space-y-2 text-base-content/80">
-              <li>Keep topics focused and specific for better results</li>
-              <li>
-                Common words like "the", "is", "and" won't have translations
-              </li>
-              <li>The translations appear as tooltips while typing</li>
-              <li>You can use this for any subject or topic</li>
-            </ul>
-          </div>
+            {/* How to Use Section */}
+            <div className="space-y-4">
+              <h2 className="card-title text-base-content">
+                How to Use
+              </h2>
+              <div className="space-y-3">
+                {[
+                  "Enter your topic in the input field above",
+                  "Click the \"Copy\" button to copy the generated prompt",
+                  "Paste the prompt into your AI tool of choice"
+                ].map((step, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <div className="badge badge-primary badge-lg w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                      {index + 1}
+                    </div>
+                    <p className="text-base-content/80">
+                      {step}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-          {/* Navigation Buttons */}
-          <div className="flex items-center gap-2 pt-4 border-t border-base-300">
-            <button
-              onClick={() => history.back()}
-              className="btn btn-success btn-outline"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              Back
-            </button>
-            <Link to="/">
-              <button className="btn btn-success btn-outline">
-                <HomeIcon className="h-5 w-5" />
-                Go Home
+            {/* Example Section */}
+            <div className="space-y-4">
+              <h2 className="card-title text-base-content">
+                Example
+              </h2>
+              <div className="card bg-base-100">
+                <div className="card-body p-4">
+                  <p className="text-base-content/80">
+                    Input: "Write a one-paragraph explanation about photosynthesis
+                    in simple English..."
+                  </p>
+                  <p className="text-base-content/80 mt-2">
+                    Output: "Photosynthesis is the [process](প্রক্রিয়া) by which
+                    plants [convert](রূপান্তর) light energy into chemical energy.
+                    During this [amazing](অসাধারণ) [process](প্রক্রিয়া), plants use
+                    [sunlight](সূর্যালোক), water, and carbon dioxide to
+                    [create](তৈরি) [glucose](গ্লুকোজ) and [oxygen](অক্সিজেন)."
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Tips Section */}
+            <div className="space-y-4">
+              <h2 className="card-title text-base-content">
+                Tips
+              </h2>
+              <ul className="list-disc list-inside space-y-2 text-base-content/80">
+                <li>Keep topics focused and specific for better results</li>
+                <li>
+                  Common words like "the", "is", "and" won't have translations
+                </li>
+                <li>The translations appear as tooltips while typing</li>
+                <li>You can use this for any subject or topic</li>
+              </ul>
+            </div>
+
+            {/* Navigation Buttons */}
+            <div className="flex items-center gap-2 pt-4 border-t border-base-300">
+              <button
+                onClick={() => history.back()}
+                className="btn btn-primary btn-outline"
+              >
+                <ArrowLeft className="h-5 w-5" />
+                Back
               </button>
-            </Link>
+              <Link to="/">
+                <button className="btn btn-primary btn-outline">
+                  <HomeIcon className="h-5 w-5" />
+                  Go Home
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
