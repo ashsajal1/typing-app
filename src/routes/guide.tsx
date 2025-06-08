@@ -32,21 +32,21 @@ function RouteComponent() {
   };
 
   return (
-    <div className="min-h-screen w-screen overflow-hidden bg-gray-50 dark:bg-gray-900 flex items-start justify-center pt-8 relative">
+    <div className="min-h-screen w-screen overflow-hidden bg-base-100 flex items-start justify-center pt-8 relative">
       <div className="w-full max-w-2xl px-6 relative z-10">
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+          <h1 className="text-3xl font-bold text-base-content mb-2">
             AI Content Generation Guide
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-base-content/70">
             Learn how to create educational content with translations
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-6">
+        <div className="bg-base-200 rounded-xl shadow-lg p-6 space-y-6">
           {/* Interactive Prompt Section */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+            <h2 className="text-xl font-semibold text-base-content">
               Generate Your Prompt
             </h2>
             <div className="space-y-4">
@@ -54,7 +54,7 @@ function RouteComponent() {
                 <input
                   type="text"
                   placeholder="Enter your topic (e.g., photosynthesis)"
-                  className="input input-bordered flex-1"
+                  className="input input-bordered flex-1 bg-base-100"
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                 />
@@ -76,8 +76,8 @@ function RouteComponent() {
                   )}
                 </button>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <p className="text-gray-700 dark:text-gray-300 font-mono text-sm whitespace-pre-wrap">
+              <div className="bg-base-100 p-4 rounded-lg">
+                <p className="text-base-content/80 font-mono text-sm whitespace-pre-wrap">
                   {prompt}
                 </p>
               </div>
@@ -86,11 +86,11 @@ function RouteComponent() {
 
           {/* Original Prompt Section */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+            <h2 className="text-xl font-semibold text-base-content">
               The Original Prompt
             </h2>
-            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-              <p className="text-gray-700 dark:text-gray-300 font-mono text-sm">
+            <div className="bg-base-100 p-4 rounded-lg">
+              <p className="text-base-content/80 font-mono text-sm">
                 Write a one-paragraph explanation about [topic] in simple
                 English. Add the meaning of most English words (except very
                 common words like a, an, the, this, that, etc.) in Bangla using
@@ -102,31 +102,31 @@ function RouteComponent() {
 
           {/* How to Use Section */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+            <h2 className="text-xl font-semibold text-base-content">
               How to Use
             </h2>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <div className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                <div className="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
                   1
                 </div>
-                <p className="text-gray-700 dark:text-gray-300">
+                <p className="text-base-content/80">
                   Enter your topic in the input field above
                 </p>
               </div>
               <div className="flex items-start gap-3">
-                <div className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                <div className="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
                   2
                 </div>
-                <p className="text-gray-700 dark:text-gray-300">
+                <p className="text-base-content/80">
                   Click the "Copy" button to copy the generated prompt
                 </p>
               </div>
               <div className="flex items-start gap-3">
-                <div className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                <div className="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
                   3
                 </div>
-                <p className="text-gray-700 dark:text-gray-300">
+                <p className="text-base-content/80">
                   Paste the prompt into your AI tool of choice
                 </p>
               </div>
@@ -135,15 +135,15 @@ function RouteComponent() {
 
           {/* Example Section */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+            <h2 className="text-xl font-semibold text-base-content">
               Example
             </h2>
-            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-              <p className="text-gray-700 dark:text-gray-300">
+            <div className="bg-base-100 p-4 rounded-lg">
+              <p className="text-base-content/80">
                 Input: "Write a one-paragraph explanation about photosynthesis
                 in simple English..."
               </p>
-              <p className="text-gray-700 dark:text-gray-300 mt-2">
+              <p className="text-base-content/80 mt-2">
                 Output: "Photosynthesis is the [process](প্রক্রিয়া) by which
                 plants [convert](রূপান্তর) light energy into chemical energy.
                 During this [amazing](অসাধারণ) [process](প্রক্রিয়া), plants use
@@ -155,10 +155,10 @@ function RouteComponent() {
 
           {/* Tips Section */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+            <h2 className="text-xl font-semibold text-base-content">
               Tips
             </h2>
-            <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
+            <ul className="list-disc list-inside space-y-2 text-base-content/80">
               <li>Keep topics focused and specific for better results</li>
               <li>
                 Common words like "the", "is", "and" won't have translations
@@ -169,7 +169,7 @@ function RouteComponent() {
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex items-center gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-2 pt-4 border-t border-base-300">
             <button
               onClick={() => history.back()}
               className="btn btn-success btn-outline"
