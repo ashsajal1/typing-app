@@ -1,5 +1,3 @@
-import { useEffect, useRef } from "react";
-
 interface TextDisplayProps {
   parsedText: { text: string; translation?: string }[];
   userInput: string;
