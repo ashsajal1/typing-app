@@ -1,9 +1,19 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import CodeTypingTest from '../components/CodeTypingTest'
+import { SEO } from '../components/SEO'
 
 export const Route = createFileRoute('/code')({
-  component: RouteComponent,
+  component: () => (
+    <>
+      <SEO 
+        title="Code Practice"
+        description="Practice typing code snippets in various programming languages. Improve your coding speed and accuracy with our specialized code typing practice."
+        keywords={['code typing', 'programming practice', 'code snippets', 'coding speed', 'programming languages']}
+      />
+      <RouteComponent />
+    </>
+  ),
 })
 
 function RouteComponent() {

@@ -2,9 +2,19 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft, HomeIcon, Copy, Check } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { SEO } from '../components/SEO'
 
 export const Route = createFileRoute("/guide")({
-  component: RouteComponent,
+  component: () => (
+    <>
+      <SEO 
+        title="Typing Guide"
+        description="Learn proper typing techniques and best practices. Master touch typing with our comprehensive guide and improve your typing skills."
+        keywords={['typing guide', 'touch typing', 'typing techniques', 'keyboard skills', 'typing tutorial']}
+      />
+      <RouteComponent />
+    </>
+  ),
 });
 
 function RouteComponent() {

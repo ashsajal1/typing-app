@@ -4,19 +4,21 @@ import { useSentenceStore } from "../store/sentenceStore";
 import TypingTest from "../components/TypingTest";
 import { ArrowLeft, HomeIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { SEO } from '../components/SEO'
 
 const topicsSearchSchema = z.object({
-  topic: z.string().optional(),
-  eclipsedTime: z.number().optional().catch(60).optional(),
+  topic: z.string(),
+  eclipsedTime: z.number(),
   savedTextId: z.number().optional(),
 });
+
 export const Route = createFileRoute("/practice")({
-  component: () => <Practice />,
+  component: PracticeComponent,
   validateSearch: (search: Record<string, unknown>) =>
     topicsSearchSchema.parse(search),
 });
 
-const Practice = () => {
+function PracticeComponent() {
   const { topic, eclipsedTime, savedTextId } = Route.useSearch();
   const [savedSentence, setSavedSentence] = useState<{
     id: number;
@@ -27,21 +29,16 @@ const Practice = () => {
   useEffect(() => {
     if (savedTextId) {
       const text = localStorage.getItem("customTextData");
-      const textArray = JSON.parse(text!);
-      console.log(textArray);
-
-      const savedSentenceObj = textArray.find(
-        (item: { id: number; label: string; text: string }) =>
-          item.id === savedTextId
-      );
-
-      if(savedSentenceObj === undefined) {
-        return;
+      if (text) {
+        const textArray = JSON.parse(text);
+        const savedSentenceObj = textArray.find(
+          (item: { id: number; label: string; text: string }) =>
+            item.id === savedTextId
+        );
+        if (savedSentenceObj) {
+          setSavedSentence(savedSentenceObj);
+        }
       }
-
-      console.log("Saved sentence:", savedSentenceObj);
-
-      setSavedSentence(savedSentenceObj);
     }
   }, [savedTextId]);
 
@@ -50,42 +47,54 @@ const Practice = () => {
 
   if (!sentences && savedSentence === null) {
     return (
-      <div className="grid place-items-center p-12">
-        <div className="flex flex-col items-center">
-          <h1 className="mb-4 font-bold text-3xl text-center">
-            Not found text of topic {topic}!
-          </h1>
+      <>
+        <SEO 
+          title="Practice"
+          description="Start your typing practice session. Choose from various topics and customize your practice duration. Track your typing speed and accuracy in real-time."
+          keywords={['typing practice', 'speed test', 'accuracy', 'typing session', 'practice mode']}
+        />
+        <div className="grid place-items-center p-12">
+          <div className="flex flex-col items-center">
+            <h1 className="mb-4 font-bold text-3xl text-center">
+              Not found text of topic {topic}!
+            </h1>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => history.back()}
-              className="btn btn-success btn-outline"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              Back
-            </button>
-            <Link to="/">
-              <button className="btn btn-success btn-outline">
-                <HomeIcon className="h-5 w-5" />
-                Go Home
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => history.back()}
+                className="btn btn-success btn-outline"
+              >
+                <ArrowLeft className="h-5 w-5" />
+                Back
               </button>
-            </Link>
+              <Link to="/">
+                <button className="btn btn-success btn-outline">
+                  <HomeIcon className="h-5 w-5" />
+                  Go Home
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  if (savedSentence) {
-    return (
-      <TypingTest eclipsedTime={Infinity} text={savedSentence.text} />
+      </>
     );
   }
 
   return (
-    <TypingTest
-      eclipsedTime={eclipsedTime || 60}
-      text={sentences}
-    />
+    <>
+      <SEO 
+        title="Practice"
+        description="Start your typing practice session. Choose from various topics and customize your practice duration. Track your typing speed and accuracy in real-time."
+        keywords={['typing practice', 'speed test', 'accuracy', 'typing session', 'practice mode']}
+      />
+      {savedSentence ? (
+        <TypingTest eclipsedTime={Infinity} text={savedSentence.text} />
+      ) : (
+        <TypingTest
+          eclipsedTime={eclipsedTime || 60}
+          text={sentences}
+        />
+      )}
+    </>
   );
-};
+}

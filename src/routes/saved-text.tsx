@@ -1,11 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Pencil, Trash2, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
+import { SEO } from '../components/SEO'
 
 type TextType = "all" | "paragraph" | "composition" | "formal-letter" | "informal-letter" | "others";
 
 export const Route = createFileRoute("/saved-text")({
-  component: RouteComponent,
+  component: () => (
+    <>
+      <SEO 
+        title="Saved Text"
+        description="Access your saved typing practice texts. Review and practice with your previously created or imported content."
+        keywords={['saved typing text', 'practice history', 'saved content', 'typing practice library']}
+      />
+      <RouteComponent />
+    </>
+  ),
 });
 
 function RouteComponent() {

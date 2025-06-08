@@ -4,6 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { BookOpen } from "lucide-react";
+import { SEO } from '../components/SEO'
 
 type TextType = "paragraph" | "composition" | "formal-letter" | "informal-letter" | "others";
 
@@ -14,7 +15,16 @@ interface FormData {
 }
 
 export const Route = createFileRoute("/custom-text")({
-  component: RouteComponent,
+  component: () => (
+    <>
+      <SEO 
+        title="Custom Text"
+        description="Create your own custom typing practice text. Import or write your own content to practice typing with personalized material."
+        keywords={['custom typing text', 'personalized practice', 'import text', 'custom content']}
+      />
+      <RouteComponent />
+    </>
+  ),
 });
 
 const formSchema = z.object({
