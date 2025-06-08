@@ -1,0 +1,49 @@
+{
+  "common": {
+    "start": "Start",
+    "stop": "Stop",
+    "reset": "Reset",
+    "settings": "Settings",
+    "statistics": "Statistics",
+    "practice": "Typing Practice",
+    "improveTyping": "Improve your typing speed and accuracy",
+    "wpm": "WPM",
+    "accuracy": "Accuracy",
+    "time": "Time",
+    "characters": "Characters",
+    "errors": "Errors",
+    "selectTopic": "Select Topic",
+    "chooseTopic": "Choose a topic to practice",
+    "practiceDuration": "Practice Duration",
+    "selectDuration": "Select practice duration",
+    "seconds": "seconds",
+    "minute": "minute",
+    "minutes": "minutes",
+    "noTimeLimit": "No time limit",
+    "startPractice": "Start Practice",
+    "savedText": "Saved Text",
+    "createCustomText": "Create Custom Text",
+    "tip": "Tip: Start with shorter durations and gradually increase as you improve"
+  },
+  "settings": {
+    "theme": "Theme",
+    "language": "Language",
+    "sound": "Sound",
+    "difficulty": "Difficulty",
+    "timeLimit": "Time Limit",
+    "customText": "Custom Text"
+  },
+  "difficulty": {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard",
+    "custom": "Custom"
+  },
+  "statistics": {
+    "bestWpm": "Best WPM",
+    "averageWpm": "Average WPM",
+    "totalPracticeTime": "Total Practice Time",
+    "totalCharacters": "Total Characters",
+    "totalErrors": "Total Errors"
+  }
+} 

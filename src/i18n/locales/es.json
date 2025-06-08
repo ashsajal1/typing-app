@@ -1,0 +1,49 @@
+{
+  "common": {
+    "start": "Comenzar",
+    "stop": "Detener",
+    "reset": "Reiniciar",
+    "settings": "Configuración",
+    "statistics": "Estadísticas",
+    "practice": "Práctica de Escritura",
+    "improveTyping": "Mejora tu velocidad y precisión al escribir",
+    "wpm": "PPM",
+    "accuracy": "Precisión",
+    "time": "Tiempo",
+    "characters": "Caracteres",
+    "errors": "Errores",
+    "selectTopic": "Seleccionar Tema",
+    "chooseTopic": "Elige un tema para practicar",
+    "practiceDuration": "Duración de la Práctica",
+    "selectDuration": "Selecciona la duración",
+    "seconds": "segundos",
+    "minute": "minuto",
+    "minutes": "minutos",
+    "noTimeLimit": "Sin límite de tiempo",
+    "startPractice": "Comenzar Práctica",
+    "savedText": "Textos Guardados",
+    "createCustomText": "Crear Texto Personalizado",
+    "tip": "Consejo: Comienza con duraciones más cortas y aumenta gradualmente mientras mejoras"
+  },
+  "settings": {
+    "theme": "Tema",
+    "language": "Idioma",
+    "sound": "Sonido",
+    "difficulty": "Dificultad",
+    "timeLimit": "Límite de Tiempo",
+    "customText": "Texto Personalizado"
+  },
+  "difficulty": {
+    "easy": "Fácil",
+    "medium": "Medio",
+    "hard": "Difícil",
+    "custom": "Personalizado"
+  },
+  "statistics": {
+    "bestWpm": "Mejor PPM",
+    "averageWpm": "PPM Promedio",
+    "totalPracticeTime": "Tiempo Total de Práctica",
+    "totalCharacters": "Total de Caracteres",
+    "totalErrors": "Total de Errores"
+  }
+} 
