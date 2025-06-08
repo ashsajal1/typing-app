@@ -116,20 +116,6 @@ export default function TypingTest({
   useEffect(() => {
     const parsed = parseTextWithTranslations(textToPractice);
     setParsedText(parsed);
-    
-    // Empty lines highlighting logic (currently not used)
-    // const emptyLineIndices = new Set<number>();
-    // let currentPosition = 0;
-    // parsed.forEach(part => {
-    //   const lines = part.text.split('\n');
-    //   lines.forEach((line, i) => {
-    //     if (i > 0 || currentPosition === 0) {
-    //       emptyLineIndices.add(currentPosition);
-    //     }
-    //     currentPosition += line.length + 1; // +1 for the newline character
-    //   });
-    // });
-    // setEmptyLines(emptyLineIndices);
   }, [textToPractice]);
 
   const handleSubmit = useCallback(() => {
