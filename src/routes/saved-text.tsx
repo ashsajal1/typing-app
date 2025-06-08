@@ -26,6 +26,7 @@ function RouteComponent() {
   const [itemToEdit, setItemToEdit] = useState<string | null>(null);
   const [editText, setEditText] = useState<string>("");
   const [editType, setEditType] = useState<TextType>("paragraph");
+  const [editLabel, setEditLabel] = useState<string>("");
   const [selectedType, setSelectedType] = useState<TextType>("all");
 
   useEffect(() => {
@@ -61,7 +62,7 @@ function RouteComponent() {
     if (itemToEdit) {
       console.log("Editing data with id:", itemToEdit);
       const dataAfterEdit = existingData.map((data) =>
-        data.id === itemToEdit ? { ...data, text: editText, type: editType } : data
+        data.id === itemToEdit ? { ...data, text: editText, type: editType, label: editLabel } : data
       );
       console.log(dataAfterEdit);
 
@@ -69,6 +70,7 @@ function RouteComponent() {
       setExistingData(dataAfterEdit);
       setItemToEdit(null);
       setEditText("");
+      setEditLabel("");
       setEditType("paragraph");
     }
   };
@@ -177,6 +179,7 @@ function RouteComponent() {
                       setItemToEdit(data.id);
                       setEditText(data.text);
                       setEditType(data.type);
+                      setEditLabel(data.label);
                     }}
                   >
                     <Pencil className="w-4 h-4" />
@@ -209,6 +212,16 @@ function RouteComponent() {
           <div className="modal-box">
             <h3 className="text-lg font-bold">Edit Text</h3>
             <div className="flex flex-col gap-4">
+              <div>
+                <h4 className="label">Title</h4>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  value={editLabel}
+                  onChange={(e) => setEditLabel(e.target.value)}
+                  placeholder="Enter title for your text"
+                />
+              </div>
               <div>
                 <h4 className="label">Text Type</h4>
                 <select 
