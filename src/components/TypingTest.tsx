@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import Result from "./Result";
 import { useErrorStatsStore } from '../store/errorStatsStore';
 import TextDisplay from "./TextDisplay";
@@ -7,17 +7,9 @@ import ControlsDisplay from "./ControlsDisplay";
 import CommandPalette from "./CommandPalette";
 
 import { ignoredKeys } from "../lib/utils";
+import { createCommands } from "../lib/commands";
 
-// Command interface
-interface Command {
-  id: string;
-  name: string;
-  shortcut: string;
-  action: () => void;
-  description: string;
-}
-
-// Interface for text with translations
+// Function to parse text with translations
 interface TextWithTranslation {
   text: string;
   translation?: string;
@@ -159,37 +151,8 @@ export default function TypingTest({
     setIsSubmitted(true);
   }, [isStarted, timer, userInput, mistakes, totalKeystrokes]);
 
-  // Define available commands
-  const commands: Command[] = [
-    {
-      id: "restart",
-      name: "Restart Test",
-      shortcut: "⌘R",
-      action: () => window.location.reload(),
-      description: "Start a new typing test"
-    },
-    {
-      id: "finish",
-      name: "Finish Test",
-      shortcut: "⌘Enter",
-      action: handleSubmit,
-      description: "End the current test and view results"
-    },
-    {
-      id: "toggle-theme",
-      name: "Toggle Theme",
-      shortcut: "⌘T",
-      action: () => document.documentElement.classList.toggle("dark"),
-      description: "Switch between light and dark mode"
-    },
-    {
-      id: "focus-input",
-      name: "Focus Input",
-      shortcut: "⌘I",
-      action: () => document.querySelector("textarea")?.focus(),
-      description: "Focus on the typing area"
-    }
-  ];
+  // Create commands
+  const commands = useMemo(() => createCommands(handleSubmit), [handleSubmit]);
 
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     // Only handle keyboard events for non-mobile devices

@@ -1,10 +1,4 @@
-interface Command {
-  id: string;
-  name: string;
-  shortcut: string;
-  action: () => void;
-  description: string;
-}
+import { Command } from "../lib/commands";
 
 interface CommandPaletteProps {
   showCommandPalette: boolean;
