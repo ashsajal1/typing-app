@@ -2,7 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { useSentenceStore } from "../store/sentenceStore";
 import TypingTest from "../components/TypingTest";
-import BengaliTyping from "../components/BengaliTyping";
+import BengaliTyping from "../components/NonEnTyping";
 import { ArrowLeft, HomeIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SEO } from '../components/SEO'
