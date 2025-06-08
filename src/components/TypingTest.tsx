@@ -191,7 +191,7 @@ export default function TypingTest({
         />
         <input
           type="text"
-          className="input input-bordered w-full"
+          className="input input-bordered w-full md:hidden"
           value={userInput}
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
