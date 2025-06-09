@@ -90,8 +90,13 @@ function RouteComponent() {
     localStorage.setItem("customTextData", JSON.stringify(dataArray));
 
     navigate({
-      to: `/practice?savedTextId=${newData.id}`,
-    })
+      to: `/practice`,
+      search: {
+        savedTextId: Number(newData.id),
+        topic: data.type,
+        eclipsedTime: 60
+      }
+    });
 
     reset();
     setIsAdded(true);
