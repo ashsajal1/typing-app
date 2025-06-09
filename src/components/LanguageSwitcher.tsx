@@ -25,7 +25,7 @@ const LanguageSwitcher = () => {
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
 
   return (
-    <div className="dropdown dropdown-end">
+    <div className="dropdown dropdown-end z-20">
       <div tabIndex={0} role="button" className="btn btn-ghost btn-sm gap-2">
         <Globe size={16} strokeWidth={1.5} />
         <span className="hidden sm:inline">{currentLanguage.name}</span>
