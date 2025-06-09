@@ -1,4 +1,4 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { useSentenceStore } from "../store/sentenceStore";
 import TypingTest from "../components/TypingTest";
@@ -9,8 +9,8 @@ import { SEO } from '../components/SEO'
 import { franc } from 'franc';
 
 const topicsSearchSchema = z.object({
-  topic: z.string(),
-  eclipsedTime: z.number(),
+  topic: z.string().optional(),
+  eclipsedTime: z.number().optional(),
   savedTextId: z.number().optional(),
 });
 
@@ -22,6 +22,7 @@ export const Route = createFileRoute("/practice")({
 
 function PracticeComponent() {
   const { topic, eclipsedTime, savedTextId } = Route.useSearch();
+  const navigate = useNavigate();
   const [savedSentence, setSavedSentence] = useState<{
     id: number;
     label: string;
@@ -29,6 +30,12 @@ function PracticeComponent() {
   } | null>(null);
 
   useEffect(() => {
+    // If no props are provided, redirect to home
+    if (!topic && !savedTextId) {
+      navigate({ to: '/' });
+      return;
+    }
+
     if (savedTextId) {
       const text = localStorage.getItem("customTextData");
       if (text) {
@@ -42,7 +49,7 @@ function PracticeComponent() {
         }
       }
     }
-  }, [savedTextId]);
+  }, [savedTextId, topic, navigate]);
 
   const getCompleteSentences = useSentenceStore((state) => state.getCompleteSentences);
   const sentences = topic ? getCompleteSentences(topic, 1000) : "";
