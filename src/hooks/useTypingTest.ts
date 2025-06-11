@@ -6,7 +6,7 @@ interface TextWithTranslation {
   translation?: string;
 }
 
-export function useTypingTest(text: string, eclipsedTime: number) {
+export function useTypingTest(text: string, eclipsedTime?: number) {
   const [userInput, setUserInput] = useState("");
   const [timer, setTimer] = useState<number>(0);
   const [isStarted, setIsStarted] = useState(false);
@@ -117,7 +117,7 @@ export function useTypingTest(text: string, eclipsedTime: number) {
   }, [textToPractice, timer, userInput, isStarted, isSubmitted, mistakes, totalKeystrokes]);
 
   useEffect(() => {
-    if (!(eclipsedTime === 0) && timer === eclipsedTime) {
+    if (!(eclipsedTime === 0) && eclipsedTime && timer === eclipsedTime) {
       handleSubmit();
       setIsSubmitted(true);
     }

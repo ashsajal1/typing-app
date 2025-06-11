@@ -105,7 +105,7 @@ function PracticeComponent() {
         <BengaliTyping text={textToType} />
       ) : (
         <TypingTest
-          eclipsedTime={eclipsedTime || 60}
+          eclipsedTime={savedSentence ? undefined : (eclipsedTime || 60)}
           text={textToType}
         />
       )}

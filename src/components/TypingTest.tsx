@@ -42,7 +42,7 @@ export default function TypingTest({
   eclipsedTime,
 }: {
   text: string;
-  eclipsedTime: number;
+  eclipsedTime?: number;
 }) {
   const [isMobile, setIsMobile] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
@@ -80,7 +80,7 @@ export default function TypingTest({
     handleSubmit,
     resetTest,
     addError
-  } = useTypingTest(text, eclipsedTime);
+  } = useTypingTest(text, eclipsedTime || Infinity);
 
   // Check if user is on mobile
   useEffect(() => {
@@ -203,7 +203,7 @@ export default function TypingTest({
 
       <StatsDisplay
         timer={timer}
-        eclipsedTime={eclipsedTime}
+        eclipsedTime={eclipsedTime ?? Infinity}
         accuracy={accuracy}
         wpm={wpm}
       />
