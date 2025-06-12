@@ -99,26 +99,6 @@ Please format the response in Markdown`;
               </div>
             </div>
 
-            {/* Original Prompt Section */}
-            <div className="space-y-4">
-              <h2 className="card-title text-base-content">
-                The Original Prompt
-              </h2>
-              <div className="card bg-base-100">
-                <div className="card-body p-4">
-                  <p className="text-base-content/80 font-mono text-sm whitespace-pre-wrap">
-                    Write a one-paragraph explanation about [topic] in English.
-                    Add the meaning of most English words (except very common
-                    words like a, an, the, this, that, etc.) in Bangla using the
-                    format [word](বাংলা অর্থ). Make the paragraph suitable for
-                    students learning English vocabulary. Format the response in
-                    Markdown with a title, the paragraph with translations, and
-                    a bullet list of key terms.
-                  </p>
-                </div>
-              </div>
-            </div>
-
             {/* How to Use Section */}
             <div className="space-y-4">
               <h2 className="card-title text-base-content">How to Use</h2>
