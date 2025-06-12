@@ -5,7 +5,7 @@ import { Clock, BookOpen, PlusCircle, PlayCircle, Save, Bookmark } from "lucide-
 import { TOPIC_ICONS, KEYBOARD_ELEMENTS } from "./lib/constants";
 import { useTranslation } from "react-i18next";
 
-export default function App() {
+const App = () => {
   const { t } = useTranslation();
   const [selectedTopic, setSelectedTopic] = useState('physics')
   const [eclipsedTime, setEclipsedTime] = useState(60)
@@ -200,3 +200,5 @@ export default function App() {
     </div>
   )
 }
+
+export default App;
