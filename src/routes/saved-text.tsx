@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Pencil, Trash2, BookOpen, Download, Upload } from "lucide-react";
+import { Pencil, Trash2, BookOpen, Download, Upload, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SEO } from '../components/SEO'
 
@@ -28,6 +28,7 @@ function RouteComponent() {
   const [editType, setEditType] = useState<TextType>("paragraph");
   const [editLabel, setEditLabel] = useState<string>("");
   const [selectedType, setSelectedType] = useState<TextType>("all");
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   useEffect(() => {
     // Retrieve existing data from localStorage
@@ -143,6 +144,12 @@ function RouteComponent() {
     reader.readAsText(file);
   };
 
+  const handleReset = () => {
+    localStorage.removeItem("customTextData");
+    setExistingData([]);
+    setShowResetConfirm(false);
+  };
+
   const filteredData = existingData.filter(
     (data) => selectedType === "all" || data.type === selectedType
   );
@@ -162,11 +169,11 @@ function RouteComponent() {
               disabled={existingData.length === 0}
             >
               <Download className="w-4 h-4" />
-              Export
+              <span className="hidden sm:inline">Export</span>
             </button>
             <label className="btn btn-sm btn-outline gap-2 cursor-pointer">
               <Upload className="w-4 h-4" />
-              Import
+              <span className="hidden sm:inline">Import</span>
               <input
                 type="file"
                 accept=".csv"
@@ -174,6 +181,14 @@ function RouteComponent() {
                 onChange={importFromCSV}
               />
             </label>
+            <button 
+              onClick={() => setShowResetConfirm(true)}
+              className="btn btn-sm btn-error gap-2"
+              disabled={existingData.length === 0}
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span className="hidden sm:inline">Reset</span>
+            </button>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
@@ -347,6 +362,40 @@ function RouteComponent() {
           </label>
         </div>
       )}
+
+      {/* Reset Confirmation Modal */}
+      <input
+        type="checkbox"
+        id="reset_modal"
+        className="modal-toggle"
+        checked={showResetConfirm}
+        onChange={(e) => setShowResetConfirm(e.target.checked)}
+      />
+      <div className="modal" role="dialog">
+        <div className="modal-box">
+          <h3 className="text-lg font-bold">Reset All Texts</h3>
+          <p className="py-4">
+            Are you sure you want to delete all saved texts? This action cannot be undone.
+          </p>
+          <div className="modal-action">
+            <button 
+              className="btn"
+              onClick={() => setShowResetConfirm(false)}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleReset}
+              className="btn btn-error"
+            >
+              Yes, Reset All
+            </button>
+          </div>
+        </div>
+        <label className="modal-backdrop" onClick={() => setShowResetConfirm(false)}>
+          Close
+        </label>
+      </div>
     </div>
   );
 }
