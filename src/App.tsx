@@ -143,7 +143,7 @@ export default function App() {
             </div>
 
             {/* Right Column - Recent Saved Texts */}
-            {recentSavedTexts.length > 0 && (
+            {recentSavedTexts.length > 0 ? (
               <div className="bg-base-200 rounded-xl shadow-lg p-8 space-y-8">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-base-content flex items-center gap-2">
@@ -172,6 +172,20 @@ export default function App() {
                       </Link>
                     ))}
                   </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-base-200 rounded-xl shadow-lg p-8 space-y-4">
+                <div className="text-center space-y-4">
+                  <div className="flex justify-center">
+                    <PlusCircle className="w-12 h-12 text-base-content/40" />
+                  </div>
+                  <h3 className="text-lg font-medium text-base-content">No Saved Texts Yet</h3>
+                  <p className="text-base-content/70">Start by creating your own custom text for practice</p>
+                  <Link to="/custom-text" className="btn btn-primary gap-2">
+                    <PlusCircle className="w-4 h-4" />
+                    Create New Text
+                  </Link>
                 </div>
               </div>
             )}
