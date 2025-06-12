@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Pencil, Trash2, BookOpen, Download } from "lucide-react";
+import { Pencil, Trash2, BookOpen, Download, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SEO } from '../components/SEO'
 
@@ -100,6 +100,49 @@ function RouteComponent() {
     document.body.removeChild(link);
   };
 
+  const importFromCSV = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result as string;
+      const rows = text.split('\n');
+      const headers = rows[0].split(',');
+      
+      // Validate headers
+      const requiredHeaders = ['ID', 'Title', 'Type', 'Content'];
+      const isValid = requiredHeaders.every(header => headers.includes(header));
+      
+      if (!isValid) {
+        alert('Invalid CSV format. Please use the exported CSV template.');
+        return;
+      }
+
+      const newData = rows.slice(1).map(row => {
+        const values = row.split(',').map(value => value.replace(/^"|"$/g, '')); // Remove quotes
+        return {
+          id: values[0],
+          label: values[1],
+          type: values[2] as TextType,
+          text: values[3]
+        };
+      }).filter(data => data.id && data.label && data.text); // Filter out empty rows
+
+      // Merge with existing data, avoiding duplicates
+      const mergedData = [...existingData];
+      newData.forEach(newItem => {
+        if (!mergedData.some(existing => existing.id === newItem.id)) {
+          mergedData.push(newItem);
+        }
+      });
+
+      localStorage.setItem("customTextData", JSON.stringify(mergedData));
+      setExistingData(mergedData);
+    };
+    reader.readAsText(file);
+  };
+
   const filteredData = existingData.filter(
     (data) => selectedType === "all" || data.type === selectedType
   );
@@ -112,14 +155,26 @@ function RouteComponent() {
           <Link to="/custom-text">
             <button className="btn btn-sm btn-success">Create</button>
           </Link>
-          <button 
-            onClick={exportToCSV}
-            className="btn btn-sm btn-outline gap-2"
-            disabled={existingData.length === 0}
-          >
-            <Download className="w-4 h-4" />
-            Export CSV
-          </button>
+          <div className="flex gap-2">
+            <button 
+              onClick={exportToCSV}
+              className="btn btn-sm btn-outline gap-2"
+              disabled={existingData.length === 0}
+            >
+              <Download className="w-4 h-4" />
+              Export
+            </button>
+            <label className="btn btn-sm btn-outline gap-2 cursor-pointer">
+              <Upload className="w-4 h-4" />
+              Import
+              <input
+                type="file"
+                accept=".csv"
+                className="hidden"
+                onChange={importFromCSV}
+              />
+            </label>
+          </div>
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
           <select 
