@@ -130,13 +130,13 @@ const App = () => {
                 <Link className="w-full" to='/saved-text'>
                   <button className="btn btn-outline w-full gap-2 hover:bg-base-300">
                     <Save className="w-4 h-4" />
-                    {t('common.savedText')}
+                    <span className="hidden sm:inline">{t('common.savedText')}</span>
                   </button>
                 </Link>
                 <Link className="w-full" to='/custom-text'>
                   <button className="btn btn-outline w-full gap-2 hover:bg-base-300">
                     <PlusCircle className="w-4 h-4" />
-                    {t('common.createCustomText')}
+                    <span className="hidden sm:inline">{t('common.createCustomText')}</span>
                   </button>
                 </Link>
               </div>
