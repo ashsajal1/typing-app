@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Pencil, Trash2, BookOpen } from "lucide-react";
+import { Pencil, Trash2, BookOpen, Download } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SEO } from '../components/SEO'
 
@@ -75,6 +75,31 @@ function RouteComponent() {
     }
   };
 
+  const exportToCSV = () => {
+    // Create CSV content
+    const headers = ['ID', 'Title', 'Type', 'Content'];
+    const csvContent = [
+      headers.join(','),
+      ...existingData.map(data => [
+        data.id,
+        `"${data.label.replace(/"/g, '""')}"`, // Escape quotes in title
+        data.type,
+        `"${data.text.replace(/"/g, '""')}"` // Escape quotes in content
+      ].join(','))
+    ].join('\n');
+
+    // Create and trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `typing-practice-texts-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const filteredData = existingData.filter(
     (data) => selectedType === "all" || data.type === selectedType
   );
@@ -87,6 +112,14 @@ function RouteComponent() {
           <Link to="/custom-text">
             <button className="btn btn-sm btn-success">Create</button>
           </Link>
+          <button 
+            onClick={exportToCSV}
+            className="btn btn-sm btn-outline gap-2"
+            disabled={existingData.length === 0}
+          >
+            <Download className="w-4 h-4" />
+            Export CSV
+          </button>
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
           <select 
