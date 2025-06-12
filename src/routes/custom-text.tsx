@@ -56,38 +56,22 @@ function RouteComponent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  const handleCSVImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleJSONImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const csvContent = e.target?.result as string;
-        const lines = csvContent.split('\n');
-        const headers = lines[0].split(',').map(h => h.trim());
-        
-        // Validate headers
-        const requiredHeaders = ['Title', 'Type', 'Content'];
-        const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
-        if (missingHeaders.length > 0) {
-          throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
+        const jsonString = e.target?.result as string;
+        const jsonData = JSON.parse(jsonString);
+
+        if (!Array.isArray(jsonData)) {
+          throw new Error('Invalid JSON format. Expected an array of objects.');
         }
 
-        // Get indices of required columns
-        const titleIndex = headers.indexOf('Title');
-        const typeIndex = headers.indexOf('Type');
-        const contentIndex = headers.indexOf('Content');
-
-        // Process each line (skip header)
-        const importedData = lines.slice(1).filter(line => line.trim()).map(line => {
-          const values = line.split(',').map(v => v.trim());
-          return {
-            label: values[titleIndex]?.replace(/^"|"$/g, '') || '',
-            type: values[typeIndex]?.toLowerCase() as TextType || 'paragraph',
-            text: values[contentIndex]?.replace(/^"|"$/g, '') || ''
-          };
-        });
+        const importedData = jsonData.filter((item: Record<string, unknown>): item is {label:string; text:string; type?: TextType} =>
+            typeof item.label === 'string' && typeof item.text === 'string');
 
         // Validate and save each entry
         const existingData = JSON.parse(localStorage.getItem("customTextData") || "[]");
@@ -137,7 +121,7 @@ function RouteComponent() {
         }
 
       } catch (error) {
-        setImportError(error instanceof Error ? error.message : 'Failed to import CSV');
+        setImportError(error instanceof Error ? error.message : 'Failed to import JSON');
         setTimeout(() => {
           setImportError(null);
         }, 3000);
@@ -213,17 +197,17 @@ function RouteComponent() {
         <div className="flex gap-2">
           <input
             type="file"
-            accept=".csv"
+            accept=".json"
             className="hidden"
             ref={fileInputRef}
-            onChange={handleCSVImport}
+            onChange={handleJSONImport}
           />
           <button 
             onClick={() => fileInputRef.current?.click()}
             className="btn btn-outline gap-2"
           >
             <Upload className="w-4 h-4" />
-            Import CSV
+            Import JSON
           </button>
           <Link to="/guide">
             <button className="btn btn-outline btn-success gap-2">

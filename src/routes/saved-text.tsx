@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Pencil, Trash2, BookOpen, Download } from "lucide-react";
+import { Pencil, Trash2, BookOpen, Download, Upload, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SEO } from '../components/SEO'
 
@@ -28,6 +28,7 @@ function RouteComponent() {
   const [editType, setEditType] = useState<TextType>("paragraph");
   const [editLabel, setEditLabel] = useState<string>("");
   const [selectedType, setSelectedType] = useState<TextType>("all");
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   useEffect(() => {
     // Retrieve existing data from localStorage
@@ -75,29 +76,67 @@ function RouteComponent() {
     }
   };
 
-  const exportToCSV = () => {
-    // Create CSV content
-    const headers = ['ID', 'Title', 'Type', 'Content'];
-    const csvContent = [
-      headers.join(','),
-      ...existingData.map(data => [
-        data.id,
-        `"${data.label.replace(/"/g, '""')}"`, // Escape quotes in title
-        data.type,
-        `"${data.text.replace(/"/g, '""')}"` // Escape quotes in content
-      ].join(','))
-    ].join('\n');
-
-    // Create and trigger download
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  // Export data as JSON file
+  const exportToJSON = () => {
+    const jsonContent = JSON.stringify(existingData, null, 2);
+    const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `typing-practice-texts-${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `typing-practice-texts-${new Date().toISOString().split('T')[0]}.json`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  // Import data from JSON file
+  const importFromJSON = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const text = e.target?.result as string;
+        const jsonData = JSON.parse(text);
+
+        if (!Array.isArray(jsonData)) {
+          alert('Invalid JSON format. Expected an array of objects.');
+          return;
+        }
+
+        const newData = jsonData
+          .filter((item: Record<string, unknown>): item is {id:string; label:string; text:string; type?: TextType} =>
+            typeof item.id === 'string' && typeof item.label === 'string' && typeof item.text === 'string')
+          .map(item => ({
+            id: item.id,
+            label: item.label,
+            type: (item.type as TextType) || 'paragraph',
+            text: item.text,
+          }));
+
+        // Merge with existing data, avoiding duplicates
+        const mergedData = [...existingData];
+        newData.forEach(newItem => {
+          if (!mergedData.some(existing => existing.id === newItem.id)) {
+            mergedData.push(newItem);
+          }
+        });
+
+        localStorage.setItem("customTextData", JSON.stringify(mergedData));
+        setExistingData(mergedData);
+      } catch (err) {
+        alert('Failed to parse JSON file.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleReset = () => {
+    localStorage.removeItem("customTextData");
+    setExistingData([]);
+    setShowResetConfirm(false);
   };
 
   const filteredData = existingData.filter(
@@ -112,14 +151,34 @@ function RouteComponent() {
           <Link to="/custom-text">
             <button className="btn btn-sm btn-success">Create</button>
           </Link>
-          <button 
-            onClick={exportToCSV}
-            className="btn btn-sm btn-outline gap-2"
-            disabled={existingData.length === 0}
-          >
-            <Download className="w-4 h-4" />
-            Export CSV
-          </button>
+          <div className="flex gap-2">
+            <button 
+              onClick={exportToJSON}
+              className="btn btn-sm btn-outline gap-2"
+              disabled={existingData.length === 0}
+            >
+              <Download className="w-4 h-4" />
+              <span className="hidden sm:inline">Export JSON</span>
+            </button>
+            <label className="btn btn-sm btn-outline gap-2 cursor-pointer">
+              <Upload className="w-4 h-4" />
+              <span className="hidden sm:inline">Import JSON</span>
+              <input
+                type="file"
+                accept=".json"
+                className="hidden"
+                onChange={importFromJSON}
+              />
+            </label>
+            <button 
+              onClick={() => setShowResetConfirm(true)}
+              className="btn btn-sm btn-error gap-2"
+              disabled={existingData.length === 0}
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span className="hidden sm:inline">Reset</span>
+            </button>
+          </div>
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
           <select 
@@ -292,6 +351,40 @@ function RouteComponent() {
           </label>
         </div>
       )}
+
+      {/* Reset Confirmation Modal */}
+      <input
+        type="checkbox"
+        id="reset_modal"
+        className="modal-toggle"
+        checked={showResetConfirm}
+        onChange={(e) => setShowResetConfirm(e.target.checked)}
+      />
+      <div className="modal" role="dialog">
+        <div className="modal-box">
+          <h3 className="text-lg font-bold">Reset All Texts</h3>
+          <p className="py-4">
+            Are you sure you want to delete all saved texts? This action cannot be undone.
+          </p>
+          <div className="modal-action">
+            <button 
+              className="btn"
+              onClick={() => setShowResetConfirm(false)}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleReset}
+              className="btn btn-error"
+            >
+              Yes, Reset All
+            </button>
+          </div>
+        </div>
+        <label className="modal-backdrop" onClick={() => setShowResetConfirm(false)}>
+          Close
+        </label>
+      </div>
     </div>
   );
 }
