@@ -76,70 +76,59 @@ function RouteComponent() {
     }
   };
 
-  const exportToCSV = () => {
-    // Create CSV content
-    const headers = ['ID', 'Title', 'Type', 'Content'];
-    const csvContent = [
-      headers.join(','),
-      ...existingData.map(data => [
-        data.id,
-        `"${data.label.replace(/"/g, '""')}"`, // Escape quotes in title
-        data.type,
-        `"${data.text.replace(/"/g, '""')}"` // Escape quotes in content
-      ].join(','))
-    ].join('\n');
-
-    // Create and trigger download
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  // Export data as JSON file
+  const exportToJSON = () => {
+    const jsonContent = JSON.stringify(existingData, null, 2);
+    const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `typing-practice-texts-${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `typing-practice-texts-${new Date().toISOString().split('T')[0]}.json`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
-  const importFromCSV = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Import data from JSON file
+  const importFromJSON = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      const text = e.target?.result as string;
-      const rows = text.split('\n');
-      const headers = rows[0].split(',');
-      
-      // Validate headers
-      const requiredHeaders = ['ID', 'Title', 'Type', 'Content'];
-      const isValid = requiredHeaders.every(header => headers.includes(header));
-      
-      if (!isValid) {
-        alert('Invalid CSV format. Please use the exported CSV template.');
-        return;
-      }
+      try {
+        const text = e.target?.result as string;
+        const jsonData = JSON.parse(text);
 
-      const newData = rows.slice(1).map(row => {
-        const values = row.split(',').map(value => value.replace(/^"|"$/g, '')); // Remove quotes
-        return {
-          id: values[0],
-          label: values[1],
-          type: values[2] as TextType,
-          text: values[3]
-        };
-      }).filter(data => data.id && data.label && data.text); // Filter out empty rows
-
-      // Merge with existing data, avoiding duplicates
-      const mergedData = [...existingData];
-      newData.forEach(newItem => {
-        if (!mergedData.some(existing => existing.id === newItem.id)) {
-          mergedData.push(newItem);
+        if (!Array.isArray(jsonData)) {
+          alert('Invalid JSON format. Expected an array of objects.');
+          return;
         }
-      });
 
-      localStorage.setItem("customTextData", JSON.stringify(mergedData));
-      setExistingData(mergedData);
+        const newData = jsonData
+          .filter((item: Record<string, unknown>): item is {id:string; label:string; text:string; type?: TextType} =>
+            typeof item.id === 'string' && typeof item.label === 'string' && typeof item.text === 'string')
+          .map(item => ({
+            id: item.id,
+            label: item.label,
+            type: (item.type as TextType) || 'paragraph',
+            text: item.text,
+          }));
+
+        // Merge with existing data, avoiding duplicates
+        const mergedData = [...existingData];
+        newData.forEach(newItem => {
+          if (!mergedData.some(existing => existing.id === newItem.id)) {
+            mergedData.push(newItem);
+          }
+        });
+
+        localStorage.setItem("customTextData", JSON.stringify(mergedData));
+        setExistingData(mergedData);
+      } catch (err) {
+        alert('Failed to parse JSON file.');
+      }
     };
     reader.readAsText(file);
   };
@@ -164,21 +153,21 @@ function RouteComponent() {
           </Link>
           <div className="flex gap-2">
             <button 
-              onClick={exportToCSV}
+              onClick={exportToJSON}
               className="btn btn-sm btn-outline gap-2"
               disabled={existingData.length === 0}
             >
               <Download className="w-4 h-4" />
-              <span className="hidden sm:inline">Export</span>
+              <span className="hidden sm:inline">Export JSON</span>
             </button>
             <label className="btn btn-sm btn-outline gap-2 cursor-pointer">
               <Upload className="w-4 h-4" />
-              <span className="hidden sm:inline">Import</span>
+              <span className="hidden sm:inline">Import JSON</span>
               <input
                 type="file"
-                accept=".csv"
+                accept=".json"
                 className="hidden"
-                onChange={importFromCSV}
+                onChange={importFromJSON}
               />
             </label>
             <button 
