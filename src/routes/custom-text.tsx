@@ -2,8 +2,8 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { BookOpen } from "lucide-react";
+import { useState, useRef } from "react";
+import { BookOpen, Upload } from "lucide-react";
 import { SEO } from '../components/SEO'
 
 type TextType = "paragraph" | "composition" | "formal-letter" | "informal-letter" | "others";
@@ -50,9 +50,109 @@ function RouteComponent() {
   
   const textValue = watch("text", "");
   const [isAdded, setIsAdded] = useState(false);
-  const [isDuplicate, setIsDuplicate] = useState(false);
   const [isPasting, setIsPasting] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState('Your text has been saved!');
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+
+  const handleCSVImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const csvContent = e.target?.result as string;
+        const lines = csvContent.split('\n');
+        const headers = lines[0].split(',').map(h => h.trim());
+        
+        // Validate headers
+        const requiredHeaders = ['Title', 'Type', 'Content'];
+        const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
+        if (missingHeaders.length > 0) {
+          throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
+        }
+
+        // Get indices of required columns
+        const titleIndex = headers.indexOf('Title');
+        const typeIndex = headers.indexOf('Type');
+        const contentIndex = headers.indexOf('Content');
+
+        // Process each line (skip header)
+        const importedData = lines.slice(1).filter(line => line.trim()).map(line => {
+          const values = line.split(',').map(v => v.trim());
+          return {
+            label: values[titleIndex]?.replace(/^"|"$/g, '') || '',
+            type: values[typeIndex]?.toLowerCase() as TextType || 'paragraph',
+            text: values[contentIndex]?.replace(/^"|"$/g, '') || ''
+          };
+        });
+
+        // Validate and save each entry
+        const existingData = JSON.parse(localStorage.getItem("customTextData") || "[]");
+        let successCount = 0;
+        let duplicateCount = 0;
+
+        importedData.forEach(data => {
+          // Validate data
+          if (!data.label || !data.text) return;
+          if (data.label.length < 5 || data.text.length < 20) return;
+
+          // Check for duplicates
+          const isDuplicate = existingData.some(
+            (item: { label: string; text: string }) =>
+              item.label === data.label && item.text === data.text
+          );
+
+          if (!isDuplicate) {
+            const newData = {
+              id: existingData.length + 1 + Math.floor(Math.random() * 1000) + new Date().getTime(),
+              ...data,
+              time: new Date().toLocaleString(),
+            };
+            existingData.push(newData);
+            successCount++;
+          } else {
+            duplicateCount++;
+          }
+        });
+
+        // Save to localStorage
+        localStorage.setItem("customTextData", JSON.stringify(existingData));
+
+        // Show success message
+        setImportError(null);
+        setIsAdded(true);
+        const message = `Successfully imported ${successCount} texts${duplicateCount > 0 ? ` (${duplicateCount} duplicates skipped)` : ''}`;
+        setSuccessMessage(message);
+        setTimeout(() => {
+          setIsAdded(false);
+          setSuccessMessage('Your text has been saved!');
+        }, 2000);
+
+        // Reset file input
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+
+      } catch (error) {
+        setImportError(error instanceof Error ? error.message : 'Failed to import CSV');
+        setTimeout(() => {
+          setImportError(null);
+        }, 3000);
+      }
+    };
+
+    reader.onerror = () => {
+      setImportError('Failed to read file');
+      setTimeout(() => {
+        setImportError(null);
+      }, 3000);
+    };
+
+    reader.readAsText(file);
+  };
 
   // Handle form submission
   const onSubmit = (data: FormData) => {
@@ -76,9 +176,9 @@ function RouteComponent() {
 
     if (isDuplicate) {
       console.log("Duplicate entry found. Not saving.");
-      setIsDuplicate(true);
+      setImportError("Error! Duplicate text found.");
       setTimeout(() => {
-        setIsDuplicate(false);
+        setImportError(null);
       }, 2000);
       return; // Stop if it's a duplicate
     }
@@ -110,12 +210,28 @@ function RouteComponent() {
     <div className="w-full p-2">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-3xl font-bold">Create Custom Text</h1>
-        <Link to="/guide">
-          <button className="btn btn-outline btn-success gap-2">
-            <BookOpen className="w-4 h-4" />
-            View Guide
+        <div className="flex gap-2">
+          <input
+            type="file"
+            accept=".csv"
+            className="hidden"
+            ref={fileInputRef}
+            onChange={handleCSVImport}
+          />
+          <button 
+            onClick={() => fileInputRef.current?.click()}
+            className="btn btn-outline gap-2"
+          >
+            <Upload className="w-4 h-4" />
+            Import CSV
           </button>
-        </Link>
+          <Link to="/guide">
+            <button className="btn btn-outline btn-success gap-2">
+              <BookOpen className="w-4 h-4" />
+              View Guide
+            </button>
+          </Link>
+        </div>
       </div>
 
       {isAdded && (
@@ -133,11 +249,11 @@ function RouteComponent() {
               d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>Your text has been saved!</span>
+          <span>{successMessage}</span>
         </div>
       )}
 
-      {isDuplicate && (
+      {importError && (
         <div role="alert" className="alert alert-error">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +268,7 @@ function RouteComponent() {
               d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>Error! Duplicate text found.</span>
+          <span>{importError}</span>
         </div>
       )}
 
