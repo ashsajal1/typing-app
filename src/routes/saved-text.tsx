@@ -286,7 +286,7 @@ function RouteComponent() {
                 className="w-full btn"
                 search={{ 
                   savedTextId: parseInt(data.id),
-                  eclipsedTime: 60,
+                  eclipsedTime: 0,
                   topic: data.type || 'paragraph'
                 }}
               >
