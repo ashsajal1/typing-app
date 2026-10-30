@@ -67,6 +67,7 @@ const LEFT: Record<string, Finger> = {
 };
 
 const RIGHT: Record<string, Finger> = {
+  Backspace: 'pinky',
   Digit6: 'index',
   Digit7: 'index',
   Digit8: 'middle',

@@ -3,6 +3,7 @@ import ControlsDisplay from './ControlsDisplay';
 import VirtualKeyboard from './VirtualKeyboard';
 import { usePressedKeys } from '../hooks/usePressedKeys';
 import { useKeyboardStore } from '../store/keyboardStore';
+import { useTypingSound } from '../hooks/useTypingSound';
 import { franc } from 'franc';
 
 interface NonEnTypingProps {
@@ -24,6 +25,7 @@ const NonEnTyping: React.FC<NonEnTypingProps> = ({ text }) => {
   const timerRef = useRef<NodeJS.Timeout>();
   const { showVirtualKeyboard, toggleVirtualKeyboard } = useKeyboardStore();
   const pressedKeys = usePressedKeys(showVirtualKeyboard);
+  useTypingSound(!isSubmitted);
 
   // Detect language and form words accordingly
   const lang = franc(text || '');

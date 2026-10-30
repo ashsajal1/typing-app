@@ -96,6 +96,7 @@ interface VirtualKeyboardProps {
   shift: boolean;
   /** The key the next character needs, ringed as a coaching cue. */
   nextCode?: string | null;
+  nextShiftCode?: string | null;
   /** Fingers that should press the next character. */
   nextFingers?: FingerTarget[];
 }
@@ -110,10 +111,14 @@ export default function VirtualKeyboard({
   activeCode,
   shift,
   nextCode = null,
+  nextShiftCode = null,
   nextFingers = [],
 }: VirtualKeyboardProps) {
   const pressed = useMemo(() => new Set(pressedCodes), [pressedCodes]);
-  const nextKey = nextCode ? getKeyByCode(nextCode) : undefined;
+  const nextKeys = [nextCode, nextShiftCode].flatMap(code => {
+    const key = code ? getKeyByCode(code) : undefined;
+    return key && !pressed.has(code!) ? [key] : [];
+  });
 
   return (
     <div className="w-full select-none overflow-hidden" aria-hidden="true">
@@ -191,16 +196,17 @@ export default function VirtualKeyboard({
           </g>
 
           {/* The cue sits under the hands so it reads as "press this next". */}
-          {nextKey && !pressed.has(nextKey.code) && (
+          {nextKeys.map(nextKey => (
             <rect
+              key={nextKey.code}
               x={getKeyX(nextKey)}
               y={getKeyY(nextKey)}
               width={getKeyWidth(nextKey)}
               height={KEY_SIZE}
               rx={KEY_RADIUS}
-              className="keycap-next"
+              className={nextKey.code === 'Backspace' ? 'keycap-next keycap-correction' : 'keycap-next'}
             />
-          )}
+          ))}
 
           <KeyboardHands
             pressedCodes={pressedCodes}

@@ -1,3 +1,4 @@
+import { useKeyboardStore } from '../store/keyboardStore';
 interface ControlsDisplayProps {
   showHighErrorChars: boolean;
   toggleHighErrorChars: () => void;
@@ -15,9 +16,14 @@ export default function ControlsDisplay({
   onReset,
   onSubmit,
 }: ControlsDisplayProps) {
+  const { soundEnabled, toggleSound } = useKeyboardStore();
   return (
     <div className="flex items-center justify-between mt-3 flex-wrap gap-2">
       <div className="flex items-center gap-4 flex-wrap">
+        <label className="label cursor-pointer gap-2">
+          <span className="label-text">Typing sound</span>
+          <input type="checkbox" className="toggle toggle-success" checked={soundEnabled} onChange={toggleSound} />
+        </label>
         <label className="label cursor-pointer gap-2">
           <span className="label-text">Show Error Chars</span>
           <input

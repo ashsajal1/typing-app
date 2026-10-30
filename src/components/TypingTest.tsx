@@ -13,8 +13,9 @@ import { useKeyboardStore } from "../store/keyboardStore";
 import VirtualKeyboard from "./VirtualKeyboard";
 import { createCommands } from "../lib/commands";
 import { flattenText } from "../lib/typingText";
-import { getCodeForCharacter } from "../lib/keyboardLayout";
-import { describeFingers, getFingersForCode } from "../lib/fingerAssignment";
+import { getTypingGuidance } from "../lib/typingGuidance";
+import { useTypingSound } from "../hooks/useTypingSound";
+
 
 // Add this at the top of the file, after the imports
 const typingAnimation = `
@@ -145,12 +146,11 @@ export default function TypingTest({
   const nextKey = useMemo(() => {
     const flat = flattenText(parsedText);
     const nextChar = flat[userInput.length];
-    if (!nextChar) return { code: null, fingers: [] as ReturnType<typeof getFingersForCode> };
-    const code = getCodeForCharacter(nextChar.char) ?? null;
-    return { code, fingers: code ? getFingersForCode(code) : [] };
-  }, [parsedText, userInput.length]);
+    return getTypingGuidance(nextChar?.char, hasMistake || incorrectNewlinePosition !== -1);
+  }, [parsedText, userInput.length, hasMistake, incorrectNewlinePosition]);
 
-  const nextFingerLabel = describeFingers(nextKey.fingers);
+  const nextFingerLabel = nextKey.label;
+  useTypingSound(!isSubmitted && !showCommandPalette);
 
   if (isSubmitted) {
     return (
@@ -232,6 +232,7 @@ export default function TypingTest({
             activeCode={pressedKeys.activeCode}
             shift={pressedKeys.shift}
             nextCode={nextKey.code}
+            nextShiftCode={nextKey.shiftCode}
             nextFingers={nextKey.fingers}
           />
         </>

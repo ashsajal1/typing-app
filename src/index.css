@@ -271,3 +271,7 @@
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #777;
 }
+.keycap-correction {
+  fill: rgb(239 68 68 / 0.18);
+  stroke: #ef4444;
+}
