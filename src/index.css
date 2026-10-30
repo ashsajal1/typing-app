@@ -49,6 +49,201 @@
   }
 }
 
+/* --- On-screen keyboard: case, plate and physical keycaps ---------------- */
+
+:root {
+  /* Board surfaces follow the daisyUI theme, with the light theme's palette
+     as the fallback. */
+  --kb-case-top: var(--fallback-b2, #f7f8fa);
+  --kb-case-bottom: var(--fallback-b3, #e2e5ea);
+  --kb-case-base: var(--fallback-b3, #dfe2e8);
+  --kb-plate: var(--fallback-b2, #eef0f3);
+  --kb-key-top: var(--fallback-b1, #ffffff);
+  --kb-key-bottom: var(--fallback-b2, #f1f2f4);
+  --kb-key-side: var(--fallback-b3, #d7dbe1);
+}
+
+/* A slab peeking out below the case, so the board sits on a lip. */
+.keyboard-case-base {
+  fill: var(--kb-case-base);
+  stroke: oklch(var(--bc) / 0.16);
+  stroke-width: 1.5;
+}
+
+.keyboard-frame {
+  fill: url(#kb-case-grad);
+  stroke: oklch(var(--bc) / 0.16);
+  stroke-width: 1.5;
+}
+
+.keyboard-plate {
+  fill: var(--kb-plate);
+  stroke: oklch(var(--bc) / 0.14);
+  stroke-width: 1.5;
+}
+
+/* Inner shadow along the plate's top edge, so it reads as recessed. */
+.keyboard-plate-shade {
+  fill: url(#kb-plate-shade-grad);
+  pointer-events: none;
+}
+
+/* Every keycap is a darker side wall with a topped cap hovering over it. */
+.keycap-side {
+  fill: rgb(0 0 0 / 0.13);
+  stroke: oklch(var(--bc) / 0.14);
+  stroke-width: 1.5;
+}
+
+.keycap-top {
+  transition: transform 70ms ease-out;
+}
+
+.keycap-body {
+  fill: url(#kb-key-grad);
+  stroke: oklch(var(--bc) / 0.12);
+  stroke-width: 1.5;
+}
+
+.keycap-pressed .keycap-top {
+  /* Sinks onto the side wall, so the key visibly travels down. */
+  transform: translateY(5px);
+}
+
+.keycap-pressed .keycap-body {
+  fill: var(--fallback-p, oklch(var(--p)));
+  stroke: var(--fallback-p, oklch(var(--p)));
+}
+
+.keycap-legend {
+  fill: oklch(var(--bc));
+  font-weight: 500;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+.keycap-legend-sm {
+  fill: oklch(var(--bc) / 0.45);
+  pointer-events: none;
+}
+
+.keycap-pressed .keycap-legend,
+.keycap-pressed .keycap-legend-sm {
+  fill: var(--fallback-pc, oklch(var(--pc)));
+}
+
+.keycap-notch {
+  fill: oklch(var(--bc) / 0.35);
+}
+
+/* Coaching cue: the key the next character needs, washed in the accent. */
+.keycap-next {
+  fill: var(--fallback-p, oklch(var(--p)));
+  fill-opacity: 0.4;
+  stroke: var(--fallback-p, oklch(var(--p)));
+  stroke-opacity: 0.85;
+  stroke-width: 2;
+  animation: next-key-cue 1.4s ease-in-out infinite;
+}
+
+.keycap-ring {
+  fill: none;
+  stroke: var(--fallback-p, oklch(var(--p)));
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+/* One translucent surface per hand prevents dark seams between digits. */
+.typing-hands { pointer-events: none; }
+.typing-hand { opacity: 0.58; }
+.typing-hand-outline {
+  stroke: rgb(84 59 56 / 0.48);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.typing-hand-crease {
+  fill: none;
+  stroke: rgb(113 75 70 / 0.18);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.typing-hand-shift { transition: transform 150ms ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .typing-hand-shift { transition: none; }
+}
+@media (forced-colors: active) {
+  .typing-hand { opacity: 0.4; }
+  .typing-hand-outline { fill: Canvas; stroke: CanvasText; }
+}
+
+@keyframes next-key-cue {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .keycap-next,
+  .hand-bone-next,
+  .hand-finger-next .hand-bone {
+    animation: none;
+  }
+  .hand-bone,
+  .hand-shift,
+  .hand-palm,
+  .keycap-top {
+    transition-duration: 0ms;
+  }
+  .hand {
+    filter: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .hand-layer {
+    opacity: 1;
+  }
+  .hand {
+    filter: none;
+  }
+  .hand-outline {
+    display: none;
+  }
+  .hand-surface,
+  .hand-palm,
+  .hand-bone {
+    fill: Canvas;
+    stroke: CanvasText;
+  }
+  .hand-finger-active .hand-bone,
+  .hand-bone-active {
+    fill: Highlight;
+    stroke: HighlightText;
+  }
+  .hand-finger-next .hand-bone,
+  .hand-bone-next {
+    fill: Canvas;
+    stroke: Highlight;
+  }
+  .hand-nail,
+  .hand-crease,
+  .hand-knuckle-ridge,
+  .hand-wrist-crease,
+  .hand-contact-shadow,
+  .hand-sheen {
+    display: none;
+  }
+}
+
+/* The wrists run off the bottom edge; fading them looks less like a cut-off. */
+.hand-fade {
+  mask-image: linear-gradient(to bottom, black 58%, transparent 97%);
+}
+
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
   width: 8px;
@@ -75,4 +270,8 @@
 
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #777;
+}
+.keycap-correction {
+  fill: rgb(239 68 68 / 0.18);
+  stroke: #ef4444;
 }
