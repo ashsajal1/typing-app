@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
-import StatsDisplay from './StatsDisplay';
 import ControlsDisplay from './ControlsDisplay';
+import VirtualKeyboard from './VirtualKeyboard';
+import { usePressedKeys } from '../hooks/usePressedKeys';
+import { useKeyboardStore } from '../store/keyboardStore';
 import { franc } from 'franc';
 
 interface NonEnTypingProps {
@@ -20,6 +22,8 @@ const NonEnTyping: React.FC<NonEnTypingProps> = ({ text }) => {
   const [wordStatus, setWordStatus] = useState<{ [key: number]: boolean }>({});
   const textRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout>();
+  const { showVirtualKeyboard, toggleVirtualKeyboard } = useKeyboardStore();
+  const pressedKeys = usePressedKeys(showVirtualKeyboard);
 
   // Detect language and form words accordingly
   const lang = franc(text || '');
@@ -193,16 +197,19 @@ const NonEnTyping: React.FC<NonEnTypingProps> = ({ text }) => {
         />
       </div>
 
-      <StatsDisplay
-        timer={timer}
-        eclipsedTime={Infinity}
-        accuracy={accuracy}
-        wpm={wpm}
-      />
+      {showVirtualKeyboard && (
+        <VirtualKeyboard
+          pressedCodes={pressedKeys.codes}
+          activeCode={pressedKeys.activeCode}
+          shift={pressedKeys.shift}
+        />
+      )}
 
       <ControlsDisplay
         showHighErrorChars={false}
         toggleHighErrorChars={() => {}}
+        showVirtualKeyboard={showVirtualKeyboard}
+        toggleVirtualKeyboard={toggleVirtualKeyboard}
         onReset={handleReset}
         onSubmit={handleSubmit}
       />

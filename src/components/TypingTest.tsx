@@ -1,14 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Result from "./Result";
 import TextDisplay from "./TextDisplay";
-import StatsDisplay from "./StatsDisplay";
 import ControlsDisplay from "./ControlsDisplay";
+import FingerGuide from "./FingerGuide";
 import CommandPalette from "./CommandPalette";
 import MobileInput from "./MobileInput";
 import MistakeAlert from "./MistakeAlert";
 import { useTypingTest } from "../hooks/useTypingTest";
 import { useKeyboardHandler } from "../hooks/useKeyboardHandler";
+import { usePressedKeys } from "../hooks/usePressedKeys";
+import { useKeyboardStore } from "../store/keyboardStore";
+import VirtualKeyboard from "./VirtualKeyboard";
 import { createCommands } from "../lib/commands";
+import { flattenText } from "../lib/typingText";
+import { getCodeForCharacter } from "../lib/keyboardLayout";
+import { describeFingers, getFingersForCode } from "../lib/fingerAssignment";
 
 // Add this at the top of the file, after the imports
 const typingAnimation = `
@@ -47,6 +53,7 @@ export default function TypingTest({
   const [isMobile, setIsMobile] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [commandSearch, setCommandSearch] = useState("");
+  const { showVirtualKeyboard, toggleVirtualKeyboard } = useKeyboardStore();
 
   const {
     userInput,
@@ -129,6 +136,22 @@ export default function TypingTest({
     handleKeyDown(e as unknown as KeyboardEvent);
   };
 
+  // The virtual keyboard is pointless without a physical one to mirror.
+  const showKeyboard = showVirtualKeyboard && !isMobile;
+  const pressedKeys = usePressedKeys(showKeyboard);
+
+  // Which key and finger the next character needs, so the user is told where to
+  // go before they press rather than after they get it wrong.
+  const nextKey = useMemo(() => {
+    const flat = flattenText(parsedText);
+    const nextChar = flat[userInput.length];
+    if (!nextChar) return { code: null, fingers: [] as ReturnType<typeof getFingersForCode> };
+    const code = getCodeForCharacter(nextChar.char) ?? null;
+    return { code, fingers: code ? getFingersForCode(code) : [] };
+  }, [parsedText, userInput.length]);
+
+  const nextFingerLabel = describeFingers(nextKey.fingers);
+
   if (isSubmitted) {
     return (
       <div className="space-y-4">
@@ -201,16 +224,24 @@ export default function TypingTest({
         />
       </div>
 
-      <StatsDisplay
-        timer={timer}
-        eclipsedTime={eclipsedTime ?? Infinity}
-        accuracy={accuracy}
-        wpm={wpm}
-      />
+      {showKeyboard && (
+        <>
+          <FingerGuide label={nextFingerLabel} />
+          <VirtualKeyboard
+            pressedCodes={pressedKeys.codes}
+            activeCode={pressedKeys.activeCode}
+            shift={pressedKeys.shift}
+            nextCode={nextKey.code}
+            nextFingers={nextKey.fingers}
+          />
+        </>
+      )}
 
       <ControlsDisplay
         showHighErrorChars={showHighErrorChars}
         toggleHighErrorChars={toggleHighErrorChars}
+        showVirtualKeyboard={showVirtualKeyboard}
+        toggleVirtualKeyboard={toggleVirtualKeyboard}
         onReset={() => window.location.reload()}
         onSubmit={handleSubmit}
       />

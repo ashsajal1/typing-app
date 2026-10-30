@@ -49,6 +49,329 @@
   }
 }
 
+/* --- On-screen keyboard: case, plate and physical keycaps ---------------- */
+
+:root {
+  /* Board surfaces follow the daisyUI theme, with the light theme's palette
+     as the fallback. */
+  --kb-case-top: var(--fallback-b2, #f7f8fa);
+  --kb-case-bottom: var(--fallback-b3, #e2e5ea);
+  --kb-case-base: var(--fallback-b3, #dfe2e8);
+  --kb-plate: var(--fallback-b2, #eef0f3);
+  --kb-key-top: var(--fallback-b1, #ffffff);
+  --kb-key-bottom: var(--fallback-b2, #f1f2f4);
+  --kb-key-side: var(--fallback-b3, #d7dbe1);
+}
+
+/* A slab peeking out below the case, so the board sits on a lip. */
+.keyboard-case-base {
+  fill: var(--kb-case-base);
+  stroke: oklch(var(--bc) / 0.16);
+  stroke-width: 1.5;
+}
+
+.keyboard-frame {
+  fill: url(#kb-case-grad);
+  stroke: oklch(var(--bc) / 0.16);
+  stroke-width: 1.5;
+}
+
+.keyboard-plate {
+  fill: var(--kb-plate);
+  stroke: oklch(var(--bc) / 0.14);
+  stroke-width: 1.5;
+}
+
+/* Inner shadow along the plate's top edge, so it reads as recessed. */
+.keyboard-plate-shade {
+  fill: url(#kb-plate-shade-grad);
+  pointer-events: none;
+}
+
+/* Every keycap is a darker side wall with a topped cap hovering over it. */
+.keycap-side {
+  fill: rgb(0 0 0 / 0.13);
+  stroke: oklch(var(--bc) / 0.14);
+  stroke-width: 1.5;
+}
+
+.keycap-top {
+  transition: transform 70ms ease-out;
+}
+
+.keycap-body {
+  fill: url(#kb-key-grad);
+  stroke: oklch(var(--bc) / 0.12);
+  stroke-width: 1.5;
+}
+
+.keycap-pressed .keycap-top {
+  /* Sinks onto the side wall, so the key visibly travels down. */
+  transform: translateY(5px);
+}
+
+.keycap-pressed .keycap-body {
+  fill: var(--fallback-p, oklch(var(--p)));
+  stroke: var(--fallback-p, oklch(var(--p)));
+}
+
+.keycap-legend {
+  fill: oklch(var(--bc));
+  font-weight: 500;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+.keycap-legend-sm {
+  fill: oklch(var(--bc) / 0.45);
+  pointer-events: none;
+}
+
+.keycap-pressed .keycap-legend,
+.keycap-pressed .keycap-legend-sm {
+  fill: var(--fallback-pc, oklch(var(--pc)));
+}
+
+.keycap-notch {
+  fill: oklch(var(--bc) / 0.35);
+}
+
+/* Coaching cue: the key the next character needs, washed in the accent. */
+.keycap-next {
+  fill: var(--fallback-p, oklch(var(--p)));
+  fill-opacity: 0.4;
+  stroke: var(--fallback-p, oklch(var(--p)));
+  stroke-opacity: 0.85;
+  stroke-width: 2;
+  animation: next-key-cue 1.4s ease-in-out infinite;
+}
+
+.keycap-ring {
+  fill: none;
+  stroke: var(--fallback-p, oklch(var(--p)));
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+/* Translucent skin tones keep the key labels visible through the hands. */
+:root {
+  --hand-glass-top: rgb(233 190 180 / 0.42);
+  --hand-glass-bottom: rgb(130 83 79 / 0.48);
+  --hand-sheen: rgb(255 225 214 / 0.16);
+  --hand-rim: rgb(126 84 79 / 0.28);
+  --hand-edge: rgb(91 61 59 / 0.4);
+  --hand-crease: rgb(105 65 61 / 0.28);
+  --hand-nail: rgb(241 205 197 / 0.25);
+  --hand-nail-edge: rgb(138 95 91 / 0.2);
+  --hand-shadow: rgb(15 23 42 / 0.3);
+  --hand-active-top: rgb(96 165 250 / 0.6);
+  --hand-active-bottom: rgb(37 99 235 / 0.45);
+  --hand-active-rim: rgb(219 234 254 / 0.9);
+  --hand-active-edge: rgb(37 99 235 / 0.55);
+  --hand-next-top: rgb(252 211 77 / 0.3);
+  --hand-next-bottom: rgb(245 158 11 / 0.2);
+  --hand-next-rim: rgb(255 251 235 / 0.9);
+  --hand-next-edge: rgb(180 83 9 / 0.4);
+}
+
+/* Ghosted hands: the keys they cover have to stay readable underneath. */
+.hand-layer {
+  opacity: 0.95;
+}
+
+.hand {
+  filter: drop-shadow(0 3px 4px rgb(62 39 38 / 0.25));
+}
+
+/* The whole hand (palm and fingers) glides as one piece when it reaches. */
+.hand-shift {
+  transition: transform 150ms ease-out;
+  will-change: transform;
+}
+
+/* A soft outline separates the hand from the keys beneath it. */
+.hand-outline {
+  fill: none;
+  stroke: var(--hand-edge);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.hand-finger-active .hand-outline {
+  stroke: var(--hand-active-edge);
+}
+
+.hand-finger-next .hand-outline {
+  stroke: var(--hand-next-edge);
+}
+
+.hand-surface {
+  fill: url(#hand-palm-grad);
+}
+
+.hand-palm {
+  fill: url(#hand-palm-grad);
+  stroke: var(--hand-rim);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.hand-knuckle-ridge,
+.hand-wrist-crease {
+  stroke: var(--hand-crease);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.hand-wrist-crease {
+  opacity: 0.25;
+}
+
+.hand-bone {
+  fill: url(#hand-finger-grad);
+  stroke: var(--hand-rim);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  transition: fill 90ms ease-out;
+}
+
+.hand-finger-active .hand-bone,
+.hand-bone-active {
+  fill: url(#hand-active-grad);
+  stroke: var(--hand-active-rim);
+}
+
+/* Coaching cue: which finger is about to be needed. Amber rather than the
+   active finger's blue, so "use this one" and "pressed" never look alike. */
+.hand-finger-next .hand-bone,
+.hand-bone-next {
+  fill: url(#hand-next-grad);
+  stroke: var(--hand-next-rim);
+  animation: next-finger-cue 1.4s ease-in-out infinite;
+}
+
+/* A subtle highlight gives each finger a rounded surface. */
+.hand-sheen {
+  fill: var(--hand-sheen);
+  pointer-events: none;
+}
+
+.hand-finger-active .hand-sheen {
+  fill: rgb(219 234 254 / 0.55);
+}
+
+.hand-finger-next .hand-sheen {
+  fill: rgb(255 251 235 / 0.55);
+}
+
+.hand-nail {
+  fill: var(--hand-nail);
+  stroke: var(--hand-nail-edge);
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+
+.hand-finger-active .hand-nail {
+  fill: rgb(219 234 254 / 0.65);
+}
+
+.hand-crease {
+  stroke: var(--hand-crease);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.hand-contact-shadow {
+  fill: var(--hand-shadow);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+@keyframes next-finger-cue {
+  0%,
+  100% {
+    filter: brightness(1.08);
+  }
+  50% {
+    filter: brightness(0.92);
+  }
+}
+
+@keyframes next-key-cue {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .keycap-next,
+  .hand-bone-next,
+  .hand-finger-next .hand-bone {
+    animation: none;
+  }
+  .hand-bone,
+  .hand-shift,
+  .hand-palm,
+  .keycap-top {
+    transition-duration: 0ms;
+  }
+  .hand {
+    filter: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .hand-layer {
+    opacity: 1;
+  }
+  .hand {
+    filter: none;
+  }
+  .hand-outline {
+    display: none;
+  }
+  .hand-surface,
+  .hand-palm,
+  .hand-bone {
+    fill: Canvas;
+    stroke: CanvasText;
+  }
+  .hand-finger-active .hand-bone,
+  .hand-bone-active {
+    fill: Highlight;
+    stroke: HighlightText;
+  }
+  .hand-finger-next .hand-bone,
+  .hand-bone-next {
+    fill: Canvas;
+    stroke: Highlight;
+  }
+  .hand-nail,
+  .hand-crease,
+  .hand-knuckle-ridge,
+  .hand-wrist-crease,
+  .hand-contact-shadow,
+  .hand-sheen {
+    display: none;
+  }
+}
+
+/* The wrists run off the bottom edge; fading them looks less like a cut-off. */
+.hand-fade {
+  mask-image: linear-gradient(to bottom, black 58%, transparent 97%);
+}
+
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
   width: 8px;

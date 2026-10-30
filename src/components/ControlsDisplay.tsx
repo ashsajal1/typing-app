@@ -1,6 +1,8 @@
 interface ControlsDisplayProps {
   showHighErrorChars: boolean;
   toggleHighErrorChars: () => void;
+  showVirtualKeyboard: boolean;
+  toggleVirtualKeyboard: () => void;
   onReset: () => void;
   onSubmit: () => void;
 }
@@ -8,12 +10,14 @@ interface ControlsDisplayProps {
 export default function ControlsDisplay({
   showHighErrorChars,
   toggleHighErrorChars,
+  showVirtualKeyboard,
+  toggleVirtualKeyboard,
   onReset,
   onSubmit,
 }: ControlsDisplayProps) {
   return (
-    <div className="flex items-center justify-between mt-3">
-      <div className="flex items-center gap-2">
+    <div className="flex items-center justify-between mt-3 flex-wrap gap-2">
+      <div className="flex items-center gap-4 flex-wrap">
         <label className="label cursor-pointer gap-2">
           <span className="label-text">Show Error Chars</span>
           <input
@@ -21,6 +25,15 @@ export default function ControlsDisplay({
             className="toggle toggle-success"
             checked={showHighErrorChars}
             onChange={toggleHighErrorChars}
+          />
+        </label>
+        <label className="label cursor-pointer gap-2">
+          <span className="label-text">On-screen Keyboard</span>
+          <input
+            type="checkbox"
+            className="toggle toggle-success"
+            checked={showVirtualKeyboard}
+            onChange={toggleVirtualKeyboard}
           />
         </label>
       </div>
