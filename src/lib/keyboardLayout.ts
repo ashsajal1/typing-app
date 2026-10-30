@@ -22,7 +22,7 @@ export const KEYBOARD_HEIGHT = KEY_UNIT * 5;
  */
 export const KEY_OFFSET = 30;
 /** Room reserved below the board for the palms and wrists. */
-export const HANDS_AREA_HEIGHT = 170;
+export const HANDS_AREA_HEIGHT = 300;
 export const VIEW_WIDTH = KEYBOARD_WIDTH + KEY_OFFSET * 2;
 export const VIEW_HEIGHT = KEYBOARD_HEIGHT + KEY_OFFSET + HANDS_AREA_HEIGHT;
 

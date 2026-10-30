@@ -122,7 +122,7 @@ export default function VirtualKeyboard({
         // Capped so the whole board, hands included, stays on screen without
         // scrolling. `meet` keeps it centred rather than squashed.
         className="mx-auto block h-auto w-full max-w-7xl"
-        style={{ maxHeight: '62vh' }}
+        style={{ maxHeight: '78vh' }}
         preserveAspectRatio="xMidYMid meet"
         focusable="false"
       >

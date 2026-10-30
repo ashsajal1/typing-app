@@ -1,249 +1,106 @@
-import { useMemo, type CSSProperties } from 'react';
-import {
-  buildBonePath,
-  buildPalmPath,
-  FINGER_ANATOMY,
-  getKnuckle,
-  getRestTarget,
-  HAND_FINGERS,
-  solveFinger,
-  THUMB,
-} from '../lib/handKinematics';
-import type { Point } from '../lib/keyboardLayout';
-import type { Finger, FingerTarget, Hand } from '../lib/fingerAssignment';
-import type { Digit, HandPose } from '../lib/handPoses';
-import { computeHandPoses } from '../lib/handPoses';
+import { useId, useMemo } from 'react';
+import { getKnuckle, getRestTarget, HAND_FINGERS, THUMB } from '../lib/handKinematics';
+import type { FingerTarget, Hand } from '../lib/fingerAssignment';
+import { computeHandPoses, type HandPose } from '../lib/handPoses';
 
 const HANDS: Hand[] = ['left', 'right'];
 
-/**
- * Pose for each hand, recomputed only when the keys being typed change. The
- * maths lives in `handPoses` so it can be unit-tested without a render.
- */
-function useHandPoses(
-  pressedCodes: string[],
-  activeCode: string | null,
-  nextFingers: FingerTarget[],
-  nextCode: string | null
-): Record<Hand, HandPose> {
-  return useMemo(
-    () => computeHandPoses(pressedCodes, activeCode, nextFingers, nextCode),
-    [pressedCodes, activeCode, nextFingers, nextCode]
-  );
-}
-
-/** Unit-length direction from `from` towards `to`. */
-function direction(from: Point, to: Point): Point {
-  const length = Math.hypot(to.x - from.x, to.y - from.y) || 1;
-  return { x: (to.x - from.x) / length, y: (to.y - from.y) / length };
-}
-
-interface FingerShapeProps {
-  hand: Hand;
-  finger: Finger;
-  pose: HandPose;
-  /** The finger that should press the next character, highlighted as a cue. */
-  isNext?: boolean;
-  silhouette?: boolean;
-}
-
-/** Draws one finger as a tapering silhouette with a nail and joint creases. */
-function FingerShape({ hand, finger, pose, isNext = false, silhouette = false }: FingerShapeProps) {
-  const isThumb = finger === 'thumb';
-  const knuckle = isThumb ? THUMB[hand].base : getKnuckle(hand, finger as Digit);
-  const anatomy = isThumb ? THUMB[hand].anatomy : FINGER_ANATOMY[finger as Digit];
-  // Fingers are solved in the hand's own frame: the slide towards the key is
-  // applied to the whole hand by an ancestor, so palm and fingers move as one
-  // piece. A finger with nothing to press simply keeps its resting pose.
-  const rest = isThumb ? THUMB[hand].restTarget : getRestTarget(hand, finger as Digit);
-  const target = pose.targets[finger];
-  const aim = target
-    ? { x: target.x - pose.shift.x, y: target.y - pose.shift.y }
-    : rest;
-  // Joints are solved from the knuckle, so the bones and the palm can never
-  // drift apart while the hand glides towards a key.
-  const points = solveFinger(knuckle, anatomy, aim, hand === 'left' ? 1 : -1);
-  const isActive = pose.active === finger;
-  const tipWidth = anatomy.widths[anatomy.widths.length - 1];
-
-  const className = [
-    'hand-bone',
-    isActive && 'hand-bone-active',
-    !isActive && isNext && 'hand-bone-next',
-  ]
-    .filter(Boolean)
-    .join(' ');
-  const bodyPath = buildBonePath(points, anatomy.widths);
-  if (silhouette) return <path d={bodyPath} fill="white" />;
-
-  // A narrower copy of the same silhouette, offset towards the light, reads as
-  // a soft highlight along each rounded finger.
-  const sheenPath = buildBonePath(
-    points,
-    anatomy.widths.map((width) => width * 0.32)
-  );
-
-  // Joint + nail details need the full 4-point chain (knuckle + 3 joints).
-  const hasJoints = points.length >= 4;
-  const joints = hasJoints ? [points[1], points[2]] : [];
-  const tip = points[points.length - 1];
-  const beforeTip = points.length >= 2 ? points[points.length - 2] : knuckle;
-  const tipDir = direction(beforeTip, tip);
-  // Perpendicular to the fingertip, used for creases and the nail's short axis.
-  const tipNormal = { x: -tipDir.y, y: tipDir.x };
-  const tipAngle = (Math.atan2(tipDir.y, tipDir.x) * 180) / Math.PI;
-  const nailBack = tipWidth * (isThumb ? 1.5 : 1.35);
-  const nail = {
-    x: tip.x - tipDir.x * nailBack,
-    y: tip.y - tipDir.y * nailBack,
+/** Draw both hands in the left hand's local frame, then mirror the right. */
+function handShape(hand: Hand, pose: HandPose) {
+  const localX = (x: number) => hand === 'left' ? x : 868 - x;
+  const fingers = HAND_FINGERS.map((finger, i) => {
+    const rest = getRestTarget(hand, finger);
+    const target = pose.targets[finger];
+    const x = localX(target ? target.x - pose.shift.x : rest.x);
+    const y = target ? target.y - pose.shift.y : rest.y;
+    const base = localX(getKnuckle(hand, finger).x);
+    const width = [27, 30, 31, 29][i];
+    // The raised knuckle sits behind the contact pad in this overhead view.
+    const crown = y - [48, 58, 64, 24][i];
+    // A bottom-row press curls into the palm: lower the finger root as well
+    // as its tip, otherwise the contour doubles back through itself.
+    const rootY = Math.max(222, y + 76);
+    const shoulderY = crown + (rootY - crown) * 0.65;
+    const left = base - width;
+    const right = base + width;
+    const contour = `C ${left} ${shoulderY} ${x - width - 8} ${crown + 35} ${x - width + 1} ${crown + 12}
+      C ${x - width + 6} ${crown - 6} ${x + width - 6} ${crown - 8} ${x + width} ${crown + 13}
+      C ${x + width + 7} ${crown + 40} ${right} ${shoulderY} ${right} ${rootY}`;
+    return { finger, x, y, crown, left, right, rootY, contour,
+      path: `M ${left} ${rootY} ${contour} Q ${base} ${rootY + 18} ${left} ${rootY} Z` };
+  });
+  const thumbTarget = pose.targets.thumb;
+  const thumb = {
+    x: localX(thumbTarget ? thumbTarget.x - pose.shift.x : THUMB[hand].restTarget.x) + (thumbTarget ? 0 : 70),
+    y: thumbTarget ? thumbTarget.y - pose.shift.y : THUMB[hand].restTarget.y + 55,
   };
-  const nailRx = tipWidth * (isThumb ? 0.78 : 0.68);
-  const nailRy = tipWidth * (isThumb ? 0.62 : 0.52);
-
-  return (
-    <g
-      className={
-        isActive
-          ? 'hand-finger hand-finger-active'
-          : isNext
-            ? 'hand-finger hand-finger-next'
-            : 'hand-finger'
-      }
-      data-hand={hand}
-      data-finger={finger}
-      data-active={isActive || undefined}
-      data-next={!isActive && isNext ? true : undefined}
-    >
-      {isActive && (
-        <ellipse
-          cx={aim.x}
-          cy={aim.y}
-          rx={tipWidth * 1.25}
-          ry={tipWidth * 0.9}
-          className="hand-contact-shadow"
-        />
-      )}
-      {/* The outline and shaded fill give each finger a soft edge. */}
-      {(isActive || isNext) && <path d={bodyPath} className="hand-outline" />}
-      {(isActive || isNext) && <path d={bodyPath} className={className} />}
-      {(isActive || isNext) && hasJoints && (
-        <path d={sheenPath} className="hand-sheen" transform="translate(-2 -3)" />
-      )}
-      {(isActive || isNext) && joints.map((joint, index) => {
-        const prev = points[index];
-        const next = points[index + 2];
-        const along = direction(prev, next);
-        const normal = { x: -along.y, y: along.x };
-        const halfLen = anatomy.widths[index + 1] * 0.52;
-        return (
-          <line
-            key={index}
-            x1={joint.x - normal.x * halfLen}
-            y1={joint.y - normal.y * halfLen}
-            x2={joint.x + normal.x * halfLen}
-            y2={joint.y + normal.y * halfLen}
-            className="hand-crease"
-          />
-        );
-      })}
-      {(isActive || isNext) && hasJoints && (
-        <ellipse
-          cx={nail.x}
-          cy={nail.y}
-          rx={nailRx}
-          ry={nailRy}
-          transform={`rotate(${tipAngle + 90} ${nail.x} ${nail.y})`}
-          className="hand-nail"
-          style={
-            {
-              '--nail-tilt-x': tipNormal.x.toFixed(3),
-              '--nail-tilt-y': tipNormal.y.toFixed(3),
-            } as CSSProperties
-          }
-        />
-      )}
-    </g>
-  );
+  const thumbCurve = `C 323 357 ${thumb.x - 42} ${thumb.y + 30} ${thumb.x - 30} ${thumb.y + 6}
+    C ${thumb.x - 26} ${thumb.y - 21} ${thumb.x + 7} ${thumb.y - 29} ${thumb.x + 18} ${thumb.y - 4}
+    C ${thumb.x + 24} ${thumb.y + 18} ${thumb.x + 25} ${thumb.y + 28} ${thumb.x + 30} ${thumb.y + 44}
+    C ${thumb.x + 18} ${thumb.y + 87} 342 459 286 492`;
+  const outline = `M 52 610 C 62 495 68 320 ${fingers[0].left} ${fingers[0].rootY} ` +
+    fingers.map((f, i) => `${i ? `Q ${(fingers[i - 1].right + f.left) / 2} ${Math.max(fingers[i - 1].rootY, f.rootY) + 10} ${f.left} ${f.rootY}` : ''} ${f.contour}`).join(' ') +
+    ` C 348 ${fingers[3].rootY + 30} 319 335 323 357 ${thumbCurve} C 263 510 245 559 242 610 Z`;
+  return { fingers, outline, thumbPath: `M 323 357 ${thumbCurve} Q 308 414 323 357 Z` };
 }
 
 interface KeyboardHandsProps {
-  /** Every key currently held down, in the order they were pressed. */
   pressedCodes: string[];
-  /** The last non-modifier key pressed. */
   activeCode: string | null;
-  /** Fingers that should press the next character, used as a coaching cue. */
   nextFingers?: FingerTarget[];
-  /** The key the next character needs, previewed when nothing is held down. */
   nextCode?: string | null;
 }
 
-export default function KeyboardHands({
-  pressedCodes,
-  activeCode,
-  nextFingers = [],
-  nextCode = null,
-}: KeyboardHandsProps) {
-  const poses = useHandPoses(pressedCodes, activeCode, nextFingers, nextCode);
-
-  const isNext = (hand: Hand, finger: Finger) =>
-    nextFingers.some((target) => target.hand === hand && target.finger === finger);
-
-  const orderFingers = (hand: Hand, pose: HandPose): Finger[] => {
-    const all: Finger[] = [...HAND_FINGERS, 'thumb'];
-    const rank = (finger: Finger) =>
-      pose.active === finger ? 2 : isNext(hand, finger) ? 1 : 0;
-    // Inactive fingers first so the pressing / cued finger paints on top.
-    return [...all].sort((a, b) => rank(a) - rank(b));
-  };
-
+export default function KeyboardHands({ pressedCodes, activeCode, nextFingers = [], nextCode = null }: KeyboardHandsProps) {
+  const id = useId().replace(/:/g, '');
+  const poses = useMemo(() => computeHandPoses(pressedCodes, activeCode, nextFingers, nextCode),
+    [pressedCodes, activeCode, nextFingers, nextCode]);
   return (
-    <g className="hand-layer hand-fade">
+    <g className="typing-hands">
       <defs>
-        {/* Translucent shading keeps the key labels readable beneath the hands. */}
-        <radialGradient id="hand-palm-grad" cx="45%" cy="35%" r="70%">
-          <stop offset="0%" style={{ stopColor: 'var(--hand-glass-top)' }} />
-          <stop offset="100%" style={{ stopColor: 'var(--hand-glass-bottom)' }} />
-        </radialGradient>
-        <radialGradient id="hand-finger-grad" cx="40%" cy="35%" r="75%">
-          <stop offset="0%" style={{ stopColor: 'var(--hand-glass-top)' }} />
-          <stop offset="100%" style={{ stopColor: 'var(--hand-glass-bottom)' }} />
-        </radialGradient>
-        <linearGradient id="hand-active-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" style={{ stopColor: 'var(--hand-active-top)' }} />
-          <stop offset="100%" style={{ stopColor: 'var(--hand-active-bottom)' }} />
+        <linearGradient id={`${id}-skin`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#947572" />
+          <stop offset="0.26" stopColor="#c5a4a0" />
+          <stop offset="0.65" stopColor="#d2b3ae" />
+          <stop offset="1" stopColor="#9f7d79" />
         </linearGradient>
-        <linearGradient id="hand-next-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" style={{ stopColor: 'var(--hand-next-top)' }} />
-          <stop offset="100%" style={{ stopColor: 'var(--hand-next-bottom)' }} />
+        <linearGradient id={`${id}-fade`} gradientUnits="userSpaceOnUse" x1="0" y1="440" x2="0" y2="610">
+          <stop offset="0" stopColor="white" /><stop offset="1" stopColor="black" />
+        </linearGradient>
+        <mask id={`${id}-wrist`} maskUnits="userSpaceOnUse" x="-200" y="-200" width="1400" height="1000">
+          <rect x="-200" y="-200" width="1400" height="1000" fill={`url(#${id}-fade)`} />
+        </mask>
+        <radialGradient id={`${id}-knuckle`}>
+          <stop offset="0" stopColor="#ffe5dc" stopOpacity="0.42" />
+          <stop offset="1" stopColor="#ffe5dc" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id={`${id}-cue`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#24b5dd" stopOpacity="0.88" />
+          <stop offset="1" stopColor="#24b5dd" stopOpacity="0" />
         </linearGradient>
       </defs>
       {HANDS.map((hand) => {
         const pose = poses[hand];
+        const shape = handShape(hand, pose);
         return (
-          <g key={hand} className="hand" data-hand={hand}>
-            {/* One transform for the whole hand: the palm and every finger
-                glide together, instead of the fingers jumping ahead of the
-                palm each time the hand reaches for a key. */}
-            <g
-              className="hand-shift"
-              style={{ transform: `translate(${pose.shift.x}px, ${pose.shift.y}px)` }}
-            >
-              <mask id={`hand-silhouette-${hand}`} maskUnits="userSpaceOnUse" x="-200" y="-200" width="1400" height="1000">
-                <path d={buildPalmPath(hand)} fill="white" />
-                {([...HAND_FINGERS, 'thumb'] as Finger[]).map((finger) => (
-                  <FingerShape key={finger} hand={hand} finger={finger} pose={pose} silhouette />
-                ))}
-              </mask>
-              <rect x="-200" y="-200" width="1400" height="1000" className="hand-surface" mask={`url(#hand-silhouette-${hand})`} />
-              {orderFingers(hand, pose).map((finger) => (
-                <FingerShape
-                  key={finger}
-                  hand={hand}
-                  finger={finger}
-                  pose={pose}
-                  isNext={isNext(hand, finger)}
-                />
-              ))}
+          <g key={hand} className="typing-hand-shift" style={{ transform: `translate(${pose.shift.x}px, ${pose.shift.y}px)` }}>
+            <g transform={hand === 'right' ? 'translate(868 0) scale(-1 1)' : undefined}>
+              <g className="typing-hand" mask={`url(#${id}-wrist)`} data-hand={hand}>
+                <path d={shape.outline} fill={`url(#${id}-skin)`} className="typing-hand-outline" />
+                <clipPath id={`${id}-${hand}-clip`}><path d={shape.outline} /></clipPath>
+                <g clipPath={`url(#${id}-${hand}-clip)`}>
+                  {shape.fingers.map(({ finger, path, x, crown }) => (
+                    <g key={finger} data-finger={finger} data-active={pose.active === finger || undefined}>
+                      <ellipse cx={x - 5} cy={crown + 30} rx="32" ry="52" fill={`url(#${id}-knuckle)`} />
+                      {(pose.active === finger || nextFingers.some(f => f.hand === hand && f.finger === finger)) &&
+                        <path d={path} fill={`url(#${id}-cue)`} />}
+                      <path d={`M ${x - 16} ${crown + 56} Q ${x} ${crown + 62} ${x + 14} ${crown + 55}`} className="typing-hand-crease" />
+                    </g>
+                  ))}
+                  {(pose.active === 'thumb' || nextFingers.some(f => f.hand === hand && f.finger === 'thumb')) &&
+                    <path d={shape.thumbPath} fill={`url(#${id}-cue)`} />}
+                </g>
+              </g>
             </g>
           </g>
         );
