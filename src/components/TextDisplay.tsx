@@ -110,7 +110,7 @@ export default function TextDisplay({
                 className={[
                   'relative inline-block w-[27px] border-b text-center transition-colors duration-100',
                   isCurrent
-                    ? 'rounded-t border-b-2 border-b-primary font-bold text-primary'
+                    ? 'font-bold text-primary'
                     : 'border-b-base-300',
                   isCurrentWord && !isCurrent ? 'text-base-content' : '',
                   isTyped

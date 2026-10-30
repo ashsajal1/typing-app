@@ -7,7 +7,7 @@ export default function MistakeAlert({ show, incorrectNewlinePosition }: Mistake
   if (!show) return null;
 
   return (
-    <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-bounce">
+    <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in">
       {incorrectNewlinePosition !== -1 
         ? "Press Backspace to remove the incorrect newline" 
         : "Fix the mistake before continuing!"}

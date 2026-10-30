@@ -115,7 +115,7 @@ export default function Result({ accuracy, wpm, wpmHistory = [], currentErrorMap
                     <div className="space-y-4">
                         {/* Header with Emoji and Status */}
                         <div className="flex items-center gap-4 mb-2">
-                            <div className="text-4xl animate-bounce">{emoji}</div>
+                            <div className="text-4xl animate-fade-in">{emoji}</div>
                             <div>
                                 <h1 className="text-2xl font-bold animate-fade-in">{status}</h1>
                                 <p className="text-base-content/80 text-sm">{description}</p>

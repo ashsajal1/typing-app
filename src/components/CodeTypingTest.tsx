@@ -221,7 +221,7 @@ export default function CodeTypingTest({ text, eclipsedTime }: CodeTypingTestPro
 
       {/* Mistake Alert */}
       {showMistakeAlert && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-bounce">
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in">
           Fix the mistake before continuing!
         </div>
       )}
