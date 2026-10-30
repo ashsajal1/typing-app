@@ -23,6 +23,7 @@ export default function Footer() {
                         <div className="flex flex-col gap-2">
                             <Link to="/" className="link link-hover">Home</Link>
                             <Link to="/practice" search={{ topic: 'physics', eclipsedTime: 60 }} className="link link-hover">Practice</Link>
+                            <Link to="/lessons" className="link link-hover">Typing Lessons</Link>
                             <Link to="/code" className="link link-hover">Code Practice</Link>
                             <Link to="/custom-text" className="link link-hover">Custom Text</Link>
                         </div>

@@ -9,14 +9,15 @@ const FOCUS_ROUTES = ['/practice']
 
 function RootLayout() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
-  const isTypingPage = FOCUS_ROUTES.some((route) => pathname.startsWith(route))
+  const isLessonSession = /^\/lessons\/[^/]+/.test(pathname)
+  const isTypingPage = isLessonSession || FOCUS_ROUTES.some((route) => pathname.startsWith(route))
 
   return (
     <HelmetProvider>
       <div className="overflow-x-hidden">
         {!isTypingPage && <Navbar />}
         <Outlet />
-        <Footer />
+        {!isLessonSession && <Footer />}
         {/* <TanStackRouterDevtools /> */}
       </div>
     </HelmetProvider>

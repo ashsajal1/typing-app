@@ -88,6 +88,7 @@ function KeyCap({ keyDef, isPressed, isShifted }: KeyCapProps) {
 }
 
 interface VirtualKeyboardProps {
+  fitViewport?: boolean;
   /** Every key currently held down, in the order they were pressed. */
   pressedCodes: string[];
   /** The last non-modifier key pressed, which the hands follow. */
@@ -107,6 +108,7 @@ interface VirtualKeyboardProps {
  * keys being typed, so nobody has to glance down at their physical board.
  */
 export default function VirtualKeyboard({
+  fitViewport = true,
   pressedCodes,
   activeCode,
   shift,
@@ -127,7 +129,7 @@ export default function VirtualKeyboard({
         // Capped so the whole board, hands included, stays on screen without
         // scrolling. `meet` keeps it centred rather than squashed.
         className="mx-auto block h-auto w-full max-w-7xl"
-        style={{ maxHeight: '78vh' }}
+        style={{ maxHeight: fitViewport ? '78vh' : undefined }}
         preserveAspectRatio="xMidYMid meet"
         focusable="false"
       >

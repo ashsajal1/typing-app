@@ -21,6 +21,8 @@ import { Route as CustomTextImport } from './routes/custom-text'
 import { Route as CodeImport } from './routes/code'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as LessonsIndexImport } from './routes/lessons.index'
+import { Route as LessonsLessonIdImport } from './routes/lessons.$lessonId'
 
 // Create/Update Routes
 
@@ -81,6 +83,18 @@ const AboutRoute = AboutImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LessonsIndexRoute = LessonsIndexImport.update({
+  id: '/lessons/',
+  path: '/lessons/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LessonsLessonIdRoute = LessonsLessonIdImport.update({
+  id: '/lessons/$lessonId',
+  path: '/lessons/$lessonId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -158,6 +172,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsImport
       parentRoute: typeof rootRoute
     }
+    '/lessons/$lessonId': {
+      id: '/lessons/$lessonId'
+      path: '/lessons/$lessonId'
+      fullPath: '/lessons/$lessonId'
+      preLoaderRoute: typeof LessonsLessonIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/lessons/': {
+      id: '/lessons/'
+      path: '/lessons'
+      fullPath: '/lessons'
+      preLoaderRoute: typeof LessonsIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -174,6 +202,8 @@ export interface FileRoutesByFullPath {
   '/saved-text': typeof SavedTextRoute
   '/stats': typeof StatsRoute
   '/terms': typeof TermsRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
+  '/lessons': typeof LessonsIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -187,6 +217,8 @@ export interface FileRoutesByTo {
   '/saved-text': typeof SavedTextRoute
   '/stats': typeof StatsRoute
   '/terms': typeof TermsRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
+  '/lessons': typeof LessonsIndexRoute
 }
 
 export interface FileRoutesById {
@@ -201,6 +233,8 @@ export interface FileRoutesById {
   '/saved-text': typeof SavedTextRoute
   '/stats': typeof StatsRoute
   '/terms': typeof TermsRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
+  '/lessons/': typeof LessonsIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -216,6 +250,8 @@ export interface FileRouteTypes {
     | '/saved-text'
     | '/stats'
     | '/terms'
+    | '/lessons/$lessonId'
+    | '/lessons'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -228,6 +264,8 @@ export interface FileRouteTypes {
     | '/saved-text'
     | '/stats'
     | '/terms'
+    | '/lessons/$lessonId'
+    | '/lessons'
   id:
     | '__root__'
     | '/'
@@ -240,6 +278,8 @@ export interface FileRouteTypes {
     | '/saved-text'
     | '/stats'
     | '/terms'
+    | '/lessons/$lessonId'
+    | '/lessons/'
   fileRoutesById: FileRoutesById
 }
 
@@ -254,6 +294,8 @@ export interface RootRouteChildren {
   SavedTextRoute: typeof SavedTextRoute
   StatsRoute: typeof StatsRoute
   TermsRoute: typeof TermsRoute
+  LessonsLessonIdRoute: typeof LessonsLessonIdRoute
+  LessonsIndexRoute: typeof LessonsIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -267,6 +309,8 @@ const rootRouteChildren: RootRouteChildren = {
   SavedTextRoute: SavedTextRoute,
   StatsRoute: StatsRoute,
   TermsRoute: TermsRoute,
+  LessonsLessonIdRoute: LessonsLessonIdRoute,
+  LessonsIndexRoute: LessonsIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -288,7 +332,9 @@ export const routeTree = rootRoute
         "/privacy",
         "/saved-text",
         "/stats",
-        "/terms"
+        "/terms",
+        "/lessons/$lessonId",
+        "/lessons/"
       ]
     },
     "/": {
@@ -320,6 +366,12 @@ export const routeTree = rootRoute
     },
     "/terms": {
       "filePath": "terms.tsx"
+    },
+    "/lessons/$lessonId": {
+      "filePath": "lessons.$lessonId.tsx"
+    },
+    "/lessons/": {
+      "filePath": "lessons.index.tsx"
     }
   }
 }

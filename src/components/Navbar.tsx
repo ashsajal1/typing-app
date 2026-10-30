@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import ModeToggle from "./ModeToggle";
-import { Bookmark, BarChart2, Keyboard } from "lucide-react";
+import { Bookmark, BarChart2, Keyboard, BookOpen } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
 
@@ -14,6 +14,9 @@ export default function Navbar() {
         <span className="font-medium">{t('common.practice')}</span>
       </Link>
       <div className="flex items-center gap-2">
+        <Link to="/lessons" className="btn btn-ghost gap-2" aria-label="Typing lessons">
+          <BookOpen size={20} strokeWidth={1.3} /><span className="hidden sm:inline">Lessons</span>
+        </Link>
         <Link to="/stats" className="btn btn-ghost gap-2 hover:bg-base-300">
           <BarChart2 size={20} strokeWidth={1.3} /> 
           <span className="hidden sm:inline">{t('common.statistics')}</span>
